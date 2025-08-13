@@ -1,7 +1,5 @@
 "use client"
 
-import * as React from "react"
-import Header from "@/components/ui/header"
 import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from "lucide-react"
 
 import {
@@ -72,7 +70,7 @@ function ListItem({
   )
 }
 
-function NavigationMenuDemo() {
+function Header() {
   return (
     <NavigationMenu viewport={false}>
       <NavigationMenuList>
@@ -211,10 +209,4 @@ function NavigationMenuDemo() {
   )
 }
 
-export default function App() {
-  return (
-    <div className="flex flex-col items-center gap-4">
-      <Header />
-    </div>
-  )
-}
+export default Header
