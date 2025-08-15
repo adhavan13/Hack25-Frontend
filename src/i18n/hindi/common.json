@@ -1,0 +1,34 @@
+{
+  "welcome": "स्वागत है",
+  "hello": "नमस्ते",
+  "goodbye": "अलविदा",
+  "language": "भाषा",
+  "selectLanguage": "भाषा चुनें",
+  "home": "होम",
+  "about": "के बारे में",
+  "contact": "संपर्क",
+  "navigation": {
+    "home": "होम",
+    "about": "हमारे बारे में",
+    "services": "सेवाएं",
+    "contact": "संपर्क करें"
+  },
+  "buttons": {
+    "submit": "जमा करें",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "edit": "संपादित करें",
+    "delete": "हटाएं"
+  },
+  "messages": {
+    "success": "ऑपरेशन सफलतापूर्वक पूर्ण हुआ",
+    "error": "एक त्रुटि हुई",
+    "loading": "लोड हो रहा है..."
+  },
+  "common": {
+    "name": "नाम",
+    "email": "ईमेल",
+    "phone": "फोन",
+    "address": "पता"
+  }
+}
