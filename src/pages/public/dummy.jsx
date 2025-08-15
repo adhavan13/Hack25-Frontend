@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import "./i18n"; // Import i18n configuration
+import "../../i18n/config"; // Import i18n configuration
 import LanguageSwitcher from "../../components/languageSwitcher";
 
 // Main App Component
@@ -21,7 +21,9 @@ function Main() {
 
       <main>
         <section style={{ marginBottom: "30px" }}>
-          <h2>{t("navigation.home")}</h2>
+          <h2>
+            {t("navigation.home")} <b>{t("hello")}</b>
+          </h2>{" "}
           <p>
             {t("hello")}! {t("messages.success")}
           </p>
