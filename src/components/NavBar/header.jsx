@@ -10,7 +10,7 @@ const DribbbleNav = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white">
       <nav className="px-6 sm:px-12 py-4">
         <div className="flex items-center justify-between">
           {/* Left side: Logo and Search Bar */}
@@ -30,9 +30,9 @@ const DribbbleNav = () => {
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   placeholder="Search for a location?"
-                  className="w-full px-4 py-4.5 pl-6 pr-12 text-sm text-gray-700 placeholder-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  className="w-full px-4 py-4.5 pl-6 pr-12 text-sm text-gray-700 placeholder-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-[#72e3ad] focus:border-transparent"
                 />
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors cursor-pointer">
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-[#5dc998] transition-colors cursor-pointer">
                   <Search size={24} />
                 </button>
               </div>
@@ -97,9 +97,9 @@ const DribbbleNav = () => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search for a location"
-              className="w-full px-4 py-3 pl-4 pr-12 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              className="w-full px-4 py-3 pl-4 pr-12 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-[#72e3ad] focus:border-transparent"
             />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors cursor-pointer">
+            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-[#5dc998] transition-colors cursor-pointer">
               <Search size={16} />
             </button>
           </div>
