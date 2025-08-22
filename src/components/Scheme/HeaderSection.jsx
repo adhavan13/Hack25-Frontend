@@ -12,9 +12,9 @@ const StatusBadge = ({ status }) => (
 
 const HeaderSection = ({ header }) => (
   <div className="mb-4 p-4 bg-white border-b border-black">
-    <div className="flex items-center justify-between max-w-3xl">
+    <div className="flex items-center justify-between pl-4 pr-4">
       <div>
-        <h1 className="text-lg font-medium text-black leading-tight">
+        <h1 className="text-2xl font-semibold text-black leading-tight">
           {header.project_name}
         </h1>
       </div>
