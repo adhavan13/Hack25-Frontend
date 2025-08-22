@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Modal from './Modal';
 import { Heart, Eye } from 'lucide-react';
 
 const ProjectGrid = ({ projects }) => {
@@ -117,60 +118,74 @@ const ProjectGrid = ({ projects }) => {
     );
   };
 
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-      {projects.map((project) => (
-        <div key={project.id} className="group cursor-pointer">
-          {/* Project Preview */}
-          <div className="relative mb-3 md:mb-4 transform transition-transform group-hover:scale-105">
-            {renderPreview(project.preview, project.title)}
-            
-            {/* Hover Overlay */}
-            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-              <div className="bg-white rounded-full p-2 transform scale-0 group-hover:scale-100 transition-transform">
-                <Eye className="w-4 h-4 text-gray-700" />
-              </div>
-            </div>
-          </div>
+  const [modalOpen, setModalOpen] = useState(false);
+  // Optionally, you can store selected project for dynamic modal content in the future
+  // const [selectedProject, setSelectedProject] = useState(null);
 
-          {/* Project Info */}
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-2 md:space-x-3">
-              {/* Avatar */}
-              <div className="w-5 h-5 md:w-6 md:h-6 bg-gray-300 rounded-full flex-shrink-0"></div>
-              
-              <div>
-                <h3 className="font-medium text-gray-900 text-xs md:text-sm">{project.title}</h3>
-                <div className="flex items-center space-x-2 mt-0.5 md:mt-1">
-                  <span className="text-gray-500 text-[10px] md:text-xs truncate max-w-[100px] sm:max-w-[150px]">
-                    {project.author}
-                  </span>
-                  <span className={`px-1.5 md:px-2 py-0.5 text-[10px] md:text-xs rounded-full font-medium ${
-                    project.badge === 'PRO' 
-                      ? 'bg-pink-100 text-pink-700' 
-                      : 'bg-blue-100 text-blue-700'
-                  }`}>
-                    {project.badge}
-                  </span>
+  const handleGridItemClick = (project) => {
+    setModalOpen(true);
+    // setSelectedProject(project); // For dynamic content later
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    // setSelectedProject(null);
+  };
+
+  return (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+        {projects.map((project) => (
+          <div key={project.id} className="group cursor-pointer" onClick={() => handleGridItemClick(project)}>
+            {/* Project Preview */}
+            <div className="relative mb-3 md:mb-4 transform transition-transform group-hover:scale-105">
+              {renderPreview(project.preview, project.title)}
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                <div className="bg-white rounded-full p-2 transform scale-0 group-hover:scale-100 transition-transform">
+                  <Eye className="w-4 h-4 text-gray-700" />
                 </div>
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="flex items-center space-x-2 md:space-x-3 text-[10px] md:text-xs text-gray-500">
-              <div className="flex items-center space-x-1">
-                <Heart className="w-3 h-3" />
-                <span>{project.likes}</span>
+            {/* Project Info */}
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-2 md:space-x-3">
+                {/* Avatar */}
+                <div className="w-5 h-5 md:w-6 md:h-6 bg-gray-300 rounded-full flex-shrink-0"></div>
+                <div>
+                  <h3 className="font-medium text-gray-900 text-xs md:text-sm">{project.title}</h3>
+                  <div className="flex items-center space-x-2 mt-0.5 md:mt-1">
+                    <span className="text-gray-500 text-[10px] md:text-xs truncate max-w-[100px] sm:max-w-[150px]">
+                      {project.author}
+                    </span>
+                    <span className={`px-1.5 md:px-2 py-0.5 text-[10px] md:text-xs rounded-full font-medium ${
+                      project.badge === 'PRO' 
+                        ? 'bg-pink-100 text-pink-700' 
+                        : 'bg-blue-100 text-blue-700'
+                    }`}>
+                      {project.badge}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center space-x-1">
-                <Eye className="w-3 h-3" />
-                <span>{formatViews(project.views)}</span>
+              {/* Stats */}
+              <div className="flex items-center space-x-2 md:space-x-3 text-[10px] md:text-xs text-gray-500">
+                <div className="flex items-center space-x-1">
+                  <Heart className="w-3 h-3" />
+                  <span>{project.likes}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Eye className="w-3 h-3" />
+                  <span>{formatViews(project.views)}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+      <Modal isOpen={modalOpen} onClose={handleCloseModal} />
+    </>
   );
 };
 
