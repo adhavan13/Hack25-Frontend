@@ -125,7 +125,10 @@ const ProjectGrid = ({ projects }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
       {projects.map((project) => (
-        <div key={project.id} className="group cursor-pointer">
+        <div
+          key={project.id}
+          className="group cursor-pointer border-b border-gray-300 shadow-[0_4px_12px_-4px_rgba(0,0,0,0.12)] bg-white rounded-lg p-3 md:p-4"
+        >
           {/* Project Preview */}
           <div className="relative mb-3 md:mb-4 transform transition-transform group-hover:scale-105">
             {renderPreview(project.preview, project.title)}
