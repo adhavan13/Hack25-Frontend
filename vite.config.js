@@ -9,11 +9,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "./icons/chrome.js": "./icons/chrome-icon.js",
-      "./chrome.js": "./chrome-icon.js",
     },
-  },
-  optimizeDeps: {
-    exclude: ["lucide-react"],
   },
 });
