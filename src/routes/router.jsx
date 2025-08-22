@@ -1,5 +1,6 @@
 import Header from "@/components/NavBar/header";
 import Scheme from "@/components/Scheme/scheme";
+import ChatBot from "@/components/ChatBot/chatbot";
 
 // Add scrollbar styling
 const scrollbarStyle = `
@@ -22,12 +23,13 @@ export default function Router() {
     <div>
       {/* Add style tag for scrollbar styling */}
       <style>{scrollbarStyle}</style>
-      <header className="">
+      <header>
         <Header />
       </header>
       <main>
         <Scheme />
       </main>
+      <ChatBot />
     </div>
   );
 }

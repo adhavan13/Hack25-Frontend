@@ -9,13 +9,18 @@ const ProjectGrid = ({ projects }) => {
 
   const renderPreview = (preview, projectTitle) => {
     return (
-      <div className="w-full h-48 bg-gray-100 rounded-lg overflow-hidden relative">
+      <div className="w-full h-48 bg-white rounded-lg overflow-hidden relative">
         {preview.map((item, index) => {
+          // Replace green colors with our custom light green
+          const updatedColor = item.color.includes('green') 
+            ? 'bg-gray-100 text-black' 
+            : item.color;
+          
           if (item.type === 'mobile') {
             return (
               <div
                 key={index}
-                className={`absolute w-16 h-32 rounded-lg ${item.color} border-2 border-white shadow-lg`}
+                className={`absolute w-16 h-32 rounded-lg ${updatedColor} border-2 border-white shadow-lg`}
                 style={{
                   left: `${20 + index * 25}%`,
                   top: '20%',
@@ -101,12 +106,12 @@ const ProjectGrid = ({ projects }) => {
             return (
               <div
                 key={index}
-                className="absolute inset-0 bg-gray-900 rounded-lg overflow-hidden"
+                className="absolute inset-0 bg-white rounded-lg overflow-hidden"
               >
                 <div className="w-full h-full relative">
-                  <div className="absolute top-4 left-4 right-4 h-32 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg"></div>
-                  <div className="absolute bottom-4 left-4 right-4 h-20 bg-gray-800 rounded-lg flex items-center justify-center">
-                    <span className="text-green-400 font-bold text-xs">THE CREDIT ATTORNEY</span>
+                  <div className="absolute top-4 left-4 right-4 h-32 bg-gradient-to-r from-[#72e3ad] to-blue-500 rounded-lg"></div>
+                  <div className="absolute bottom-4 left-4 right-4 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <span className="text-black font-bold text-xs">THE CREDIT ATTORNEY</span>
                   </div>
                 </div>
               </div>
@@ -162,7 +167,7 @@ const ProjectGrid = ({ projects }) => {
                     <span className={`px-1.5 md:px-2 py-0.5 text-[10px] md:text-xs rounded-full font-medium ${
                       project.badge === 'PRO' 
                         ? 'bg-pink-100 text-pink-700' 
-                        : 'bg-blue-100 text-blue-700'
+                        : 'bg-gray-100 text-black'
                     }`}>
                       {project.badge}
                     </span>

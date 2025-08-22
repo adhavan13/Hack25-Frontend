@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Filter, ChevronDown, Menu, X } from 'lucide-react';
 import ProjectGrid from './ProjectGrid';
 
 const DesignGallery = () => {
-  const [activeFilter, setActiveFilter] = useState('Popular');
+  const [activeFilter, setActiveFilter] = useState('Latest');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  const timeFilters = ['Latest', 'Old', 'Upcoming'];
   
   const filters = [
-    'Popular', 'Discover', 'Animation', 'Branding', 'Illustration', 
+    'Discover', 'Animation', 'Branding', 'Illustration', 
     'Mobile', 'Print', 'Product Design', 'Typography', 'Web Design'
   ];
 
@@ -121,14 +125,32 @@ const DesignGallery = () => {
     }
   ];
 
+  // Handle outside click to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Navigation Bar */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white sticky top-0 z-10">
         <div className="px-4 md:px-8 lg:px-12">
           <div className="flex items-center justify-between h-16">
             {/* Mobile Menu Button */}
@@ -143,31 +165,50 @@ const DesignGallery = () => {
               )}
             </button>
 
-            {/* Left - Popular Filter */}
-            <div className="hidden md:flex items-center">
+            {/* Left - Time Filter Dropdown */}
+            <div className="hidden md:flex items-center relative" ref={dropdownRef}>
               <button
-                onClick={() => setActiveFilter('Popular')}
-                className={`flex items-center space-x-1 px-3 lg:px-5 py-2 text-sm font-medium transition-colors whitespace-nowrap ${
-                  activeFilter === 'Popular'
-                    ? 'text-gray-900 font-semibold bg-gray-100 rounded-full'
-                    : 'text-gray-800 hover:text-gray-400 rounded-lg'
-                }`}
+                onClick={toggleDropdown}
+                className={`flex items-center justify-center space-x-1 px-3 lg:px-5 py-2 text-sm font-medium transition-colors whitespace-nowrap border border-gray-120 rounded-lg text-gray-800 bg-white`}
               >
-                <span>Popular</span>
-                <ChevronDown className="w-4 h-4" />
+                <span>{activeFilter}</span>
+                <ChevronDown 
+                  className={`w-4 h-4 ml-1 transition-transform duration-200 ${
+                    dropdownOpen ? 'transform rotate-180' : ''
+                  }`} 
+                />
               </button>
+              
+              {dropdownOpen && (
+                <div className="absolute top-full left-0 mt-3 bg-white border border-gray-100 rounded-lg shadow-md z-20">
+                  {timeFilters.map((filter) => (
+                    <button
+                      key={filter}
+                      onClick={() => {
+                        setActiveFilter(filter);
+                        setDropdownOpen(false);
+                      }}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
+                        activeFilter === filter ? 'font-semibold' : ''
+                      }`}
+                    >
+                      {filter}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Center - Other Filters */}
             <div className="hidden md:flex items-center space-x-4 lg:space-x-6 overflow-x-auto scrollbar-hide mx-auto">
-              {filters.slice(1).map((filter) => (
+              {filters.map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
                   className={`flex items-center space-x-1 px-2 lg:px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap cursor-pointer ${
                     activeFilter === filter
-                      ? 'text-gray-900 font-semibold bg-gray-100 rounded-full'
-                      : 'text-gray-800 hover:text-gray-400 rounded-lg'
+                      ? 'text-black font-semibold bg-[#72e3ad] rounded-full'
+                      : 'text-gray-800 font-medium hover:text-gray-600 hover:bg-gray-50 rounded-lg'
                   }`}
                 >
                   <span>{filter}</span>
@@ -176,7 +217,7 @@ const DesignGallery = () => {
             </div>
 
             {/* Right - Filter Button */}
-            <button className="flex items-center space-x-2 px-3 py-2 text-gray-800 hover:text-gray-400 border border-gray-300 rounded-lg hover:border-gray-200 transition-colors">
+            <button className="flex items-center space-x-2 px-3 py-2 text-gray-800 hover:text-gray-600 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors bg-white">
               <Filter className="w-4 h-4" />
               <span className="text-sm font-medium hidden sm:inline">Filters</span>
             </button>
@@ -186,8 +227,28 @@ const DesignGallery = () => {
 
       {/* Mobile Filter Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200 px-4 py-2 overflow-x-auto">
+        <div className="md:hidden bg-white border-b border-gray-100 px-4 py-2 overflow-x-auto">
+          <div className="flex flex-wrap gap-2 mb-2">
+            {/* Time filters for mobile */}
+            {timeFilters.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => {
+                  setActiveFilter(filter);
+                  setMobileMenuOpen(false);
+                }}
+                className={`flex items-center space-x-1 px-3 py-1.5 text-sm font-medium transition-colors ${
+                  activeFilter === filter
+                    ? 'bg-[#72e3ad] text-black font-semibold rounded-full'
+                    : 'bg-gray-50 text-gray-700 hover:text-gray-600 hover:bg-gray-50 rounded-full'
+                }`}
+              >
+                <span>{filter}</span>
+              </button>
+            ))}
+          </div>
           <div className="flex flex-wrap gap-2">
+            {/* Other filters for mobile */}
             {filters.map((filter) => (
               <button
                 key={filter}
@@ -197,12 +258,11 @@ const DesignGallery = () => {
                 }}
                 className={`flex items-center space-x-1 px-3 py-1.5 text-sm font-medium transition-colors ${
                   activeFilter === filter
-                    ? 'bg-gray-100 text-gray-900 font-semibold rounded-full'
-                    : 'bg-gray-50 text-gray-700 hover:text-gray-400 hover:bg-gray-50 rounded-full'
-                } ${filter !== 'Popular' ? 'cursor-pointer' : ''}`}
+                    ? 'bg-[#72e3ad] text-black font-semibold rounded-full'
+                    : 'bg-gray-50 text-gray-700 hover:text-gray-600 hover:bg-gray-50 rounded-full'
+                }`}
               >
                 <span>{filter}</span>
-                {filter === 'Popular' && <ChevronDown className="w-4 h-4" />}
               </button>
             ))}
           </div>
