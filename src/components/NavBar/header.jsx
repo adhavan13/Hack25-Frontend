@@ -4,9 +4,23 @@ import { Search, Menu, X } from 'lucide-react';
 const DribbbleNav = () => {
   const [searchValue, setSearchValue] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activePage, setActivePage] = useState(''); // Add state for active page
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Function to handle page navigation and set active page
+  const handlePageClick = (page) => {
+    setActivePage(page);
+    // You can add navigation logic here if needed
+  };
+
+  // Helper function to determine active page style
+  const getPageStyle = (page) => {
+    return activePage === page
+      ? 'text-[#72e3ad] font-semibold border-b-2 border-[#72e3ad] pb-1'
+      : 'text-black hover:text-gray-500 transition-colors';
   };
 
   return (
@@ -14,7 +28,7 @@ const DribbbleNav = () => {
       <nav className="px-6 sm:px-12 py-4">
         <div className="flex items-center justify-between">
           {/* Left side: Logo and Search Bar */}
-          <div className="flex items-center space-x-8 md:space-x-12 flex-1">
+          <div className="flex items-center space-x-4 md:space-x-6 flex-1">
             {/* Logo */}
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900 italic tracking-tight">
@@ -32,7 +46,7 @@ const DribbbleNav = () => {
                   placeholder="Search for a location?"
                   className="w-full px-4 py-4.5 pl-6 pr-12 text-sm text-gray-700 placeholder-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-[#72e3ad] focus:border-transparent"
                 />
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-[#5dc998] transition-colors cursor-pointer">
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors">
                   <Search size={24} />
                 </button>
               </div>
@@ -43,28 +57,48 @@ const DribbbleNav = () => {
           <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
             {/* Designers Dropdown */}
             <div className="relative group">
-              <button className="flex items-center space-x-1 text-black hover:text-gray-500 transition-colors">
+              <button
+                className={`flex items-center space-x-1 ${getPageStyle(
+                  'designers'
+                )} cursor-pointer`}
+                onClick={() => handlePageClick('designers')}
+              >
                 <span className="font-medium">Designers</span>
               </button>
             </div>
 
             {/* Explore Dropdown */}
             <div className="relative group">
-              <button className="flex items-center space-x-1 text-black hover:text-gray-500 transition-colors">
+              <button
+                className={`flex items-center space-x-1 ${getPageStyle(
+                  'explore'
+                )} cursor-pointer`}
+                onClick={() => handlePageClick('explore')}
+              >
                 <span className="font-medium">Explore</span>
               </button>
             </div>
 
             {/* Find Talent Dropdown */}
             <div className="relative group">
-              <button className="flex items-center space-x-1 text-black hover:text-gray-500 transition-colors">
+              <button
+                className={`flex items-center space-x-1 ${getPageStyle(
+                  'talent'
+                )} cursor-pointer`}
+                onClick={() => handlePageClick('talent')}
+              >
                 <span className="font-medium">Find Talent</span>
               </button>
             </div>
 
             {/* Get Hired Dropdown */}
             <div className="relative group">
-              <button className="flex items-center space-x-1 text-black hover:text-gray-500 transition-colors">
+              <button
+                className={`flex items-center space-x-1 ${getPageStyle(
+                  'hired'
+                )} cursor-pointer`}
+                onClick={() => handlePageClick('hired')}
+              >
                 <span className="font-medium">Get Hired</span>
               </button>
             </div>
@@ -72,7 +106,11 @@ const DribbbleNav = () => {
             {/* Blog */}
             <a
               href="#"
-              className="text-black hover:text-gray-500 font-medium transition-colors"
+              className={`${getPageStyle('blog')} font-medium cursor-pointer`}
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageClick('blog');
+              }}
             >
               Blog
             </a>
@@ -82,7 +120,7 @@ const DribbbleNav = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleMobileMenu}
-              className="text-gray-700 hover:text-gray-900 focus:outline-none"
+              className="text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -99,7 +137,7 @@ const DribbbleNav = () => {
               placeholder="Search for a location"
               className="w-full px-4 py-3 pl-4 pr-12 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-[#72e3ad] focus:border-transparent"
             />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-[#5dc998] transition-colors cursor-pointer">
+            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors">
               <Search size={16} />
             </button>
           </div>
@@ -109,21 +147,45 @@ const DribbbleNav = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 py-3 space-y-4">
             <div className="flex flex-col space-y-4">
-              <button className="flex items-center justify-between text-black hover:text-gray-500 transition-colors py-2">
+              <button
+                className={`flex items-center justify-between ${getPageStyle(
+                  'designers'
+                )} py-2 cursor-pointer`}
+                onClick={() => handlePageClick('designers')}
+              >
                 <span className="font-medium">Designers</span>
               </button>
-              <button className="flex items-center justify-between text-black hover:text-gray-500 transition-colors py-2">
+              <button
+                className={`flex items-center justify-between ${getPageStyle(
+                  'explore'
+                )} py-2 cursor-pointer`}
+                onClick={() => handlePageClick('explore')}
+              >
                 <span className="font-medium">Explore</span>
               </button>
-              <button className="flex items-center justify-between text-black hover:text-gray-500 transition-colors py-2">
+              <button
+                className={`flex items-center justify-between ${getPageStyle(
+                  'talent'
+                )} py-2 cursor-pointer`}
+                onClick={() => handlePageClick('talent')}
+              >
                 <span className="font-medium">Find Talent</span>
               </button>
-              <button className="flex items-center justify-between text-black hover:text-gray-500 transition-colors py-2">
+              <button
+                className={`flex items-center justify-between ${getPageStyle(
+                  'hired'
+                )} py-2 cursor-pointer`}
+                onClick={() => handlePageClick('hired')}
+              >
                 <span className="font-medium">Get Hired</span>
               </button>
               <a
                 href="#"
-                className="text-black hover:text-gray-500 font-medium transition-colors py-2"
+                className={`${getPageStyle('blog')} font-medium py-2 cursor-pointer`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageClick('blog');
+                }}
               >
                 Blog
               </a>
