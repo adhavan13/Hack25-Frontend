@@ -1,11 +1,6 @@
-import Header from "@/components/NavBar/header";
+import Router from "./routes/router";
 
 export default function App() {
-  return (
-    <div>
-      <header className="w-full flex justify-center items-center">
-        <Header />
-      </header>
-    </div>
-  );
+  return <Router />;
 }
+
