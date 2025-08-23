@@ -14,6 +14,7 @@ const DribbbleNav = () => {
   // Function to handle page navigation and set active page
   const handlePageClick = (page) => {
     setActivePage(page);
+    setIsMobileMenuOpen(false); // Close mobile menu on nav click
     // You can add navigation logic here if needed
   };
 
@@ -76,7 +77,16 @@ const DribbbleNav = () => {
               </Link>
             </div>
 
-            {/* Explore Link */}
+            {/* Explore Link - Added to match mobile */}
+            <div className="relative group">
+              <Link 
+                to="/explore" 
+                className={`flex items-center space-x-1 ${getPageStyle('explore')} cursor-pointer`}
+                onClick={() => handlePageClick('explore')}
+              >
+                <span className="font-medium">Explore</span>
+              </Link>
+            </div>
 
             {/* Find Talent Link */}
             <div className="relative group">
@@ -141,6 +151,14 @@ const DribbbleNav = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 py-3 space-y-4">
             <div className="flex flex-col space-y-4">
+              {/* Home Link - Added to match desktop */}
+              <Link
+                to="/"
+                className={`flex items-center justify-between ${getPageStyle('/')} py-2 cursor-pointer`}
+                onClick={() => handlePageClick('/')}
+              >
+                <span className="font-medium">Home</span>
+              </Link>
               <Link
                 to="/grievances"
                 className={`flex items-center justify-between ${getPageStyle('grievances')} py-2 nav-links cursor-pointer`}

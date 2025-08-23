@@ -7,10 +7,10 @@ export default function DesignerSearchBar() {
   const [availableForWork, setAvailableForWork] = useState(true);
 
   return (
-    <div className="w-full">
-      <div className="flex items-center gap-2 bg-white rounded-lg shadow-sm">
+    <div className="w-full pl-4 pr-4 sm:pl-4 sm:pr-0">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-white rounded-lg shadow-sm">
         {/* Budget Input */}
-        <div className="flex items-center gap-2 px-4 py-3 min-w-0 flex-1">
+        <div className="flex items-center gap-2 px-4 py-3 min-w-0 flex-1 border-b border-gray-200 sm:border-b-0 sm:border-r sm:border-l-0 sm:border-gray-200">
           <span className="text-gray-500 text-lg">$</span>
           <input
             type="text"
@@ -22,7 +22,7 @@ export default function DesignerSearchBar() {
         </div>
 
         {/* Location Input */}
-        <div className="flex items-center gap-2 px-4 py-3 min-w-0 flex-1 border-l border-gray-200">
+        <div className="flex items-center gap-2 px-4 py-3 min-w-0 flex-1 border-b border-gray-200 sm:border-b-0 sm:border-l border-gray-200">
           <Search className="text-gray-400 w-5 h-5" />
           <input
             type="text"
@@ -34,27 +34,32 @@ export default function DesignerSearchBar() {
         </div>
 
         {/* PRO Designers Section */}
-        <div className="flex items-center gap-1 px-4 py-3 border-l border-gray-200">
-          <span className="text-gray-900 font-semibold text-base">PRO</span>
+        <div className="flex items-center gap-1 px-4 py-3 border-b border-gray-200 sm:border-b-0 sm:border-l border-gray-200">
+          <span className="font-semibold text-base bg-gray-100 text-black px-2 rounded" style={{ color: '#72e3ad' }}>PRO</span>
           <span className="text-gray-700 text-base">Designers</span>
           <Info className="text-gray-400 w-4 h-4 ml-1" />
         </div>
 
         {/* Available for Work Toggle */}
-        <div className="flex items-center gap-3 px-4 py-3 border-l border-gray-200">
+        <div className="flex items-center gap-3 px-4 py-3 sm:border-l border-gray-200">
           <span className="text-gray-700 text-sm">Available for work</span>
           <button
             onClick={() => setAvailableForWork(!availableForWork)}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
               availableForWork 
-                ? 'bg-gradient-to-r from-pink-500 to-purple-600' 
+                ? 'bg-gray-100' 
                 : 'bg-gray-200'
             }`}
+            style={availableForWork ? { border: '1.5px solid #72e3ad' } : {}}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+              className={`inline-block h-4 w-4 transform rounded-full transition-transform ${
                 availableForWork ? 'translate-x-6' : 'translate-x-1'
               }`}
+              style={{
+                background: availableForWork ? '#72e3ad' : '#fff',
+                border: availableForWork ? '1.5px solid #72e3ad' : '1px solid #e5e7eb'
+              }}
             />
           </button>
         </div>
