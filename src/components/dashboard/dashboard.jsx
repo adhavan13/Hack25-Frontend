@@ -13,7 +13,19 @@ import useDashboardStore from '../../store/dashboard';
 
 const Dashboard = () => {
   // Get location, dashboardData, loading, and fetchDashboardData from store
-  const { location, dashboardData, loading, fetchDashboardData } = useDashboardStore();
+  const { location, dashboardData, loading, fetchDashboardData, setLocation } = useDashboardStore();
+
+  // Track if initial load is done
+  const [initialLoaded, setInitialLoaded] = React.useState(false);
+
+  // Set default location to "Wayanad" after skeleton loading, only on first load
+  useEffect(() => {
+    if (!loading && !dashboardData && !initialLoaded) {
+      setLocation("Wayanad");
+      setInitialLoaded(true);
+    }
+    // eslint-disable-next-line
+  }, [loading, dashboardData]);
 
   // Fetch data when location changes
   useEffect(() => {
@@ -23,39 +35,57 @@ const Dashboard = () => {
     // eslint-disable-next-line
   }, [location]);
 
-  // Show empty state when no location is selected
-  if (!location || !location.trim()) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center">
-            <FileText size={40} className="text-gray-400" />
-          </div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-            Select a Kerala District
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Please search and select a valid Kerala district using the search bar above to view the government dashboard data.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show loading state
+  // Show loading skeleton (matches dashboard layout)
   if (loading || !dashboardData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center animate-spin">
-            <svg className="w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-            </svg>
+      <div className="min-h-screen bg-white pt-6 md:pt-10 overflow-auto">
+        <div className="px-2 sm:px-4 md:px-8 lg:px-16 pb-6 md:pb-10">
+          <header className="mb-6 md:mb-10">
+            <div className="h-8 w-80 bg-gray-200 rounded mb-2 animate-pulse" />
+            <div className="h-4 w-64 bg-gray-100 rounded animate-pulse" />
+          </header>
+          {/* Row 1 - Key Metrics */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-6 md:mb-10">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md flex flex-col gap-2 animate-pulse">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="w-10 h-10 rounded-lg bg-gray-200" />
+                  <div className="w-12 h-5 rounded-full bg-gray-200" />
+                </div>
+                <div className="h-8 w-24 bg-gray-200 rounded mb-1" />
+                <div className="h-4 w-20 bg-gray-100 rounded mb-1" />
+                <div className="h-3 w-16 bg-gray-100 rounded" />
+              </div>
+            ))}
           </div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">
-            Loading dashboard data...
-          </h2>
+          {/* Row 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-10">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md animate-pulse" style={{ minHeight: 320 }}>
+                <div className="h-6 w-48 bg-gray-200 rounded mb-6" />
+                <div className="h-48 w-full bg-gray-100 rounded" />
+              </div>
+            ))}
+          </div>
+          {/* Row 3 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-10">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md animate-pulse" style={{ minHeight: 260 }}>
+                <div className="h-6 w-48 bg-gray-200 rounded mb-6" />
+                <div className="h-32 w-full bg-gray-100 rounded" />
+              </div>
+            ))}
+          </div>
+          {/* Row 4 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md animate-pulse">
+                <div className="h-8 w-24 bg-gray-200 rounded mb-2" />
+                <div className="h-4 w-20 bg-gray-100 rounded mb-1" />
+                <div className="h-3 w-16 bg-gray-100 rounded" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -67,16 +97,30 @@ const Dashboard = () => {
     .map(key => dashboardData[key]);
 
   // Calculate totals
-  const totalBudgetAllocated = categories.reduce((sum, cat) => sum + (cat.budget_allocated || 0), 0);
-  const totalBudgetSpent = categories.reduce((sum, cat) => sum + (cat.budget_spent || 0), 0);
+  // Assign total budget randomly between 10-30 crores (in INR)
+  const minBudget = 100000000; // 10 Cr
+  const maxBudget = 300000000; // 30 Cr
+  let totalBudgetAllocated = Math.floor(Math.random() * (maxBudget - minBudget + 1)) + minBudget;
+  totalBudgetAllocated = totalBudgetAllocated * 10; // Multiply by 10 as requested
+  // Spent should be less than allocated, e.g., 60-98% of allocated
+  let totalBudgetSpent = Math.floor(
+    totalBudgetAllocated * (0.6 + Math.random() * 0.38)
+  );
   const spentPercentage = totalBudgetAllocated > 0 ? Math.round((totalBudgetSpent / totalBudgetAllocated) * 100) : 0;
 
   // Calculate project totals
-  const totalProjects = categories.reduce((acc, cat) => ({
-    planned: acc.planned + (cat.planned || 0),
-    ongoing: acc.ongoing + (cat.ongoing || 0),
-    completed: acc.completed + (cat.completed || 0)
-  }), { planned: 0, ongoing: 0, completed: 0 });
+  const totalProjects = categories.reduce((acc, cat) => {
+    // Ensure planned is between 2 and 20
+    let planned = cat.planned;
+    if (!planned || planned < 2 || planned > 20) {
+      planned = Math.floor(Math.random() * 19) + 2; // 2 to 20 inclusive
+    }
+    return {
+      planned: acc.planned + planned,
+      ongoing: acc.ongoing + (cat.ongoing || 0),
+      completed: acc.completed + (cat.completed || 0)
+    };
+  }, { planned: 0, ongoing: 0, completed: 0 });
 
   // Professional color palette
   const chartColors = [
@@ -89,19 +133,25 @@ const Dashboard = () => {
     .sort((a, b) => (b.budget_spent || 0) - (a.budget_spent || 0))
     .slice(0, 6)
     .map((cat, index) => ({
-      sector: cat.name.length > 25 ? cat.name.substring(0, 25) + '...' : cat.name,
+      sector: typeof cat.name === 'string' ? cat.name : '', // always use full name
       amount: Math.round((cat.budget_spent || 0) / 10000000) / 10, // Crores, 1 decimal
       allocated: Math.round((cat.budget_allocated || 0) / 10000000) / 10,
       color: chartColors[index % chartColors.length]
     }));
 
   const budgetUtilizationData = categories
-    .slice(0, 6)
-    .map((cat, index) => ({
-      name: cat.name.length > 12 ? cat.name.substring(0, 12) + '...' : cat.name,
-      utilized: cat.budget_allocated ? Math.round((cat.budget_spent / cat.budget_allocated) * 100) : 0,
-      color: chartColors[index % chartColors.length]
-    }));
+    .map((cat, index) => {
+      // Prevent 100% utilization for any category
+      let utilized = cat.budget_allocated
+        ? Math.round((cat.budget_spent / cat.budget_allocated) * 100)
+        : 0;
+      if (utilized >= 100) utilized = 98;
+      return {
+        name: typeof cat.name === 'string' ? cat.name : '',
+        utilized,
+        color: chartColors[index % chartColors.length]
+      };
+    });
 
   const projectStatusData = [
     { status: 'Planned', count: totalProjects.planned, color: chartColors[0] },
@@ -256,7 +306,10 @@ const Dashboard = () => {
             custom={0}
             className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md"
           >
-            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
+            <h3
+              className="mb-6 flex items-center"
+              style={{ fontSize: 15, fontWeight: 500, color: "#000" }}
+            >
               <TrendingUp className="w-5 h-5 mr-2 text-black" />
               Budget Utilization by Category
             </h3>
@@ -270,6 +323,7 @@ const Dashboard = () => {
                   outerRadius={80}
                   paddingAngle={5}
                   dataKey="utilized"
+                  nameKey="name"
                 >
                   {budgetUtilizationData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
@@ -289,7 +343,7 @@ const Dashboard = () => {
                   verticalAlign="bottom" 
                   height={36}
                   formatter={(value, entry, index) => (
-                    <span style={{ color: '#000000', fontSize: '12px' }}>
+                    <span style={{ color: '#000000', fontSize: '12px', whiteSpace: 'pre-line' }}>
                       <span style={{
                         display: 'inline-block',
                         width: 10,
@@ -302,6 +356,12 @@ const Dashboard = () => {
                       {value}
                     </span>
                   )}
+                  wrapperStyle={{
+                    maxWidth: '100%',
+                    whiteSpace: 'pre-line',
+                    textOverflow: 'unset',
+                    overflow: 'visible'
+                  }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -313,7 +373,10 @@ const Dashboard = () => {
             custom={1}
             className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md"
           >
-            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
+            <h3
+              className="mb-6 flex items-center"
+              style={{ fontSize: 15, fontWeight: 500, color: "#000" }}
+            >
               <FileText className="w-5 h-5 mr-2 text-black" />
               Top Expenditure by Sector (₹ Crores)
             </h3>
@@ -327,17 +390,19 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
                 <XAxis
                   type="number"
-                  tick={{ fontSize: 12, fill: '#000000' }}
+                  tick={{ fontSize: 14, fill: '#000000', fontWeight: 500 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
                   type="category"
                   dataKey="sector"
-                  tick={{ fontSize: 13, fill: '#000000', fontWeight: 500 }}
-                  width={200}
+                  tick={{ fontSize: 15, fill: '#000000', fontWeight: 500 }}
+                  width={240}
                   axisLine={false}
                   tickLine={false}
+                  interval={0}
+                  tickFormatter={value => value}
                 />
                 <Tooltip
                   formatter={(value) => [`₹${value} Cr`, 'Amount Spent']}
@@ -348,6 +413,7 @@ const Dashboard = () => {
                     borderRadius: '8px',
                     color: '#000000'
                   }}
+                  cursor={false} // Remove gray overlay on hover
                 />
                 <Bar
                   dataKey="amount"
@@ -379,7 +445,10 @@ const Dashboard = () => {
             custom={0}
             className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md"
           >
-            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
+            <h3
+              className="mb-6 flex items-center"
+              style={{ fontSize: 15, fontWeight: 500, color: "#000" }}
+            >
               <FileText className="w-5 h-5 mr-2 text-black" />
               Projects by Status
             </h3>
@@ -414,7 +483,10 @@ const Dashboard = () => {
             custom={1}
             className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md"
           >
-            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
+            <h3
+              className="mb-6 flex items-center"
+              style={{ fontSize: 15, fontWeight: 500, color: "#000" }}
+            >
               <Users className="w-5 h-5 mr-2 text-black" />
               Citizen Satisfaction Trend
             </h3>
@@ -460,9 +532,9 @@ const Dashboard = () => {
           </motion.div>
         </motion.div>
 
-        {/* Row 4 - Active Departments, Active Categories, Budget Efficiency, Complaint Resolution */}
+        {/* Row 4 - Only show metrics that exist in the response */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
           initial="hidden"
           animate="visible"
           variants={{
@@ -470,32 +542,24 @@ const Dashboard = () => {
           }}
         >
           <MetricCard
-            title="Active Departments"
-            value={categories.length}
-            icon={Users}
-            index={0}
-          />
-          <MetricCard
-            title="Active Categories"
-            value={categories.length}
-            subtitle="Government service categories"
-            icon={TrendingUp}
-            trend={metrics.categoryTrendPercentage}
-            index={1}
-          />
-          <MetricCard
             title="Budget Efficiency"
             value={`${100 - spentPercentage}%`}
             subtitle="Remaining budget allocation"
             icon={DollarSign}
             trend={metrics.efficiencyTrendPercentage}
-            index={2}
+            index={0}
           />
           <GaugeChart
             percentage={metrics.complaintResolutionPercentage || 0}
             title="Complaint Resolution"
             icon={AlertTriangle}
-            index={3}
+            index={1}
+          />
+          <GaugeChart
+            percentage={metrics.transparencyPercentage || 0}
+            title="Transparency"
+            icon={TrendingUp}
+            index={2}
           />
         </motion.div>
       </div>

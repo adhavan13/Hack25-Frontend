@@ -21,8 +21,11 @@ const useDashboardStore = create((set, get) => ({
     set({ loading: true, error: null });
 
     try {
+      // Remove CORS proxy, use direct API call
+      const apiUrl = "https://hack25-backend-x7el.vercel.app/api/projects/getSummary";
+
       const response = await fetch(
-        "https://hack25-backend-x7el.vercel.app/api/projects/getSummary",
+        apiUrl,
         {
           method: "POST",
           headers: {
@@ -59,4 +62,8 @@ const useDashboardStore = create((set, get) => ({
 }));
 
 export default useDashboardStore;
+  // Clear error
+
+
+
 
