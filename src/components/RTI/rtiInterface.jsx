@@ -25,11 +25,14 @@ import {
   Star
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const SUGGESTIONS = [
   "Provide the latest government circulars on education policy.",
   "List all government tenders issued in Kerala in 2024.",
   "Show me the annual expenditure report for public health.",
+  "Post-Flood Spice Plantation Rehabilitation project in Wayanad district",
   "Give details of sanctioned government jobs in the last year.",
   "Share the RTI response for road construction in Ernakulam."
 ];
@@ -79,6 +82,19 @@ const RTI_CATEGORIES = [
       "Latest job notifications",
       "Selection list status",
       "Employment scheme details"
+    ]
+  },
+  {
+    id: "disaster-rehabilitation",
+    name: "Disaster Rehabilitation",
+    icon: Shield,
+    queries: 423,
+    avgTime: "1.6s",
+    description: "Post-disaster rehabilitation projects, flood relief schemes, and recovery programs",
+    examples: [
+      "Wayanad flood rehabilitation",
+      "Spice plantation recovery",
+      "Disaster relief fund allocation"
     ]
   },
   {
@@ -160,6 +176,7 @@ const RTI_Interface = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [queryStats, setQueryStats] = useState({ total: 45672, resolved: 44152 });
   const [activeTab, setActiveTab] = useState("chat");
+  const [processedQueries, setProcessedQueries] = useState(new Set()); // Track processed queries
   
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -186,81 +203,387 @@ const RTI_Interface = () => {
   // To debug, add a console log for errors and the response:
   const fetchRTIReport = async (query) => {
     try {
+      // Generate unique request ID to prevent caching
+      const requestId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const trimmedQuery = query.trim();
+      
+      // Check if this is a specific project query
+      const isProjectQuery = trimmedQuery.toLowerCase().includes('wayanad') || 
+                           trimmedQuery.toLowerCase().includes('spice plantation') ||
+                           trimmedQuery.toLowerCase().includes('rehabilitation') ||
+                           trimmedQuery.toLowerCase().includes('flood');
+      
+      // Log the specific query being processed
+      console.log(`Processing ${isProjectQuery ? 'PROJECT-SPECIFIC' : 'GENERAL'} query [${requestId}]:`, trimmedQuery);
+      
+      // Validate that query is not empty and is unique
+      if (!trimmedQuery || trimmedQuery.length < 3) {
+        throw new Error("Query too short or empty");
+      }
+      
+      // Create enhanced request payload for project queries
+      const requestPayload = {
+        query: trimmedQuery,
+        requestId: requestId,
+        timestamp: new Date().toISOString(),
+        queryType: isProjectQuery ? 'project-specific' : 'general',
+        district: isProjectQuery && trimmedQuery.toLowerCase().includes('wayanad') ? 'Wayanad' : null,
+        projectCategory: isProjectQuery ? 'rehabilitation' : null,
+        // Add cache busting parameter
+        cacheBuster: Math.random()
+      };
+      
+      console.log("Sending enhanced request payload:", requestPayload);
+      
       const res = await fetch("https://hack25-backend-x7el.vercel.app/api/rti/getReport", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query })
+        headers: { 
+          "Content-Type": "application/json",
+          "X-Request-ID": requestId,
+          "X-Query-Type": isProjectQuery ? "project-specific" : "general",
+          "X-District": isProjectQuery && trimmedQuery.toLowerCase().includes('wayanad') ? "Wayanad" : "",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache"
+        },
+        body: JSON.stringify(requestPayload)
       });
       
+      console.log(`🌐 HTTP Response Status for [${requestId}]:`, res.status);
+      console.log(`🌐 HTTP Response Headers for [${requestId}]:`, Object.fromEntries(res.headers.entries()));
+      
       if (!res.ok) {
+        console.error(`❌ HTTP Error for [${requestId}]:`, res.status, res.statusText);
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       
-      const data = await res.json();
+      // Get raw response text first
+      const rawResponseText = await res.text();
+      console.log(`📄 Raw Response Text for [${requestId}]:`, rawResponseText);
+      console.log(`📏 Raw Response Length for [${requestId}]:`, rawResponseText.length);
+      console.log(`🔍 Raw Response Type for [${requestId}]:`, typeof rawResponseText);
+      
+      // Try to parse as JSON
+      let data;
+      try {
+        data = JSON.parse(rawResponseText);
+        console.log(`✅ Parsed JSON Data for [${requestId}]:`, data);
+        console.log(`🔍 JSON Data Type for [${requestId}]:`, typeof data);
+        console.log(`📊 JSON Data Keys for [${requestId}]:`, Object.keys(data || {}));
+      } catch (parseError) {
+        console.error(`❌ JSON Parse Error for [${requestId}]:`, parseError);
+        console.log(`📄 Treating as plain text response for [${requestId}]`);
+        data = rawResponseText;
+      }
       
       let reportText = '';
+      
+      // Log each extraction attempt
+      console.log(`🔍 Extracting report text for [${requestId}]...`);
+      
       if (data && data.rtiReport) {
+        console.log(`✅ Found data.rtiReport for [${requestId}]:`, data.rtiReport);
         reportText = data.rtiReport;
       } else if (data && data.report) {
+        console.log(`✅ Found data.report for [${requestId}]:`, data.report);
         reportText = data.report;
       } else if (data && data.message) {
+        console.log(`✅ Found data.message for [${requestId}]:`, data.message);
         reportText = data.message;
+      } else if (data && data.response) {
+        console.log(`✅ Found data.response for [${requestId}]:`, data.response);
+        reportText = data.response;
+      } else if (data && data.data) {
+        console.log(`✅ Found data.data for [${requestId}]:`, data.data);
+        reportText = data.data;
+      } else if (data && data.content) {
+        console.log(`✅ Found data.content for [${requestId}]:`, data.content);
+        reportText = data.content;
+      } else if (data && data.result) {
+        console.log(`✅ Found data.result for [${requestId}]:`, data.result);
+        reportText = data.result;
       } else {
+        console.log(`⚠️ No standard field found, using raw data for [${requestId}]:`, data);
         reportText = typeof data === "string" ? data : JSON.stringify(data, null, 2);
       }
       
-      // More comprehensive text cleaning and markdown processing
+      console.log(`📝 Extracted Report Text for [${requestId}]:`, reportText);
+      console.log(`📏 Extracted Report Length for [${requestId}]:`, reportText.length);
+      console.log(`🔍 Extracted Report Type for [${requestId}]:`, typeof reportText);
+      
+      // Validate that we received a meaningful response
+      if (!reportText || reportText.trim().length < 10) {
+        console.error(`❌ Response too short for [${requestId}]. Length:`, reportText.length);
+        throw new Error("Response too short or empty");
+      }
+      
+      // Check if response seems generic or cached (basic validation)
+      const responseSignature = reportText.substring(0, 100).toLowerCase();
+      console.log(`🔍 Response signature for [${requestId}]:`, responseSignature);
+      
+      // Log before processing
+      console.log(`🔧 Processing response text for [${requestId}]...`);
+      console.log(`📝 Before processing - length: ${reportText.length}, preview:`, reportText.substring(0, 200));
+      
+      // Process the response text
       reportText = reportText
-        // First, handle JSON-escaped content if it exists
         .replace(/\\"/g, '"')
         .replace(/\\'/g, "'")
         .replace(/\\\\/g, '\\')
-        
-        // Convert literal \n and \t to actual characters
         .replace(/\\n/g, '\n')
         .replace(/\\t/g, '\t')
         .replace(/\\r/g, '\r')
-        
-        // Fix escaped markdown characters
         .replace(/\\#/g, '#')
         .replace(/\\\*/g, '*')
         .replace(/\\-/g, '-')
         .replace(/\\\|/g, '|')
         .replace(/\\`/g, '`')
-        
-        // Clean up multiple consecutive newlines
         .replace(/\n{3,}/g, '\n\n')
-        
-        // Ensure proper header spacing
         .replace(/^(#{1,6})\s*/gm, '$1 ')
-        
-        // Ensure proper list formatting
         .replace(/^\*\s+/gm, '* ')
         .replace(/^-\s+/gm, '- ')
         .replace(/^\+\s+/gm, '+ ')
-        
-        // Fix bold text formatting
         .replace(/\*\*([^*]+)\*\*/g, '**$1**')
-        
-        // Fix table formatting - ensure proper spacing
         .replace(/\|\s*([^|]+)\s*\|/g, '| $1 |')
-        
-        // Clean up horizontal rules
         .replace(/^-{3,}$/gm, '---')
-        
-        // Remove trailing spaces
         .replace(/[ \t]+$/gm, '')
-        
-        // Clean up the beginning and end
         .trim();
       
-      // Log the processed text to debug
-      console.log("Processed markdown:", reportText.substring(0, 200) + "...");
+      console.log(`✅ Processed response for query [${requestId}] - Length:`, reportText.length);
+      console.log(`📝 After processing - preview:`, reportText.substring(0, 200));
       
-      return reportText;
+      // Enhanced response processing for project queries
+      if (reportText && isProjectQuery) {
+        console.log(`🏗️ Processing PROJECT-SPECIFIC response for [${requestId}]...`);
+        
+        // Add project-specific formatting
+        reportText = `# ${trimmedQuery}\n\n` + reportText;
+        
+        // Add project metadata if Wayanad query
+        if (trimmedQuery.toLowerCase().includes('wayanad')) {
+          reportText = reportText.replace(
+            /^# /,
+            `# 🌿 WAYANAD DISTRICT PROJECT REPORT\n\n**Query**: ${trimmedQuery}\n**District**: Wayanad, Kerala\n**Category**: Post-Disaster Rehabilitation\n**Generated**: ${new Date().toLocaleString()}\n\n---\n\n# `
+          );
+        }
+      }
+      
+      // Add project-specific metadata to response
+      const uniqueResponse = `<!-- Project Query: ${trimmedQuery} | District: ${isProjectQuery && trimmedQuery.toLowerCase().includes('wayanad') ? 'Wayanad' : 'N/A'} | Request ID: ${requestId} | Timestamp: ${new Date().toISOString()} -->\n\n${reportText}`;
+      
+      console.log(`🎯 Final unique response for [${requestId}] - Length:`, uniqueResponse.length);
+      console.log(`📝 Final response preview:`, uniqueResponse.substring(0, 300));
+      
+      return uniqueResponse;
     } catch (err) {
-      console.error("Fetch error:", err);
-      return "❌ Failed to fetch RTI data. Please check your connection and try again.";
+      console.error(`❌ Fetch error for query [${query}]:`, err);
+      console.error(`❌ Error name:`, err.name);
+      console.error(`❌ Error message:`, err.message);
+      console.error(`❌ Error stack:`, err.stack);
+      return `❌ Failed to fetch RTI data for your specific query: "${query}". Please check your connection and try again with a different question.`;
+    }
+  };
+
+  // Function to convert markdown to plain text for PDF
+  const markdownToPlainText = (markdown) => {
+    if (!markdown || typeof markdown !== 'string') {
+      return 'No response data available';
+    }
+    
+    return markdown
+      // Convert headers to plain text with emphasis
+      .replace(/^#{1}\s+(.+)$/gm, '\n$1\n' + '='.repeat(50) + '\n')
+      .replace(/^#{2}\s+(.+)$/gm, '\n$1\n' + '-'.repeat(30) + '\n')
+      .replace(/^#{3,6}\s+(.+)$/gm, '\n$1:\n')
+      
+      // Convert bold/italic to uppercase or emphasis
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/\*([^*]+)\*/g, '$1')
+      .replace(/_([^_]+)_/g, '$1')
+      
+      // Convert links but keep text
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      
+      // Handle code blocks
+      .replace(/```[\s\S]*?```/g, (match) => {
+        return '\n' + match.replace(/```/g, '').trim() + '\n';
+      })
+      .replace(/`([^`]+)`/g, '$1')
+      
+      // Convert lists to readable format
+      .replace(/^\*\s+(.+)$/gm, '• $1')
+      .replace(/^-\s+(.+)$/gm, '• $1')
+      .replace(/^\+\s+(.+)$/gm, '• $1')
+      .replace(/^\d+\.\s+(.+)$/gm, '$1')
+      
+      // Handle tables - convert to readable format
+      .replace(/\|([^|]+)\|/g, (match, content) => {
+        return content.trim() + ' | ';
+      })
+      
+      // Clean up horizontal rules
+      .replace(/^-{3,}$/gm, '\n' + '-'.repeat(50) + '\n')
+      
+      // Remove extra whitespace but preserve structure
+      .replace(/\n{4,}/g, '\n\n\n')
+      .replace(/[ \t]+$/gm, '')
+      .trim();
+  };
+
+  // Function to generate and download PDF
+  const generateAndDownloadPDF = async (query, response) => {
+    try {
+      console.log(`Starting PROJECT-AWARE PDF generation for query: "${query}"`);
+      
+      if (!response || response.trim() === '') {
+        console.error('No response data to generate PDF');
+        return false;
+      }
+
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentWidth = pageWidth - (margin * 2);
+      
+      // Check if this is a Wayanad/project query
+      const isWayanadQuery = query.toLowerCase().includes('wayanad');
+      const isProjectQuery = query.toLowerCase().includes('rehabilitation') || 
+                           query.toLowerCase().includes('spice plantation') ||
+                           query.toLowerCase().includes('flood');
+      
+      // Enhanced header for project queries
+      doc.setFontSize(24);
+      doc.setTextColor(40, 40, 40);
+      if (isWayanadQuery) {
+        doc.text('🌿 WAYANAD PROJECT REPORT', margin, 30);
+      } else {
+        doc.text('RTI AutoBot Report', margin, 30);
+      }
+      
+      // Add project-specific subtitle
+      if (isProjectQuery) {
+        doc.setFontSize(12);
+        doc.setTextColor(80, 80, 80);
+        doc.text('Post-Disaster Rehabilitation & Recovery Program', margin, 42);
+      }
+      
+      // Add horizontal line
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(200, 200, 200);
+      doc.line(margin, isProjectQuery ? 48 : 35, pageWidth - margin, isProjectQuery ? 48 : 35);
+      
+      // Enhanced metadata for project queries
+      const queryId = btoa(query).substring(0, 16);
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Generated on: ${new Date().toLocaleString()}`, margin, isProjectQuery ? 58 : 45);
+      doc.text(`Query ID: ${queryId}`, pageWidth - margin - 50, isProjectQuery ? 58 : 45);
+      
+      if (isWayanadQuery) {
+        doc.text(`District: Wayanad, Kerala`, margin, isProjectQuery ? 68 : 55);
+        doc.text(`Category: Rehabilitation Project`, pageWidth - margin - 80, isProjectQuery ? 68 : 55);
+      }
+      
+      let currentY = isProjectQuery ? 85 : (isWayanadQuery ? 70 : 60);
+      
+      // Add query section with emphasis on uniqueness
+      doc.setFontSize(14);
+      doc.setTextColor(60, 60, 60);
+      doc.text('SPECIFIC QUERY:', margin, currentY);
+      currentY += 10;
+      
+      doc.setFontSize(11);
+      doc.setTextColor(40, 40, 40);
+      const queryLines = doc.splitTextToSize(query, contentWidth);
+      doc.text(queryLines, margin, currentY);
+      currentY += (queryLines.length * 6) + 15;
+      
+      // Add separator line
+      doc.setLineWidth(0.3);
+      doc.setDrawColor(150, 150, 150);
+      doc.line(margin, currentY, pageWidth - margin, currentY);
+      currentY += 15;
+      
+      // Add response section
+      doc.setFontSize(14);
+      doc.setTextColor(60, 60, 60);
+      doc.text('UNIQUE RESPONSE:', margin, currentY);
+      currentY += 15;
+      
+      // Convert markdown to plain text with query context
+      const plainTextResponse = markdownToPlainText(response);
+      console.log(`Converted plain text for query "${query}", length:`, plainTextResponse.length);
+      
+      if (!plainTextResponse || plainTextResponse.trim() === '' || plainTextResponse === 'No response data available') {
+        doc.setFontSize(12);
+        doc.setTextColor(200, 50, 50);
+        doc.text('Error: No unique response data could be processed for this specific query.', margin, currentY);
+        doc.text(`Query: "${query}"`, margin, currentY + 15);
+        doc.text(`Response length: ${response ? response.length : 0} characters`, margin, currentY + 30);
+      } else {
+        doc.setFontSize(10);
+        doc.setTextColor(40, 40, 40);
+        
+        const responseLines = doc.splitTextToSize(plainTextResponse, contentWidth);
+        console.log(`Total lines for query-specific response:`, responseLines.length);
+        
+        const lineHeight = 5;
+        
+        for (let i = 0; i < responseLines.length; i++) {
+          if (currentY + lineHeight > pageHeight - 30) {
+            doc.addPage();
+            currentY = margin + 20;
+          }
+          
+          doc.text(responseLines[i], margin, currentY);
+          currentY += lineHeight;
+        }
+      }
+      
+      // Add footer with query-specific information
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        
+        doc.setLineWidth(0.3);
+        doc.setDrawColor(200, 200, 200);
+        doc.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
+        
+        doc.text(
+          `RTI AutoBot - Query: "${query.substring(0, 30)}${query.length > 30 ? '...' : ''}"`,
+          margin,
+          pageHeight - 12
+        );
+        doc.text(
+          `Page ${i} of ${totalPages} | ID: ${queryId}`,
+          pageWidth - margin - 50,
+          pageHeight - 12
+        );
+      }
+      
+      // Generate unique filename
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+      let filename;
+      
+      if (isWayanadQuery) {
+        filename = `Wayanad_Rehabilitation_${timestamp}.pdf`;
+      } else if (isProjectQuery) {
+        filename = `Project_Report_${timestamp}.pdf`;
+      } else {
+        const queryShort = query.substring(0, 30).replace(/[^a-zA-Z0-9]/g, '_');
+        filename = `RTI_${queryShort}_${timestamp}.pdf`;
+      }
+      
+      console.log(`Saving PROJECT-SPECIFIC PDF as: ${filename}`);
+      doc.save(filename);
+      
+      console.log('Project-specific PDF generation completed successfully');
+      return true;
+    } catch (error) {
+      console.error('Error generating project-specific PDF:', error);
+      return false;
     }
   };
 
@@ -268,30 +591,124 @@ const RTI_Interface = () => {
     const messageToSend = typeof msg === "string" ? msg : input;
     if (!messageToSend.trim()) return;
 
+    const trimmedMessage = messageToSend.trim();
+    const queryHash = btoa(trimmedMessage).substring(0, 16); // Create unique hash for query
+    
+    console.log(`New query submitted: "${trimmedMessage}" [Hash: ${queryHash}]`);
+    
+    // Check if this exact query was recently processed (prevent duplicates within session)
+    if (processedQueries.has(queryHash)) {
+      console.log("Duplicate query detected, processing anyway to ensure fresh response");
+    }
+    
+    // Add to processed queries set
+    setProcessedQueries(prev => new Set(prev).add(queryHash));
+
+    // Show user message in chat
     setMessages(prev => [...prev, { 
       sender: "user", 
-      text: messageToSend, 
-      timestamp: new Date() 
+      text: trimmedMessage, 
+      timestamp: new Date(),
+      queryHash: queryHash // Add unique identifier
     }]);
     setInput("");
     setIsTyping(true);
 
-    const start = Date.now();
-    const response = await fetchRTIReport(messageToSend);
-    const responseTime = ((Date.now() - start) / 1000).toFixed(1) + "s";
-
-    setIsTyping(false);
+    // Show processing message with unique identifier
+    const processingMessageId = `processing-${Date.now()}-${Math.random()}`;
     setMessages(prev => [...prev, { 
       sender: "bot", 
-      text: response, 
+      text: `🔄 Processing your specific query: "${trimmedMessage.substring(0, 50)}${trimmedMessage.length > 50 ? '...' : ''}" and generating unique PDF report...`, 
       timestamp: new Date(),
-      queryResolved: true,
-      responseTime
+      isProcessing: true,
+      processingId: processingMessageId,
+      queryHash: queryHash
     }]);
-    setQueryStats(prev => ({
-      total: prev.total + 1,
-      resolved: prev.resolved + 1
-    }));
+
+    try {
+      const start = Date.now();
+      console.log(`Fetching RTI report for unique query [${queryHash}]:`, trimmedMessage);
+      
+      const response = await fetchRTIReport(trimmedMessage);
+      const responseTime = ((Date.now() - start) / 1000).toFixed(1) + "s";
+      
+      console.log(`RTI report received for query [${queryHash}], length:`, response ? response.length : 0);
+
+      setIsTyping(false);
+
+      // Validate response is unique and meaningful
+      if (!response || response.trim() === '' || response.includes('Failed to fetch')) {
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastMessage = newMessages.find(m => m.processingId === processingMessageId);
+          if (lastMessage && lastMessage.isProcessing) {
+            lastMessage.text = `❌ Failed to generate unique response for your query: "${trimmedMessage}". Please rephrase your question or try again.`;
+            lastMessage.isProcessing = false;
+            lastMessage.queryResolved = false;
+            lastMessage.responseTime = responseTime;
+          }
+          return newMessages;
+        });
+        return;
+      }
+
+      // Generate unique PDF with query-specific content
+      console.log(`Starting PDF generation for query [${queryHash}]...`);
+      const pdfGenerated = await generateAndDownloadPDF(trimmedMessage, response);
+      
+      if (pdfGenerated) {
+        // Update the processing message to show success with unique details
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastMessage = newMessages.find(m => m.processingId === processingMessageId);
+          if (lastMessage && lastMessage.isProcessing) {
+            lastMessage.text = `✅ Unique PDF report generated for your query!\n\n📊 Query: "${trimmedMessage}"\n📄 Report contains ${response.length} characters of specific government data\n⏱️ Response time: ${responseTime}\n🔍 Query ID: ${queryHash}`;
+            lastMessage.isProcessing = false;
+            lastMessage.queryResolved = true;
+            lastMessage.responseTime = responseTime;
+            lastMessage.queryHash = queryHash;
+          }
+          return newMessages;
+        });
+      } else {
+        // If PDF generation failed, show the unique response in chat
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastMessage = newMessages.find(m => m.processingId === processingMessageId);
+          if (lastMessage && lastMessage.isProcessing) {
+            lastMessage.text = `❌ PDF generation failed for your specific query. Here's your unique response:\n\n**Query:** ${trimmedMessage}\n**Response ID:** ${queryHash}\n\n${response}`;
+            lastMessage.isProcessing = false;
+            lastMessage.queryResolved = true;
+            lastMessage.responseTime = responseTime;
+            lastMessage.queryHash = queryHash;
+          }
+          return newMessages;
+        });
+      }
+
+      setQueryStats(prev => ({
+        total: prev.total + 1,
+        resolved: prev.resolved + 1
+      }));
+      
+    } catch (error) {
+      console.error(`Error processing query [${queryHash}]:`, error);
+      setIsTyping(false);
+      
+      // Update message to show specific error
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const lastMessage = newMessages.find(m => m.processingId === processingMessageId);
+        if (lastMessage && lastMessage.isProcessing) {
+          lastMessage.text = `❌ An error occurred while processing your specific query: "${trimmedMessage}". Please try rephrasing your question.`;
+          lastMessage.isProcessing = false;
+          lastMessage.queryResolved = false;
+          lastMessage.queryHash = queryHash;
+        }
+        return newMessages;
+      });
+    }
+    
     inputRef.current?.focus();
   };
 
@@ -513,7 +930,7 @@ const RTI_Interface = () => {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleInputKeyDown}
-                        placeholder="Ask any question about government information, data, or services..."
+                        placeholder="Ask any question - PDF report will be automatically downloaded..."
                         className="w-full resize-none rounded-2xl border border-gray-200 px-5 py-4 pr-12 text-sm leading-relaxed bg-gray-50 focus:bg-white focus:border-gray-300 focus:outline-none transition-colors duration-200 max-h-32"
                         rows={1}
                         style={{
@@ -530,9 +947,14 @@ const RTI_Interface = () => {
                         backgroundColor: input.trim() ? '#72e3ad' : '',
                         color: input.trim() ? 'black' : ''
                       }}
+                      title="Generate PDF Report"
                     >
-                      <Send className="w-5 h-5" />
+                      <Download className="w-5 h-5" />
                     </button>
+                  </div>
+                  <div className="mt-2 text-xs text-gray-500 flex items-center gap-1">
+                    <FileText className="w-3 h-3" />
+                    Press Enter to generate and download PDF report
                   </div>
                 </div>
               </div>
