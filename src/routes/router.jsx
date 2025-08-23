@@ -2,10 +2,8 @@ import Header from "@/components/NavBar/header";
 import Scheme from "@/components/Scheme/scheme";
 import ChatBot from "@/components/ChatBot/chatbot";
 import { Routes, Route } from "react-router-dom";
-import GrievancesPage from "../components/Grievances/grievances";
 import Dashboard from "../components/dashboard/dashboard";
-import RTI from "../components/RTI/rtiInterface";
-import Suggestions from "../components/SchemeSuggestion/schemeSuggestion";
+import GrievancesPage from "@/components/Grievances/Grievances";
 
 // Add scrollbar styling
 const scrollbarStyle = `
@@ -36,8 +34,6 @@ export default function Router() {
           <Route path="/" element={<Scheme />} />
           <Route path="/grievances" element={<GrievancesPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/rti" element={<RTI />} />
-          <Route path="/suggestion" element={<Suggestions />} />
           {/* Add other routes here as needed */}
         </Routes>
       </main>
