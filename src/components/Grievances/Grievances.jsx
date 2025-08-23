@@ -69,7 +69,7 @@ export default function Grievances() {
         </div>
 
         {/* Search Bar */}
-        <div className="mt-4 sm:mt-6">git 
+        <div className="mt-4 sm:mt-6">
           <CategoryNavigation onCategoryChange={handleCategoryChange} />
         </div>
         <div className="mb-4 sm:mb-5 mt-4">
