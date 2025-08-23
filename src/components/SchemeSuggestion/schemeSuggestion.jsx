@@ -454,11 +454,11 @@ export default function Questions() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-between pt-8 border-t border-gray-200">
+            <div className="flex flex-col-reverse gap-3 pt-8 border-t border-gray-200 sm:flex-row sm:justify-between sm:gap-0">
               <button
                 type="button"
                 onClick={handleDiscard}
-                className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200 font-medium"
+                className="w-full sm:w-auto px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-200 font-medium"
               >
                 Clear Form
               </button>
@@ -469,7 +469,7 @@ export default function Questions() {
                   handleSubmit();
                   setIsOpen(true);
                 }}
-                className="px-8 py-3 bg-[#72e3ad] text-black rounded-lg hover:bg-[#5dd299] focus:outline-none focus:ring-2 focus:ring-[#72e3ad]/50 transition-all duration-200 font-medium shadow-sm"
+                className="w-full sm:w-auto px-8 py-3 bg-[#72e3ad] text-black rounded-lg hover:bg-[#5dd299] focus:outline-none focus:ring-2 focus:ring-[#72e3ad]/50 transition-all duration-200 font-medium shadow-sm mb-2 sm:mb-0"
               >
                 Submit Application
               </button>

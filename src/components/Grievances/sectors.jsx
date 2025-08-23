@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function CategoryNavigation({ onCategoryChange, selectedCategory = 'All' }) {
+export default function CategoryNavigation({ onCategoryChange, selectedCategory = 'All', categories: propsCategories }) {
   const [activeCategory, setActiveCategory] = useState(selectedCategory);
   
   // Update internal state when props change
@@ -8,11 +8,14 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
     setActiveCategory(selectedCategory);
   }, [selectedCategory]);
   
-  const categories = [
+  const categoriesList = propsCategories || [
     'All',
     'Agriculture and Allied Services',
     'Rural Development',
-    'Irrigation and Flood Control'
+    'Irrigation and Flood Control',
+    'Economic Services',
+    'Industry and Minerals',
+    'Energy'
   ];
 
   const handleCategoryClick = (category) => {
@@ -24,7 +27,7 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
 
   return (
     <div className="w-full bg-white">
-      <div className="flex items-center gap-4 px-2 sm:px-4 py-4 sm:py-6">
+      <div className="flex items-center gap-2 sm:gap-4 px-2 sm:px-4 py-3 sm:py-6">
         {/* Category Navigation */}
         <nav className="flex-1">
           <div
@@ -35,17 +38,25 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
               scrollbarWidth: 'none'
             }}
           >
-            {categories.map((category) => (
+            {categoriesList.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryClick(category)}
                 className={`
-                  whitespace-nowrap px-4 sm:px-6 py-2 text-sm font-medium rounded-full transition-all duration-200 ease-in-out
+                  whitespace-nowrap
+                  px-4 sm:px-6
+                  py-2 sm:py-2
+                  text-xs sm:text-sm
+                  font-medium
+                  rounded-full
+                  transition-all duration-200 ease-in-out
                   ${
                     activeCategory === category
                       ? 'bg-gray-100 text-black'
                       : 'text-gray-500 hover:bg-gray-50 hover:text-black'
                   }
+                  flex-shrink-0
+                  focus:outline-none focus:ring-2 focus:ring-[#72e3ad]
                 `}
                 style={
                   activeCategory === category
@@ -56,6 +67,10 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
                 {category}
               </button>
             ))}
+          </div>
+          {/* Mobile scroll hint */}
+          <div className="block sm:hidden text-xs text-gray-400 mt-1 ml-1">
+            <span>&larr; scroll &rarr;</span>
           </div>
         </nav>
       </div>
@@ -69,6 +84,16 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
           .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
+          }
+          @media (max-width: 640px) {
+            .scrollbar-hide button {
+              min-width: 120px;
+              font-size: 13px;
+              padding-left: 12px;
+              padding-right: 12px;
+              padding-top: 10px;
+              padding-bottom: 10px;
+            }
           }
         `}
       </style>

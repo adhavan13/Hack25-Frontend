@@ -259,7 +259,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             aria-label="Close modal"
           >
-            <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />
           </button>
         </div>
 

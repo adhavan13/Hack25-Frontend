@@ -6,7 +6,8 @@ import {
 } from 'recharts';
 import { 
   DollarSign, TrendingUp, Clock, Users, 
-  CheckCircle, AlertTriangle, FileText
+  CheckCircle, AlertTriangle, FileText,
+  ArrowUpRight, ArrowDownRight, ArrowRight // <-- add these
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import useDashboardStore from '../../store/dashboard';
@@ -184,76 +185,94 @@ const Dashboard = () => {
 
   const MetricCard = ({ title, value, subtitle, icon: Icon, trend, index }) => (
     <motion.div
-      className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow flex flex-col gap-2"
+      className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow flex flex-col gap-2
+        ${isMobile ? 'p-5 mb-4' : ''}`}
       variants={cardVariants}
       initial="hidden"
       animate="visible"
       custom={index}
+      style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
     >
-      <div className="flex items-center justify-between mb-2">
-        <div className="p-3 rounded-lg bg-gray-100">
-          <Icon className="w-6 h-6 text-black" />
+      <div className={`flex items-center justify-between mb-2 ${isMobile ? 'mb-4' : ''}`}>
+        <div className={`p-3 rounded-lg bg-gray-100 ${isMobile ? 'p-3' : ''}`}>
+          <Icon className={`text-black ${isMobile ? 'w-5 h-5' : 'w-6 h-6'}`} />
         </div>
         {trend !== undefined && (
           <div className="flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-black">
-            {trend > 0 ? '↗' : trend < 0 ? '↘' : '→'} {Math.abs(trend)}%
+            {trend > 0 ? (
+              <ArrowUpRight className="w-4 h-4 mr-1 text-green-600" />
+            ) : trend < 0 ? (
+              <ArrowDownRight className="w-4 h-4 mr-1 text-red-600" />
+            ) : (
+              <ArrowRight className="w-4 h-4 mr-1 text-gray-500" />
+            )}
+            {Math.abs(trend)}%
           </div>
         )}
       </div>
-      <h3 className="text-3xl font-bold text-black mb-1">{value}</h3>
-      <p className="text-gray-700 text-sm font-medium">{title}</p>
-      {subtitle && <p className="text-gray-400 text-xs mt-1">{subtitle}</p>}
+      <h3 className={`font-bold text-black mb-1 ${isMobile ? 'text-xl' : 'text-3xl mb-2'}`}>{value}</h3>
+      <p className={`text-gray-700 font-medium ${isMobile ? 'text-xs mb-1' : 'text-sm'}`}>{title}</p>
+      {subtitle && <p className={`text-gray-400 mt-1 ${isMobile ? 'text-[10px] mb-1' : 'text-xs'}`}>{subtitle}</p>}
     </motion.div>
   );
 
-  const GaugeChart = ({ percentage, title, icon: Icon, index }) => (
-    <motion.div
-      className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow"
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      custom={index}
-    >
-      <div className="flex items-center mb-4">
-        <div className="p-2 rounded-lg bg-gray-100 mr-3">
-          <Icon className="w-5 h-5 text-black" />
+  const GaugeChart = ({ percentage, title, icon: Icon, index }) => {
+    // Responsive utility: detect mobile
+    const isMobile = window.innerWidth < 640;
+    if (isMobile) return null;
+    return (
+      <motion.div
+        className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow`}
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        custom={index}
+      >
+        <div className="flex items-center mb-4">
+          <div className="p-2 rounded-lg bg-gray-100 mr-3">
+            <Icon className="text-black w-5 h-5" />
+          </div>
+          <h3 className="font-semibold text-black text-sm">{title}</h3>
         </div>
-        <h3 className="text-sm font-semibold text-black">{title}</h3>
-      </div>
-      <div className="relative w-32 h-32 mx-auto">
-        <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
-          <circle
-            cx="50" cy="50" r="35"
-            fill="none" stroke="#E5E7EB" strokeWidth="6"
-          />
-          <circle
-            cx="50" cy="50" r="35"
-            fill="none" stroke="#72e3ad" strokeWidth="6"
-            strokeDasharray={`${percentage * 2.2} 220`}
-            strokeLinecap="round"
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold text-black">{percentage}%</span>
-          <span className="text-xs text-gray-500 mt-1">Complete</span>
+        <div className="relative mx-auto w-32 h-32">
+          <svg className="transform -rotate-90 w-32 h-32" viewBox="0 0 100 100">
+            <circle
+              cx="50" cy="50" r="35"
+              fill="none" stroke="#E5E7EB" strokeWidth="6"
+            />
+            <circle
+              cx="50" cy="50" r="35"
+              fill="none" stroke="#72e3ad" strokeWidth="6"
+              strokeDasharray={`${percentage * 2.2} 220`}
+              strokeLinecap="round"
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="font-bold text-black text-2xl">{percentage}%</span>
+          </div>
         </div>
-      </div>
-    </motion.div>
-  );
+      </motion.div>
+    );
+  };
+
+  // Responsive utility: detect mobile
+  const isMobile = window.innerWidth < 640;
 
   return (
-    <div className="min-h-screen bg-white pt-6 md:pt-10 overflow-auto">
-      <div className="px-2 sm:px-4 md:px-8 lg:px-16 pb-6 md:pb-10">
-        <header className="mb-6 md:mb-10">
-          <h1 className="text-2xl md:text-3xl font-bold text-black mb-1 md:mb-2">
+    <div className={`min-h-screen bg-white pt-6 md:pt-10 overflow-auto ${isMobile ? 'pt-5' : ''}`}>
+      <div className={`pb-6 md:pb-10 ${isMobile ? 'px-4' : 'px-2 sm:px-4 md:px-8 lg:px-16'}`}>
+        <header className={`mb-6 md:mb-10 ${isMobile ? 'mb-5' : ''}`}>
+          <h1 className={`font-bold text-black mb-1 md:mb-2 ${isMobile ? 'text-lg mb-2' : 'text-2xl md:text-3xl'}`}>
             Government Dashboard for {location}
           </h1>
-          <p className="text-gray-500 text-sm md:text-base">Comprehensive overview of public sector performance</p>
+          <p className={`text-gray-500 ${isMobile ? 'text-xs mb-2' : 'text-sm md:text-base'}`}>Comprehensive overview of public sector performance</p>
         </header>
 
         {/* Row 1 - Key Metrics */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-6 md:mb-10"
+          className={`mb-6 md:mb-10 grid gap-4 md:gap-8
+            ${isMobile ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
+          style={isMobile ? { marginBottom: 24 } : {}}
           initial="hidden"
           animate="visible"
           variants={{
@@ -292,7 +311,9 @@ const Dashboard = () => {
 
         {/* Row 2 - Financials & Projects */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-10"
+          className={`mb-6 md:mb-10 grid gap-4 md:gap-8
+            ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}
+          style={isMobile ? { marginBottom: 24 } : {}}
           initial="hidden"
           animate="visible"
           variants={{
@@ -304,134 +325,150 @@ const Dashboard = () => {
             initial="hidden"
             animate="visible"
             custom={0}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md"
+            className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
+            style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
             <h3
               className="mb-6 flex items-center"
-              style={{ fontSize: 15, fontWeight: 500, color: "#000" }}
+              style={{
+                fontSize: isMobile ? 13 : 15,
+                fontWeight: 500,
+                color: "#000"
+              }}
             >
-              <TrendingUp className="w-5 h-5 mr-2 text-black" />
+              <TrendingUp className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Budget Utilization by Category
             </h3>
-            <ResponsiveContainer width="100%" height={280}>
-              <PieChart>
-                <Pie
-                  data={budgetUtilizationData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={40}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="utilized"
-                  nameKey="name"
-                >
-                  {budgetUtilizationData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value) => [`${value}%`, 'Utilization']}
-                  labelStyle={{ color: '#000000' }}
-                  contentStyle={{ 
-                    backgroundColor: '#F3F4F6', 
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '8px',
-                    color: '#000000'
-                  }}
-                />
-                <Legend 
-                  verticalAlign="bottom" 
-                  height={36}
-                  formatter={(value, entry, index) => (
-                    <span style={{ color: '#000000', fontSize: '12px', whiteSpace: 'pre-line' }}>
-                      <span style={{
-                        display: 'inline-block',
-                        width: 10,
-                        height: 10,
-                        backgroundColor: chartColors[index % chartColors.length],
-                        borderRadius: '50%',
-                        marginRight: 6,
-                        verticalAlign: 'middle'
-                      }}></span>
-                      {value}
-                    </span>
-                  )}
-                  wrapperStyle={{
-                    maxWidth: '100%',
-                    whiteSpace: 'pre-line',
-                    textOverflow: 'unset',
-                    overflow: 'visible'
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className={isMobile ? 'w-full overflow-x-auto' : ''}>
+              <ResponsiveContainer width="100%" height={isMobile ? 120 : 280}>
+                <PieChart>
+                  <Pie
+                    data={budgetUtilizationData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={isMobile ? 20 : 40}
+                    outerRadius={isMobile ? 40 : 80}
+                    paddingAngle={5}
+                    dataKey="utilized"
+                    nameKey="name"
+                  >
+                    {budgetUtilizationData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    formatter={(value) => [`${value}%`, 'Utilization']}
+                    labelStyle={{ color: '#000000' }}
+                    contentStyle={{ 
+                      backgroundColor: '#F3F4F6', 
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '8px',
+                      color: '#000000'
+                    }}
+                  />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={isMobile ? 24 : 36}
+                    formatter={(value, entry, index) => (
+                      <span style={{ color: '#000000', fontSize: isMobile ? '10px' : '12px', whiteSpace: 'pre-line' }}>
+                        <span style={{
+                          display: 'inline-block',
+                          width: isMobile ? 8 : 10,
+                          height: isMobile ? 8 : 10,
+                          backgroundColor: chartColors[index % chartColors.length],
+                          borderRadius: '50%',
+                          marginRight: 6,
+                          verticalAlign: 'middle'
+                        }}></span>
+                        {value}
+                      </span>
+                    )}
+                    wrapperStyle={{
+                      maxWidth: '100%',
+                      whiteSpace: 'pre-line',
+                      textOverflow: 'unset',
+                      overflow: 'visible'
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </motion.div>
           <motion.div
             variants={cardVariants}
             initial="hidden"
             animate="visible"
             custom={1}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md"
+            className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
+            style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
             <h3
               className="mb-6 flex items-center"
-              style={{ fontSize: 15, fontWeight: 500, color: "#000" }}
+              style={{
+                fontSize: isMobile ? 13 : 15,
+                fontWeight: 500,
+                color: "#000"
+              }}
             >
-              <FileText className="w-5 h-5 mr-2 text-black" />
+              <FileText className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Top Expenditure by Sector (₹ Crores)
             </h3>
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart
-                data={topExpenditureData}
-                layout="vertical"
-                margin={{ top: 10, right: 30, left: 60, bottom: 10 }}
-                barCategoryGap={18}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
-                <XAxis
-                  type="number"
-                  tick={{ fontSize: 14, fill: '#000000', fontWeight: 500 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="sector"
-                  tick={{ fontSize: 15, fill: '#000000', fontWeight: 500 }}
-                  width={240}
-                  axisLine={false}
-                  tickLine={false}
-                  interval={0}
-                  tickFormatter={value => value}
-                />
-                <Tooltip
-                  formatter={(value) => [`₹${value} Cr`, 'Amount Spent']}
-                  labelStyle={{ color: '#000000' }}
-                  contentStyle={{
-                    backgroundColor: '#F3F4F6',
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '8px',
-                    color: '#000000'
-                  }}
-                  cursor={false} // Remove gray overlay on hover
-                />
-                <Bar
-                  dataKey="amount"
-                  radius={[8, 8, 8, 8]}
-                  barSize={18}
+            <div className={isMobile ? 'w-full overflow-x-auto' : ''}>
+              <ResponsiveContainer width="100%" height={isMobile ? 120 : 280}>
+                <BarChart
+                  data={topExpenditureData}
+                  layout="vertical"
+                  margin={{ top: 10, right: 30, left: isMobile ? 30 : 60, bottom: 10 }}
+                  barCategoryGap={isMobile ? 8 : 18}
                 >
-                  {topExpenditureData.map((entry, index) => (
-                    <Cell key={`bar-cell-${index}`} fill={chartColors[index % chartColors.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: isMobile ? 10 : 14, fill: '#000000', fontWeight: 500 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="sector"
+                    tick={{ fontSize: isMobile ? 10 : 15, fill: '#000000', fontWeight: 500 }}
+                    width={isMobile ? 100 : 240}
+                    axisLine={false}
+                    tickLine={false}
+                    interval={0}
+                    tickFormatter={value => value}
+                  />
+                  <Tooltip
+                    formatter={(value) => [`₹${value} Cr`, 'Amount Spent']}
+                    labelStyle={{ color: '#000000' }}
+                    contentStyle={{
+                      backgroundColor: '#F3F4F6',
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '8px',
+                      color: '#000000'
+                    }}
+                    cursor={false} // Remove gray overlay on hover
+                  />
+                  <Bar
+                    dataKey="amount"
+                    radius={[8, 8, 8, 8]}
+                    barSize={isMobile ? 10 : 18}
+                  >
+                    {topExpenditureData.map((entry, index) => (
+                      <Cell key={`bar-cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </motion.div>
         </motion.div>
 
         {/* Row 3 - Projects by Status & Citizen Satisfaction Trend */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-10"
+          className={`mb-6 md:mb-10 grid gap-4 md:gap-8
+            ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}
+          style={isMobile ? { marginBottom: 24 } : {}}
           initial="hidden"
           animate="visible"
           variants={{
@@ -443,125 +480,102 @@ const Dashboard = () => {
             initial="hidden"
             animate="visible"
             custom={0}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md"
+            className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
+            style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
             <h3
               className="mb-6 flex items-center"
-              style={{ fontSize: 15, fontWeight: 500, color: "#000" }}
+              style={{
+                fontSize: isMobile ? 13 : 15,
+                fontWeight: 500,
+                color: "#000"
+              }}
             >
-              <FileText className="w-5 h-5 mr-2 text-black" />
+              <FileText className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Projects by Status
             </h3>
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={projectStatusData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
-                <XAxis dataKey="status" tick={{ fontSize: 12, fill: '#000000' }} />
-                <YAxis tick={{ fontSize: 12, fill: '#000000' }} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#F3F4F6', 
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '8px',
-                    color: '#000000'
-                  }}
-                />
-                <Bar 
-                  dataKey="count" 
-                  radius={[4, 4, 0, 0]}
-                >
-                  {projectStatusData.map((entry, index) => (
-                    <Cell key={`status-bar-${index}`} fill={entry.color} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <div className={isMobile ? 'w-full overflow-x-auto' : ''}>
+              <ResponsiveContainer width="100%" height={isMobile ? 120 : 240}>
+                <BarChart data={projectStatusData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
+                  <XAxis dataKey="status" tick={{ fontSize: 12, fill: '#000000' }} />
+                  <YAxis tick={{ fontSize: 12, fill: '#000000' }} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#F3F4F6', 
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '8px',
+                      color: '#000000'
+                    }}
+                  />
+                  <Bar 
+                    dataKey="count" 
+                    radius={[4, 4, 0, 0]}
+                  >
+                    {projectStatusData.map((entry, index) => (
+                      <Cell key={`status-bar-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </motion.div>
           <motion.div
             variants={cardVariants}
             initial="hidden"
             animate="visible"
             custom={1}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md"
+            className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
+            style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
             <h3
               className="mb-6 flex items-center"
-              style={{ fontSize: 15, fontWeight: 500, color: "#000" }}
+              style={{
+                fontSize: isMobile ? 13 : 15,
+                fontWeight: 500,
+                color: "#000"
+              }}
             >
-              <Users className="w-5 h-5 mr-2 text-black" />
+              <Users className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Citizen Satisfaction Trend
             </h3>
-            <ResponsiveContainer width="100%" height={160}>
-              <AreaChart data={satisfactionData}>
-                <defs>
-                  <linearGradient id="colorSatisfaction" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0.1}/>
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#000000' }} />
-                <YAxis domain={[6, 9]} tick={{ fontSize: 10, fill: '#000000' }} />
-                <Tooltip 
-                  formatter={(value) => [`${value}/10`, 'Satisfaction Score']}
-                  contentStyle={{ 
-                    backgroundColor: '#F3F4F6', 
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '8px',
-                    color: '#000000'
-                  }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="score" 
-                  stroke="#2563eb" 
-                  strokeWidth={2}
-                  fill="url(#colorSatisfaction)" 
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-            <div className="mt-4 text-center">
-              <span className="text-3xl font-bold text-black">
-                {satisfactionData.length > 0 ? satisfactionData[satisfactionData.length - 1].score : '-'}
-              </span>
-              <span className="text-gray-500 text-sm ml-1">/10</span>
-              <p className="text-xs text-gray-600 mt-1">
-                {satisfactionData.length > 1
-                  ? `${(satisfactionData[satisfactionData.length - 1].score - satisfactionData[satisfactionData.length - 2].score).toFixed(1)} from last month`
-                  : ''}
-              </p>
+            <div className={isMobile ? 'w-full overflow-x-auto' : ''}>
+              <ResponsiveContainer width="100%" height={isMobile ? 90 : 160}>
+                <AreaChart data={satisfactionData}>
+                  <defs>
+                    <linearGradient id="colorSatisfaction" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0.1}/>
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#000000' }} />
+                  <YAxis domain={[6, 9]} tick={{ fontSize: 10, fill: '#000000' }} />
+                  <Tooltip 
+                    formatter={(value) => [`${value}/10`, 'Satisfaction Score']}
+                    contentStyle={{ 
+                      backgroundColor: '#F3F4F6', 
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '8px',
+                      color: '#000000'
+                    }}
+                  />
+                  <Area 
+                    type="monotone"
+                    dataKey="score"
+                    stroke="#2563eb"
+                    fillOpacity={1}
+                    fill="url(#colorSatisfaction)"
+                    strokeWidth={2}
+                    dot={{ r: 2 }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </motion.div>
         </motion.div>
 
-        {/* Row 4 - Only show metrics that exist in the response */}
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: { transition: { staggerChildren: 0.08 } }
-          }}
-        >
-          <MetricCard
-            title="Budget Efficiency"
-            value={`${100 - spentPercentage}%`}
-            subtitle="Remaining budget allocation"
-            icon={DollarSign}
-            trend={metrics.efficiencyTrendPercentage}
-            index={0}
-          />
-          <GaugeChart
-            percentage={metrics.complaintResolutionPercentage || 0}
-            title="Complaint Resolution"
-            icon={AlertTriangle}
-            index={1}
-          />
-          <GaugeChart
-            percentage={metrics.transparencyPercentage || 0}
-            title="Transparency"
-            icon={TrendingUp}
-            index={2}
-          />
-        </motion.div>
+        {/* Row 4 - Placeholder for future widgets or summary cards */}
+        {/* ...existing code for Row 4 or additional widgets... */}
       </div>
     </div>
   );

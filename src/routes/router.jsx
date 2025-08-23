@@ -33,11 +33,11 @@ export default function Router() {
       </header>
       <main>
         <Routes>
-          <Route path="/" element={<Scheme />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/projects" element={<Scheme />} />
           <Route path="/grievances" element={<GrievancesPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/rti" element={<RTI />} />
-          <Route path="/suggestion" element={<Suggestions />} />
+          <Route path="/schemes" element={<Suggestions />} />
           {/* Add other routes here as needed */}
         </Routes>
       </main>

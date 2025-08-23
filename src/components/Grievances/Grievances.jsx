@@ -6,7 +6,7 @@ import GrievanceCard from './grievanceCard';
 import PostGrievanceModal from './PostGrievanceModal';
 import ChatBot from '../ChatBot/chatbot';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X } from 'lucide-react';
+import { Search, X, Menu } from 'lucide-react'; // <-- Add Menu icon
 
 export default function Grievances() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,6 +19,8 @@ export default function Grievances() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userVotes, setUserVotes] = useState({}); // Track user votes: { grievanceId: 'upvote'|'downvote'|null }
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // <-- Add state
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
   // Handle search input
   const handleSearch = (term) => {
@@ -28,6 +30,7 @@ export default function Grievances() {
   // Handle category selection
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
+    setMobileMenuOpen(false); // close menu on mobile after selecting
   };
 
   // Handle location selection
@@ -284,19 +287,25 @@ export default function Grievances() {
     }));
   };
 
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
       {/* <Header /> */}
 
-      <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 border-b shadow-[0_4px_12px_0_rgba(0,0,0,0.06)]">
-        {/* Added border-b and shadow for bottom border shadow */}
-        <div className="px-2 sm:pl-5 flex justify-between items-start">
-          <div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+      <div className="px-2 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8 border-b shadow-[0_4px_12px_0_rgba(0,0,0,0.06)]">
+        {/* Responsive: px-2/py-3 for mobile, sm:px-6/py-6 for desktop */}
+        <div className="px-0 sm:pl-5 flex flex-col sm:flex-row justify-between items-start gap-3">
+          <div className="w-full sm:w-auto">
+            <h1 className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900">
               Grievances
             </h1>
-            <p className="mt-1 sm:mt-2 text-sm sm:text-base lg:text-lg text-gray-600">
+            <p className="mt-1 sm:mt-2 text-xs sm:text-base lg:text-lg text-gray-600">
               View and submit grievances across different sectors
             </p>
             {(searchTerm || selectedCategory !== "All" || selectedLocation) && (
@@ -343,7 +352,15 @@ export default function Grievances() {
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            {/* Mobile menu icon for filters */}
+            <button
+              className="block sm:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              title="Show filters"
+            >
+              <Menu size={22} />
+            </button>
             <button
               onClick={() => setShowSearchBar(!showSearchBar)}
               className="text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
@@ -353,13 +370,13 @@ export default function Grievances() {
             </button>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="text-black px-4 py-2 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2"
+              className="text-black px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2"
               style={{ backgroundColor: "#72e3a6" }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#5dd490")}
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#72e3a6")}
             >
               <span className="text-lg">+</span>
-              Post Grievance
+              <span className="hidden xs:inline">Post Grievance</span>
             </button>
           </div>
         </div>
@@ -370,7 +387,7 @@ export default function Grievances() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-4 px-2 sm:px-5"
+            className="mt-3 sm:mt-4 px-0 sm:px-5"
           >
             <div className="relative">
               <Search
@@ -382,7 +399,7 @@ export default function Grievances() {
                 placeholder="Search grievances by title, description, location, or category..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                className="w-full pl-10 pr-10 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm sm:text-base"
               />
               {searchTerm && (
                 <button
@@ -397,21 +414,56 @@ export default function Grievances() {
         )}
 
         {/* Category Navigation */}
-        <div className="mt-4 sm:mt-6">
-          <CategoryNavigation
-            onCategoryChange={handleCategoryChange}
-            onLocationChange={handleLocationChange}
-            selectedCategory={selectedCategory}
-            selectedLocation={selectedLocation}
-          />
+        <div className="mt-3 sm:mt-6">
+          {/* Hide on mobile, show on sm+ */}
+          <div className="hidden sm:block">
+            <CategoryNavigation
+              onCategoryChange={handleCategoryChange}
+              onLocationChange={handleLocationChange}
+              selectedCategory={selectedCategory}
+              selectedLocation={selectedLocation}
+              categories={[
+                'All',
+                'Agriculture and Allied Services',
+                'Rural Development',
+                'Irrigation and Flood Control',
+                'Economic Services',
+                'Industry and Minerals',
+                'Energy'
+              ]}
+            />
+          </div>
+          {/* Show filters on mobile only when menu is open */}
+          {mobileMenuOpen && (
+            <div className="block sm:hidden w-full">
+              <div className="flex flex-wrap gap-2 px-1 py-2">
+                {['All', 'Agriculture and Allied Services', 'Rural Development', 'Irrigation and Flood Control', 'Economic Services', 'Industry and Minerals', 'Energy'].map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => handleCategoryChange(category)}
+                    className={`
+                      flex items-center space-x-1 px-3 py-1.5 text-xs font-medium transition-colors
+                      ${
+                        selectedCategory === category
+                          ? 'bg-[#72e3ad] text-black font-semibold rounded-full'
+                          : 'bg-white text-gray-700 hover:text-gray-600 border border-gray-100 rounded-full'
+                      }
+                    `}
+                  >
+                    <span>{category}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Grievances Cards */}
-        <div className="mt-6 sm:mt-8">
+        <div className="mt-4 sm:mt-8">
           {/* Results summary */}
           {!loading && !error && (
-            <div className="mb-4 px-2 sm:px-5">
-              <p className="text-sm text-gray-600">
+            <div className="mb-3 sm:mb-4 px-0 sm:px-5">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Showing {grievances.length} of {allGrievances.length} grievances
                 {(searchTerm ||
                   selectedCategory !== "All" ||
@@ -422,14 +474,14 @@ export default function Grievances() {
             </div>
           )}
 
-          <div className="grid gap-4 sm:gap-6 grid-cols-1">
+          <div className="grid gap-3 sm:gap-6 grid-cols-1">
             {loading ? (
               // Skeleton loader: show 3 skeleton cards
               <>
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="animate-pulse bg-gray-100 rounded-lg p-6 flex flex-col gap-3"
+                    className="animate-pulse bg-gray-100 rounded-lg p-4 sm:p-6 flex flex-col gap-3"
                   >
                     <div className="h-5 w-1/3 bg-gray-300 rounded mb-2"></div>
                     <div className="h-4 w-2/3 bg-gray-200 rounded mb-2"></div>
@@ -473,6 +525,7 @@ export default function Grievances() {
                       onUpvote={() => handleUpvote(grievance.grievance_id)}
                       onDownvote={() => handleDownvote(grievance.grievance_id)}
                       userVote={userVotes[grievance.grievance_id]}
+                      showReadMore={isMobile} // <-- Only show on mobile
                     />
                   </motion.div>
                 ))}
@@ -481,10 +534,10 @@ export default function Grievances() {
               <div className="col-span-full text-center py-8 lg:py-16">
                 <div className="max-w-md mx-auto">
                   <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
                     No grievances found
                   </h3>
-                  <p className="text-gray-500 mb-4">
+                  <p className="text-gray-500 mb-4 text-sm sm:text-base">
                     {searchTerm ||
                     selectedCategory !== "All" ||
                     selectedLocation
