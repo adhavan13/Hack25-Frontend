@@ -6,6 +6,7 @@ import GrievancesPage from "../components/Grievances/grievances";
 import Dashboard from "../components/dashboard/dashboard";
 import RTI from "../components/RTI/rtiInterface";
 import Suggestions from "../components/SchemeSuggestion/schemeSuggestion";
+
 // Add scrollbar styling
 const scrollbarStyle = `
   ::-webkit-scrollbar {
