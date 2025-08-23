@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from '../Navbar/Header';
 import CategoryNavigation from './sectors';
-import GrievanceCard from './GrievanceCard';
+import GrievanceCard from './grievanceCard';
 import PostGrievanceModal from './PostGrievanceModal';
 import ChatBot from '../ChatBot/chatbot';
 import { motion, AnimatePresence } from 'framer-motion';
