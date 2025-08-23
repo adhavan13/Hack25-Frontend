@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function CategoryNavigation({ onCategoryChange }) {
-  const [activeCategory, setActiveCategory] = useState('All');
+export default function CategoryNavigation({ onCategoryChange, selectedCategory = 'All' }) {
+  const [activeCategory, setActiveCategory] = useState(selectedCategory);
+  
+  // Update internal state when props change
+  useEffect(() => {
+    setActiveCategory(selectedCategory);
+  }, [selectedCategory]);
   
   const categories = [
     'All',
@@ -19,38 +24,42 @@ export default function CategoryNavigation({ onCategoryChange }) {
 
   return (
     <div className="w-full bg-white">
-      <nav className="flex items-center px-2 sm:px-4 py-4 sm:py-6">
-        <div
-          className="flex space-x-2 sm:space-x-4 overflow-x-auto scrollbar-hide"
-          style={{
-            WebkitOverflowScrolling: 'touch',
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none'
-          }}
-        >
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => handleCategoryClick(category)}
-              className={`
-                whitespace-nowrap px-4 sm:px-6 py-2 text-sm font-medium rounded-full transition-all duration-200 ease-in-out
-                ${
+      <div className="flex items-center gap-4 px-2 sm:px-4 py-4 sm:py-6">
+        {/* Category Navigation */}
+        <nav className="flex-1">
+          <div
+            className="flex space-x-2 sm:space-x-4 overflow-x-auto scrollbar-hide"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              msOverflowStyle: 'none',
+              scrollbarWidth: 'none'
+            }}
+          >
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => handleCategoryClick(category)}
+                className={`
+                  whitespace-nowrap px-4 sm:px-6 py-2 text-sm font-medium rounded-full transition-all duration-200 ease-in-out
+                  ${
+                    activeCategory === category
+                      ? 'bg-gray-100 text-black'
+                      : 'text-gray-500 hover:bg-gray-50 hover:text-black'
+                  }
+                `}
+                style={
                   activeCategory === category
-                    ? 'bg-gray-100 text-black'
-                    : 'text-gray-500 hover:bg-gray-50 hover:text-black'
+                    ? { border: '2px solid #72e3ad', backgroundColor: '#f3f4f6', color: '#000' }
+                    : { }
                 }
-              `}
-              style={
-                activeCategory === category
-                  ? { border: '2px solid #72e3ad', backgroundColor: '#f3f4f6', color: '#000' }
-                  : { }
-              }
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-      </nav>
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </nav>
+      </div>
+
       <style>
         {`
           /* Hide scrollbar for all browsers */

@@ -13,7 +13,10 @@ export default function GrievanceCard({
   assignedOfficer,
   upvotes,
   downvotes = 0,
-  evidence
+  evidence,
+  onUpvote,
+  onDownvote,
+  userVote
 }) {
   const getStatusColor = (status) => {
     switch ((status || '').toLowerCase()) {
@@ -115,13 +118,39 @@ export default function GrievanceCard({
 
               {/* Voting Section */}
               <div className="flex items-center gap-4">
-                <button className="flex items-center gap-2 hover:scale-105 transition-transform duration-200">
-                  <ArrowBigUp className="w-5 h-5 text-green-600 hover:text-green-700 transition-colors" />
-                  <span className="text-sm font-bold text-black">{upvotes}</span>
+                <button 
+                  className={`flex items-center gap-2 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-lg ${
+                    userVote === 'upvote' 
+                      ? 'bg-green-100 border border-green-300 shadow-sm' 
+                      : 'hover:bg-green-50'
+                  }`}
+                  onClick={onUpvote}
+                >
+                  <ArrowBigUp className={`w-5 h-5 transition-colors ${
+                    userVote === 'upvote' 
+                      ? 'text-green-700 fill-green-600' 
+                      : 'text-green-600 hover:text-green-700'
+                  }`} />
+                  <span className={`text-sm font-bold ${
+                    userVote === 'upvote' ? 'text-green-700' : 'text-black'
+                  }`}>{upvotes}</span>
                 </button>
-                <button className="flex items-center gap-2 hover:scale-105 transition-transform duration-200">
-                  <ArrowBigDown className="w-5 h-5 text-red-600 hover:text-red-700 transition-colors" />
-                  <span className="text-sm font-bold text-black">{downvotes}</span>
+                <button 
+                  className={`flex items-center gap-2 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-lg ${
+                    userVote === 'downvote' 
+                      ? 'bg-red-100 border border-red-300 shadow-sm' 
+                      : 'hover:bg-red-50'
+                  }`}
+                  onClick={onDownvote}
+                >
+                  <ArrowBigDown className={`w-5 h-5 transition-colors ${
+                    userVote === 'downvote' 
+                      ? 'text-red-700 fill-red-600' 
+                      : 'text-red-600 hover:text-red-700'
+                  }`} />
+                  <span className={`text-sm font-bold ${
+                    userVote === 'downvote' ? 'text-red-700' : 'text-black'
+                  }`}>{downvotes}</span>
                 </button>
               </div>
             </div>
