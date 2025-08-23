@@ -4,7 +4,7 @@ import ChatBot from "@/components/ChatBot/chatbot";
 import { Routes, Route } from "react-router-dom";
 import GrievancesPage from "../components/Grievances/grievances";
 import Dashboard from "../components/dashboard/dashboard";
-import Test from "../components/test";
+import Suggestion from "../components/SchemeSuggestion/schemeSuggestion";
 // Add scrollbar styling
 const scrollbarStyle = `
   ::-webkit-scrollbar {
@@ -34,7 +34,7 @@ export default function Router() {
           <Route path="/" element={<Scheme />} />
           <Route path="/grievances" element={<GrievancesPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/test" element={<Test />} />
+          <Route path="/suggestion" element={<Suggestion />} />
           {/* Add other routes here as needed */}
         </Routes>
       </main>

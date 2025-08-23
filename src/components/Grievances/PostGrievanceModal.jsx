@@ -88,7 +88,12 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
       setShowSuccessModal(true);
     } catch (err) {
       setShowFailureModal(true);
-      setError("Failed to submit grievance. Please try again.");
+      // Show backend error if available, else generic message
+      setError(
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Failed to submit grievance. Please try again."
+      );
     }
     setLoading(false);
   };
