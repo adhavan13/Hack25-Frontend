@@ -47,11 +47,10 @@ const useDashboardStore = create((set, get) => ({
       set({
         error: error.message,
         loading: false,
-        // Fallback to mock data if API fails
-        dashboardData: getMockDashboardData(),
+        dashboardData: null,
       });
 
-      return getMockDashboardData();
+      return null;
     }
   },
 
@@ -59,9 +58,5 @@ const useDashboardStore = create((set, get) => ({
   clearError: () => set({ error: null }),
 }));
 
-// Mock data function (fallback when API is not available)
-const getMockDashboardData = () => ({
-  // Will be replaced by dynamic data provided by the user
-});
-
 export default useDashboardStore;
+
