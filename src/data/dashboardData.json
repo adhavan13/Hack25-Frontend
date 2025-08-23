@@ -1,0 +1,153 @@
+{
+  "governmentData": {
+    "categories": [
+      {
+        "name": "Agriculture and Allied Services",
+        "budget_allocated": 15000000,
+        "budget_spent": 10200000,
+        "projects": {
+          "planned": 10,
+          "ongoing": 7,
+          "completed": 5
+        }
+      },
+      {
+        "name": "Rural Development",
+        "budget_allocated": 20000000,
+        "budget_spent": 14500000,
+        "projects": {
+          "planned": 12,
+          "ongoing": 8,
+          "completed": 9
+        }
+      },
+      {
+        "name": "Co-operation",
+        "budget_allocated": 8000000,
+        "budget_spent": 5200000,
+        "projects": {
+          "planned": 6,
+          "ongoing": 3,
+          "completed": 2
+        }
+      },
+      {
+        "name": "Irrigation and Flood Control",
+        "budget_allocated": 18000000,
+        "budget_spent": 12000000,
+        "projects": {
+          "planned": 9,
+          "ongoing": 6,
+          "completed": 4
+        }
+      },
+      {
+        "name": "Energy",
+        "budget_allocated": 22000000,
+        "budget_spent": 16500000,
+        "projects": {
+          "planned": 11,
+          "ongoing": 8,
+          "completed": 6
+        }
+      },
+      {
+        "name": "Industry and Minerals",
+        "budget_allocated": 16000000,
+        "budget_spent": 10500000,
+        "projects": {
+          "planned": 8,
+          "ongoing": 6,
+          "completed": 3
+        }
+      },
+      {
+        "name": "Transport and Communications",
+        "budget_allocated": 25000000,
+        "budget_spent": 18700000,
+        "projects": {
+          "planned": 15,
+          "ongoing": 10,
+          "completed": 9
+        }
+      },
+      {
+        "name": "Scientific Services and Research",
+        "budget_allocated": 7000000,
+        "budget_spent": 4200000,
+        "projects": {
+          "planned": 5,
+          "ongoing": 2,
+          "completed": 2
+        }
+      },
+      {
+        "name": "Social and Community Services",
+        "budget_allocated": 14000000,
+        "budget_spent": 10000000,
+        "projects": {
+          "planned": 9,
+          "ongoing": 5,
+          "completed": 4
+        }
+      },
+      {
+        "name": "Economic Services",
+        "budget_allocated": 12000000,
+        "budget_spent": 8000000,
+        "projects": {
+          "planned": 7,
+          "ongoing": 4,
+          "completed": 3
+        }
+      },
+      {
+        "name": "General Services",
+        "budget_allocated": 6000000,
+        "budget_spent": 3500000,
+        "projects": {
+          "planned": 4,
+          "ongoing": 2,
+          "completed": 1
+        }
+      },
+      {
+        "name": "Local Level Plan Programmes",
+        "budget_allocated": 10000000,
+        "budget_spent": 7200000,
+        "projects": {
+          "planned": 6,
+          "ongoing": 4,
+          "completed": 3
+        }
+      }
+    ]
+  },
+  "serviceData": {
+    "serviceTimeData": [
+      { "month": "Jan", "time": 5.2, "target": 4.0 },
+      { "month": "Feb", "time": 4.8, "target": 4.0 },
+      { "month": "Mar", "time": 4.5, "target": 4.0 },
+      { "month": "Apr", "time": 4.2, "target": 4.0 },
+      { "month": "May", "time": 3.9, "target": 4.0 },
+      { "month": "Jun", "time": 3.7, "target": 4.0 }
+    ],
+    "satisfactionData": [
+      { "month": "Jan", "score": 7.2, "target": 8.0 },
+      { "month": "Feb", "score": 7.5, "target": 8.0 },
+      { "month": "Mar", "score": 7.8, "target": 8.0 },
+      { "month": "Apr", "score": 8.1, "target": 8.0 },
+      { "month": "May", "score": 8.3, "target": 8.0 },
+      { "month": "Jun", "score": 8.5, "target": 8.0 }
+    ]
+  },
+  "metrics": {
+    "transparencyPercentage": 87,
+    "complaintResolutionPercentage": 92,
+    "onTimeTrendPercentage": 5.2,
+    "budgetTrendPercentage": -2.3,
+    "projectTrendPercentage": 2.1,
+    "categoryTrendPercentage": 1.5,
+    "efficiencyTrendPercentage": 3.2
+  }
+}

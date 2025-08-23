@@ -4,6 +4,7 @@ import Header from '../Navbar/Header';
 import CategoryNavigation from './sectors';
 import SearchBar from './SearchBar';
 import GrievanceCard from './GrievanceCard';
+import PostGrievanceModal from './PostGrievanceModal';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Grievances() { 
@@ -12,6 +13,7 @@ export default function Grievances() {
   const [grievances, setGrievances] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Handle search input
   const handleSearch = (term) => {
@@ -48,6 +50,32 @@ export default function Grievances() {
     fetchGrievances();
   }, [selectedCategory, searchTerm]);
 
+  const handlePostSuccess = () => {
+    // Refresh grievances after successful post
+    const fetchGrievances = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const body = {
+          sector: selectedCategory === 'All' ? null : selectedCategory,
+          pageSize: 10,
+          offset: 0,
+          filters: searchTerm ? { search: searchTerm } : {},
+          language: 'eng'
+        };
+        const res = await axios.post(
+          'https://hack25-backend-x7el.vercel.app/api/grievance/getPosts',
+          body
+        );
+        setGrievances(res.data || []);
+      } catch (err) {
+        setError('Failed to load grievances');
+      }
+      setLoading(false);
+    };
+    fetchGrievances();
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -62,14 +90,20 @@ export default function Grievances() {
               View and submit grievances across different sectors
             </p>
           </div>
-          <button className="text-black px-4 py-2 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2" style={{ backgroundColor: '#72e3a6' }} onMouseEnter={(e) => e.target.style.backgroundColor = '#5dd490'} onMouseLeave={(e) => e.target.style.backgroundColor = '#72e3a6'}>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="text-black px-4 py-2 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2" 
+            style={{ backgroundColor: '#72e3a6' }} 
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#5dd490'} 
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#72e3a6'}
+          >
             <span className="text-lg">+</span>
             Post Grievance
           </button>
         </div>
 
         {/* Search Bar */}
-        <div className="mt-4 sm:mt-6">git 
+        <div className="mt-4 sm:mt-6">
           <CategoryNavigation onCategoryChange={handleCategoryChange} />
         </div>
         <div className="mb-4 sm:mb-5 mt-4">
@@ -129,6 +163,12 @@ export default function Grievances() {
           )}
         </div>
       </div>
+
+      <PostGrievanceModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handlePostSuccess}
+      />
     </div>
   );
 }
