@@ -1,124 +1,484 @@
-import React from 'react';
-import HeaderSection from './HeaderSection';
-import OverviewSection from './OverviewSection';
-import SchemeBudgetSection from './SchemeBudgetSection';
-import TimelineSection from './TimelineSection';
-import ContractorSection from './ContractorSection';
-import BeneficiariesSection from './BeneficiariesSection';
-import MapSection from './MapSection';
-import FooterSection from './FooterSection';
+import React, { useState, useEffect } from 'react';
+import { Calendar, User, Building, Users, DollarSign, Clock, MapPin, Phone, Mail, CheckCircle, Circle, AlertCircle, X } from 'lucide-react';
 
-// --- Data (move to a separate file if needed) ---
-const projectUIData = {
-  header: {
-    project_id: "KL-PWD-TVM-2024-001",
+const Modal = ({ isOpen, onClose }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300);
+  };
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
+
+  const sampleProject = {
     project_name: "Construction of Kovalam-Vizhinjam Coastal Road (Phase-1)",
-    status: "Ongoing"
-  },
-  overview: {
-    description: "This project involves the construction of a coastal road to enhance connectivity and promote tourism.",
-    project_type: "Infrastructure",
-    work_category: "Roads and Bridges",
-    project_category: "Coastal Development",
+    project_description: "Construction of 2-lane concrete road with proper drainage system and street lighting along the coastal stretch connecting Kovalam to Vizhinjam port. The project includes beautification works and pedestrian walkways.",
+    project_type: "New Construction",
+    work_category: "Road Construction",
+    
+    scheme_name: "Kerala Coastal Infrastructure Development Program",
+    scheme_description: "Comprehensive infrastructure development program for Kerala's coastal areas including roads, ports, tourism facilities and coastal protection measures",
+    scheme_type: "State",
+    scheme_category: "Infrastructure Development",
+    
+    total_scheme_budget: 50000000000,
+    allocated_budget: 125000000,
+    estimated_cost: 125000000,
+    current_amount_spent: 35000000,
+    
+    status: "Ongoing",
+    physical_progress_percentage: 35,
+    
     implementing_department: "Public Works Department",
-    implementing_agency: "Kerala Public Works Department",
+    implementing_agency: "PWD, Thiruvananthapuram Division",
     nodal_officer: {
       name: "Er. Rajesh Kumar",
       designation: "Executive Engineer",
       contact: "+91-9876543210",
       email: "ee.pwd.tvm@kerala.gov.in"
+    },
+    
+    timeline: {
+      proposal_date: new Date("2024-01-15"),
+      approval_date: new Date("2024-02-20"),
+      tender_publication_date: new Date("2024-03-01"),
+      work_commencement_date: new Date("2024-05-01"),
+      scheduled_completion_date: new Date("2025-04-30"),
+      actual_completion_date: null
+    },
+    
+    contractor: {
+      company_name: "Kerala Infrastructure Builders Pvt Ltd",
+      registration_number: "KL05E0123456",
+      contractor_class: "A Class",
+      contact_person: "Mr. Suresh Nair",
+      contact_details: {
+        phone: "+91-9876543210",
+        email: "kib.construction@email.com",
+        address: "123 Industrial Estate, Kazhakuttom, Thiruvananthapuram - 695582"
+      }
+    },
+    
+    beneficiaries: {
+      direct_beneficiaries: 15000,
+      indirect_beneficiaries: 45000,
+      beneficiary_categories: [
+        "Daily commuters",
+        "Tourism industry workers",
+        "Local businesses",
+        "Fishing community",
+        "Students and school children"
+      ]
     }
-  },
-  scheme: {
-    name: "PMGSY",
-    description: "Pradhan Mantri Gram Sadak Yojana - Connecting rural areas with all weather roads.",
-    type: "Central Sector Scheme",
-    parent_program: "Bharatmala Pariyojana",
-    category: "Infrastructure",
-    total_budget: 50000000000,
-    allocated_budget: 125000000,
-    estimated_cost: 125000000,
-    spent: 35000000
-  },
-  timeline: {
-    proposal_date: "2024-01-15",
-    approval_date: "2024-02-20",
-    tender_date: "2024-03-01",
-    commencement_date: "2024-05-01",
-    scheduled_completion: "2025-04-30",
-    actual_completion: null
-  },
-  contractor: {
-    company_name: "Kerala Infrastructure Builders Pvt Ltd",
-    registration_number: "KL05E0123456",
-    contractor_class: "A Class",
-    contact_person: "Mr. Suresh Nair",
-    phone: "+91-9876543210",
-    email: "kib.construction@email.com",
-    address: "123 Industrial Estate, Kazhakuttom, Thiruvananthapuram - 695582"
-  },
-  beneficiaries: {
-    direct: 15000,
-    indirect: 45000,
-    categories: [
-      "Daily commuters",
-      "Tourism industry workers",
-      "Local businesses",
-      "Fishing community",
-      "Students and school children"
-    ]
-  },
-  footer: {
-    created_at: "2024-01-15T10:30:00Z",
-    updated_at: "2024-08-22T14:45:00Z",
-    created_by: "project_admin_001",
-    last_modified_by: "project_manager_tvm_001",
-    version: 1
-  }
-};
+  };
 
-const Modal = ({ isOpen, onClose }) => {
+  const formatMoney = (amount) => {
+    return `₹${(amount / 10000000).toFixed(1)} Crores`;
+  };
+
+  const formatDate = (date) => {
+    return date.toLocaleDateString('en-IN', { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    });
+  };
+
+  const SimpleProgressBar = ({ percentage }) => {
+    return (
+      <div className="w-full">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm text-gray-600">Work Completed</span>
+          <span className="text-lg font-bold text-gray-900">{percentage}%</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-3">
+          <div 
+            className="h-3 rounded-full transition-all duration-1000 ease-out"
+            style={{ 
+              width: `${percentage}%`, 
+              background: 'linear-gradient(90deg, #72e3ad 0%, #5fd49a 100%)'
+            }}
+          ></div>
+        </div>
+        <div className="text-xs text-gray-500 mt-1">
+          About {Math.round(percentage/10)} out of 10 parts done
+        </div>
+      </div>
+    );
+  };
+
+  const timelineSteps = [
+    { 
+      key: 'proposal_date', 
+      label: 'Project Planned', 
+      simple: 'Idea proposed',
+      completed: true 
+    },
+    { 
+      key: 'approval_date', 
+      label: 'Got Permission', 
+      simple: 'Government said yes',
+      completed: true 
+    },
+    { 
+      key: 'tender_publication_date', 
+      label: 'Found Builder', 
+      simple: 'Selected who will build',
+      completed: true 
+    },
+    { 
+      key: 'work_commencement_date', 
+      label: 'Work Started', 
+      simple: 'Construction began',
+      completed: true 
+    },
+    { 
+      key: 'scheduled_completion_date', 
+      label: 'Expected Finish', 
+      simple: 'When it should be ready',
+      completed: false 
+    }
+  ];
+
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 transition-colors duration-300"
-      onClick={onClose}
-    >
-      <div
-        className="w-screen max-w-full bg-white rounded-t-2xl shadow-lg flex flex-col max-h-[90vh] animate-slideUp"
-        onClick={e => e.stopPropagation()}
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Backdrop */}
+      <div 
+        className={`absolute inset-0 bg-black transition-opacity duration-300 ${
+          isVisible ? 'opacity-50' : 'opacity-0'
+        }`}
+        onClick={handleClose}
+      />
+      
+      {/* Modal */}
+      <div 
+        className={`absolute top-0 left-0 right-0 bg-white shadow-lg transform transition-transform duration-300 ease-out ${
+          isVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+        style={{ height: '100vh', overflowY: 'auto' }}
       >
-        <div className="flex justify-end p-4 pt-6">
+        {/* Close Button - Fixed at top */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 flex justify-between items-center z-10 shadow-sm">
+          <h1 className="text-lg sm:text-xl font-bold text-gray-900">Project Details</h1>
           <button
-            className="text-2xl text-gray-700 hover:text-red-500 transition-colors"
-            onClick={onClose}
-            aria-label="Close Modal"
+            onClick={handleClose}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label="Close modal"
           >
-            &times;
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
           </button>
         </div>
-        <div className="px-6 pb-8 pt-2 overflow-y-auto flex-1">
-          <HeaderSection header={projectUIData.header} />
-          <OverviewSection overview={projectUIData.overview} />
-          <SchemeBudgetSection scheme={projectUIData.scheme} />
-          <TimelineSection timeline={projectUIData.timeline} />
-          <ContractorSection contractor={projectUIData.contractor} />
-          <BeneficiariesSection beneficiaries={projectUIData.beneficiaries} />
-          <FooterSection footer={projectUIData.footer} />
+
+        {/* Content */}
+        <div className="px-3 sm:px-6 pb-6 space-y-4 sm:space-y-8">
+          {/* Header with Clear Purpose */}
+          <div className="text-center pt-3 sm:pt-4 pb-2 border-b border-gray-100">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+              Kovalam to Vizhinjam Road Construction
+            </h2>
+            <div className="bg-gray-100 mx-auto max-w-3xl p-3 rounded-lg mb-4">
+              <p className="text-gray-900 text-xs sm:text-sm leading-relaxed">
+                This is a <span className="font-medium text-sm sm:text-base">government project</span> to build a new <span className="font-medium text-sm sm:text-base">2-lane road</span> connecting <span className="font-medium text-sm sm:text-base">Kovalam to Vizhinjam port</span>, 
+                with drainage, street lights, and walking paths for pedestrians.
+              </p>
+            </div>
+            <div className="inline-flex items-center justify-center gap-2 bg-gray-100 px-3 py-1 rounded-full mb-2">
+              <AlertCircle className="w-4 h-4" style={{color: '#72e3ad'}} />
+              <span className="font-medium text-xs sm:text-sm text-gray-900">Current Status: <span className="text-sm sm:text-base font-semibold">Work is In Progress (35% Complete)</span></span>
+            </div>
+          </div>
+
+          {/* Key Information Cards */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-4">
+            <div className="text-center p-2 sm:p-4 border border-gray-200 rounded-lg bg-white">
+              <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">Budget Allocated</div>
+              <div className="text-lg sm:text-xl font-bold text-gray-900">{formatMoney(sampleProject.allocated_budget)}</div>
+              <div className="text-xs text-gray-600 mt-1">Total funds for this project</div>
+            </div>
+            
+            <div className="text-center p-2 sm:p-4 border border-gray-200 rounded-lg bg-white">
+              <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">Money Used So Far</div>
+              <div className="text-lg sm:text-xl font-bold text-gray-900">{formatMoney(sampleProject.current_amount_spent)}</div>
+              <div className="text-xs text-gray-600 mt-1">{Math.round(sampleProject.current_amount_spent/sampleProject.allocated_budget*100)}% of budget used</div>
+            </div>
+            
+            <div className="text-center p-2 sm:p-4 border border-gray-200 rounded-lg bg-white">
+              <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">People Benefiting</div>
+              <div className="text-lg sm:text-xl font-bold text-gray-900">60,000</div>
+              <div className="text-xs text-gray-600 mt-1">15,000 direct + 45,000 indirect</div>
+            </div>
+            
+            <div className="text-center p-2 sm:p-4 border border-gray-200 rounded-lg bg-white">
+              <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">Timeline</div>
+              <div className="text-lg sm:text-xl font-bold text-gray-900">Apr 2025</div>
+              <div className="text-xs text-gray-600 mt-1">Expected completion date</div>
+            </div>
+          </div>
+
+          {/* Progress - More Informative */}
+          <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4">Current Progress</h3>
+            <div className="flex flex-col gap-4 sm:gap-6 sm:flex-row sm:items-center">
+              <div className="w-full sm:w-2/3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs sm:text-sm text-gray-600 font-medium">Work Completed</span>
+                  <span className="text-lg sm:text-xl font-bold text-gray-900">{sampleProject.physical_progress_percentage}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3 sm:h-4">
+                  <div 
+                    className="h-3 sm:h-4 rounded-full transition-all duration-1000 ease-out"
+                    style={{ 
+                      width: `${sampleProject.physical_progress_percentage}%`, 
+                      backgroundColor: '#72e3ad' 
+                    }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>Started: <span className="font-medium">May 2024</span></span>
+                  <span>Expected End: <span className="font-medium">April 2025</span></span>
+                </div>
+              </div>
+              <div className="w-full sm:w-1/3 bg-gray-100 p-3 rounded-lg">
+                <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-2">What's Happening Now:</h4>
+                <ul className="text-xs sm:text-sm text-gray-900 space-y-3 list-disc pl-4">
+                  <li><span className="font-medium">Road foundation</span> is being laid</li>
+                  <li><span className="font-medium">Drainage systems</span> installation</li>
+                  <li>Preparing for <span className="font-medium">street lighting</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Timeline - Horizontal for desktop, Vertical for mobile */}
+          <div className="border border-gray-200 rounded-lg p-3 sm:p-8 bg-white">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">Project Timeline</h3>
+            <p className="text-xs text-gray-600 mb-4 sm:mb-6">See how this project has progressed from planning to completion</p>
+            
+            {/* Desktop Timeline (Horizontal) - Hidden on mobile */}
+            <div className="hidden sm:flex flex-nowrap w-full justify-between pb-4">
+              {timelineSteps.map((step, index) => {
+                const date = sampleProject.timeline[step.key];
+                const isLast = index === timelineSteps.length - 1;
+                
+                return (
+                  <div
+                    key={step.key}
+                    className="flex flex-col items-center relative min-w-[150px] flex-1"
+                  >
+                    {/* Connector Line */}
+                    {!isLast && (
+                      <div className={`absolute top-3 left-[50%] w-[calc(100%-20px)] h-[2px] ${
+                        step.completed ? 'bg-[#72e3ad]' : 'bg-gray-200'
+                      }`}></div>
+                    )}
+                    
+                    {/* Circle Indicator */}
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center z-10 ${
+                      step.completed ? 'bg-gray-100' : 'bg-gray-100'
+                    }`}>
+                      {step.completed ? (
+                        <CheckCircle className="w-4 h-4 text-black" fill="#72e3ad" />
+                      ) : (
+                        <Circle className="w-4 h-4 text-gray-400" />
+                      )}
+                    </div>
+                    
+                    {/* Step Content */}
+                    <div className="mt-3 text-center px-2">
+                      <div className="font-semibold text-gray-900 text-base">{step.label}</div>
+                      <div className="text-xs text-gray-600 mb-2">{step.simple}</div>
+                      <div className={`text-xs py-1 px-2 rounded-md font-medium ${
+                        step.completed ? 'bg-gray-100 text-gray-900' : 'bg-gray-100 text-gray-900'
+                      }`}>
+                        {formatDate(date)}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Mobile Timeline (Vertical) - Shown only on mobile */}
+            <div className="sm:hidden flex flex-col items-center space-y-4">
+              {timelineSteps.map((step, index) => {
+                const date = sampleProject.timeline[step.key];
+                const isLast = index === timelineSteps.length - 1;
+                return (
+                  <div key={step.key} className="flex items-start gap-3 relative w-full max-w-xs mx-auto">
+                    {/* Vertical connector line */}
+                    {!isLast && (
+                      <div 
+                        className={`absolute left-3 top-6 w-[2px] h-[calc(100%+16px)] ${
+                          step.completed ? 'bg-[#72e3ad]' : 'bg-gray-200'
+                        }`}
+                      ></div>
+                    )}
+                    {/* Left side - Circle indicator */}
+                    <div className="flex-shrink-0 z-10">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                        step.completed ? 'bg-gray-100' : 'bg-gray-100'
+                      }`}>
+                        {step.completed ? (
+                          <CheckCircle className="w-4 h-4 text-black" fill="#72e3ad" />
+                        ) : (
+                          <Circle className="w-4 h-4 text-gray-400" />
+                        )}
+                      </div>
+                    </div>
+                    {/* Right side - Content */}
+                    <div className="flex-grow pl-1 pb-1">
+                      <div className="font-semibold text-gray-900 text-sm">{step.label}</div>
+                      <div className="text-xs text-gray-600 mb-1">{step.simple}</div>
+                      <div className="text-xs py-1 px-2 rounded-md font-medium bg-gray-100 text-gray-900 inline-block">
+                        {formatDate(date)}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Who's Involved - More Informative */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
+            <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white h-full flex flex-col">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
+                <User className="w-4 h-4 sm:w-5 sm:h-5" style={{color: '#72e3ad'}} />
+                <span>Government Officer In-Charge</span>
+              </h3>
+              <p className="text-xs text-gray-500 mb-3 sm:mb-4">This official is responsible for overseeing this project</p>
+              <div className="bg-gray-100 p-3 sm:p-4 rounded-lg flex-grow flex flex-col justify-between">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="font-semibold text-sm sm:text-base text-gray-900">{sampleProject.nodal_officer.name}</div>
+                  <div className="text-xs sm:text-sm text-gray-900 font-medium">{sampleProject.nodal_officer.designation}</div>
+                  <div className="text-xs sm:text-sm text-gray-900">Public Works Department</div>
+                </div>
+                <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-900">
+                    <Phone className="w-4 h-4 flex-shrink-0" style={{color: '#72e3ad'}} />
+                    <span className="break-all">{sampleProject.nodal_officer.contact}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-900">
+                    <Mail className="w-4 h-4 flex-shrink-0" style={{color: '#72e3ad'}} />
+                    <span className="break-all">{sampleProject.nodal_officer.email}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white h-full flex flex-col">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
+                <Building className="w-4 h-4 sm:w-5 sm:h-5" style={{color: '#72e3ad'}} />
+                <span>Construction Company</span>
+              </h3>
+              <p className="text-xs text-gray-500 mb-3 sm:mb-4">This company was selected to build the project</p>
+              <div className="bg-gray-100 p-3 sm:p-4 rounded-lg flex-grow flex flex-col justify-between">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="font-semibold text-sm sm:text-base text-gray-900">Kerala Infrastructure Builders</div>
+                  <div className="text-xs sm:text-sm text-gray-900 font-medium">A-Class Licensed Company</div>
+                  <div className="text-xs sm:text-sm text-gray-900">Contact: {sampleProject.contractor.contact_person}</div>
+                </div>
+                <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-900">
+                    <Phone className="w-4 h-4 flex-shrink-0" style={{color: '#72e3ad'}} />
+                    <span className="break-all">{sampleProject.contractor.contact_details.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-900">
+                    <MapPin className="w-4 h-4 flex-shrink-0" style={{color: '#72e3ad'}} />
+                    <span className="break-all text-xs">Thiruvananthapuram, Kerala</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Who Benefits - Clearer Layout */}
+          <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" style={{color: '#72e3ad'}} />
+              <span>Who Will Benefit From This Road?</span>
+            </h3>
+            <p className="text-xs text-gray-600 mb-3 sm:mb-4">This project will improve transportation and quality of life for these groups</p>
+            
+            <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6">
+              <div className="w-full md:w-1/3 bg-gray-100 rounded-lg p-3 sm:p-4 text-center">
+                <div className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">60,000</div>
+                <div className="text-xs sm:text-sm text-gray-900 font-medium">Total People Helped</div>
+                <div className="flex justify-center gap-4 mt-3">
+                  <div className="text-center">
+                    <div className="text-sm sm:text-base font-semibold text-gray-900">15,000</div>
+                    <div className="text-xs text-gray-900">Direct Impact</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm sm:text-base font-semibold text-gray-900">45,000</div>
+                    <div className="text-xs text-gray-900">Indirect Impact</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="w-full md:w-2/3">
+                <div className="text-xs sm:text-sm font-medium text-gray-700 mb-2">Specific groups that will benefit:</div>
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-2">
+                  {sampleProject.beneficiaries.beneficiary_categories.map((category, index) => (
+                    <div key={index} className="flex items-center gap-2 p-2 bg-gray-100 rounded-md">
+                      <div className="w-2 h-2 rounded-full" style={{backgroundColor: '#72e3ad'}}></div>
+                      <span className="text-xs sm:text-sm font-medium text-gray-900">{category}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer with additional resources */}
+          <div className="text-center p-3 sm:p-6 bg-gray-100 rounded-lg">
+            <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-3">Want to know more?</h3>
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
+              <button className="flex items-center gap-1 px-3 py-2 bg-white text-gray-900 rounded-lg text-xs sm:text-sm border border-gray-200">
+                <Phone className="w-3 h-3 sm:w-4 sm:h-4" style={{color: '#72e3ad'}} />
+                <span>Contact PWD</span>
+              </button>
+              <button className="flex items-center gap-1 px-3 py-2 bg-white text-gray-900 rounded-lg text-xs sm:text-sm border border-gray-200">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4" style={{color: '#72e3ad'}} />
+                <span>View on Map</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <style jsx>{`
-        .animate-slideUp {
-          animation: slideUp 0.35s cubic-bezier(0.4,0,0.2,1);
-        }
-        @keyframes slideUp {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 };
 
+// Export the Modal component for use in your ProjectGrid
 export default Modal;
