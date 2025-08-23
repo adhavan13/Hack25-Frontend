@@ -39,35 +39,41 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
     setImage(e.target.files[0]);
   };
 
-  const uploadImage = async (imageFile) => {
-    // For demo purposes, returning a placeholder URL
-    // In production, upload to your image hosting service
-    return `https://example.com/images/${Date.now()}.jpg`;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      let supportingEvidence = '';
+      // Create FormData object for multipart/form-data
+      const formDataToSend = new FormData();
+      
+      // Add all form fields
+      formDataToSend.append('grievance_title', formData.grievance_title);
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('project_service_name', formData.project_service_name);
+      formDataToSend.append('location', formData.location);
+      formDataToSend.append('long_description', formData.long_description);
+      formDataToSend.append('short_description', formData.short_description);
+      formDataToSend.append('assigned_officer_department', formData.assigned_officer_department);
+      formDataToSend.append('grievance_id', `GRV${Date.now()}`);
+      formDataToSend.append('date_of_submission', new Date().toISOString());
+      formDataToSend.append('status', 'Pending');
+      formDataToSend.append('upvotes_count', '0');
+      
+      // Add image file if present
       if (image) {
-        supportingEvidence = await uploadImage(image);
+        formDataToSend.append('supporting_evidence', image);
       }
-
-      const grievanceData = {
-        ...formData,
-        grievance_id: `GRV${Date.now()}`,
-        date_of_submission: new Date().toISOString(),
-        status: 'Pending',
-        upvotes_count: 0,
-        supporting_evidence: supportingEvidence
-      };
 
       await axios.post(
         'https://hack25-backend-x7el.vercel.app/api/grievance/addPost',
-        grievanceData
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
 
       setShowSuccessModal(true);
