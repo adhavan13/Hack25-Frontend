@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Info } from 'lucide-react';
+import { Search, Info, DollarSign, MapPin } from 'lucide-react';
 
 export default function DesignerSearchBar() {
   const [budget, setBudget] = useState('');
@@ -11,7 +11,7 @@ export default function DesignerSearchBar() {
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-white rounded-lg shadow-sm">
         {/* Budget Input */}
         <div className="flex items-center gap-2 px-4 py-3 min-w-0 flex-1 border-b border-gray-200 sm:border-b-0 sm:border-r sm:border-l-0 sm:border-gray-200">
-          <span className="text-gray-500 text-lg">$</span>
+          <DollarSign className="text-gray-500 w-5 h-5" />
           <input
             type="text"
             placeholder="Enter Budget"
@@ -23,7 +23,7 @@ export default function DesignerSearchBar() {
 
         {/* Location Input */}
         <div className="flex items-center gap-2 px-4 py-3 min-w-0 flex-1 border-b border-gray-200 sm:border-b-0 sm:border-l border-gray-200">
-          <Search className="text-gray-400 w-5 h-5" />
+          <MapPin className="text-gray-500 w-5 h-5" />
           <input
             type="text"
             placeholder="Enter Location"

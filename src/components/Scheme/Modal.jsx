@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Calendar,
   User,
-  Building,
+  Building2,
   Users,
   DollarSign,
   Clock,
@@ -11,8 +11,13 @@ import {
   Mail,
   CheckCircle,
   Circle,
-  AlertCircle,
+  AlertTriangle,
   X,
+  Settings,
+  FileText,
+  Wallet,
+  CreditCard,
+  TrendingUp,
 } from "lucide-react";
 
 const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
@@ -276,7 +281,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                 </p>
               </div>
               <div className="inline-flex items-center justify-center gap-2 bg-gray-100 px-3 py-1 rounded-full mb-2">
-                <AlertCircle className="w-4 h-4" style={{ color: "#72e3ad" }} />
+                <AlertTriangle className="w-4 h-4 text-gray-700" />
                 <span className="font-medium text-xs sm:text-sm text-gray-900">
                   Current Status:{" "}
                   <span className="text-sm sm:text-base font-semibold">
@@ -289,6 +294,9 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             {/* Key Information Cards */}
             <div className="grid grid-cols-2 gap-2 sm:gap-4 lg:grid-cols-4">
               <div className="text-center p-2 sm:p-4 border border-gray-200 rounded-lg bg-white">
+                <div className="flex items-center justify-center mb-2">
+                  <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
+                </div>
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
                   Budget Allocated
                 </div>
@@ -303,6 +311,9 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
               </div>
 
               <div className="text-center p-2 sm:p-4 border border-gray-200 rounded-lg bg-white">
+                <div className="flex items-center justify-center mb-2">
+                  <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
+                </div>
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
                   Money Used So Far
                 </div>
@@ -323,6 +334,9 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
               </div>
 
               <div className="text-center p-2 sm:p-4 border border-gray-200 rounded-lg bg-white">
+                <div className="flex items-center justify-center mb-2">
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
+                </div>
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
                   People Benefiting
                 </div>
@@ -340,6 +354,9 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
               </div>
 
               <div className="text-center p-2 sm:p-4 border border-gray-200 rounded-lg bg-white">
+                <div className="flex items-center justify-center mb-2">
+                  <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
+                </div>
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
                   Timeline
                 </div>
@@ -361,7 +378,8 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
 
             {/* Progress - More Informative */}
             <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+                <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                 Current Progress
               </h3>
               <div className="flex flex-col gap-4 sm:gap-6 sm:flex-row sm:items-center">
@@ -409,7 +427,8 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                   </div>
                 </div>
                 <div className="w-full sm:w-1/3 bg-gray-100 p-3 rounded-lg">
-                  <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-2">
+                  <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
+                    <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700" />
                     What's Happening Now:
                   </h4>
                   <ul className="text-xs sm:text-sm text-gray-900 space-y-3 list-disc pl-4">
@@ -433,7 +452,8 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
 
             {/* Timeline - Horizontal for desktop, Vertical for mobile */}
             <div className="border border-gray-200 rounded-lg p-3 sm:p-8 bg-white">
-              <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                 Project Timeline
               </h3>
               <p className="text-xs text-gray-600 mb-4 sm:mb-6">
@@ -470,11 +490,11 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                       >
                         {step.completed ? (
                           <CheckCircle
-                            className="w-4 h-4 text-black"
+                            className="w-4 h-4 text-gray-700"
                             fill="#72e3ad"
                           />
                         ) : (
-                          <Circle className="w-4 h-4 text-gray-400" />
+                          <Circle className="w-4 h-4 text-gray-500" />
                         )}
                       </div>
 
@@ -530,11 +550,11 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                         >
                           {step.completed ? (
                             <CheckCircle
-                              className="w-4 h-4 text-black"
+                              className="w-4 h-4 text-gray-700"
                               fill="#72e3ad"
                             />
                           ) : (
-                            <Circle className="w-4 h-4 text-gray-400" />
+                            <Circle className="w-4 h-4 text-gray-500" />
                           )}
                         </div>
                       </div>
@@ -560,10 +580,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
               <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white h-full flex flex-col">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
-                  <User
-                    className="w-4 h-4 sm:w-5 sm:h-5"
-                    style={{ color: "#72e3ad" }}
-                  />
+                  <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                   <span>Government Officer In-Charge</span>
                 </h3>
                 <p className="text-xs text-gray-500 mb-3 sm:mb-4">
@@ -583,19 +600,13 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                   </div>
                   <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-900">
-                      <Phone
-                        className="w-4 h-4 flex-shrink-0"
-                        style={{ color: "#72e3ad" }}
-                      />
+                      <Phone className="w-4 h-4 flex-shrink-0 text-gray-700" />
                       <span className="break-all">
                         {data.nodal_officer?.contact || "N/A"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-900">
-                      <Mail
-                        className="w-4 h-4 flex-shrink-0"
-                        style={{ color: "#72e3ad" }}
-                      />
+                      <Mail className="w-4 h-4 flex-shrink-0 text-gray-700" />
                       <span className="break-all">
                         {data.nodal_officer?.email || "N/A"}
                       </span>
@@ -606,10 +617,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
 
               <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white h-full flex flex-col">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
-                  <Building
-                    className="w-4 h-4 sm:w-5 sm:h-5"
-                    style={{ color: "#72e3ad" }}
-                  />
+                  <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                   <span>Construction Company</span>
                 </h3>
                 <p className="text-xs text-gray-500 mb-3 sm:mb-4">
@@ -629,19 +637,13 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                   </div>
                   <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-900">
-                      <Phone
-                        className="w-4 h-4 flex-shrink-0"
-                        style={{ color: "#72e3ad" }}
-                      />
+                      <Phone className="w-4 h-4 flex-shrink-0 text-gray-700" />
                       <span className="break-all">
                         {data.contractor?.contact_details?.phone || "N/A"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-900">
-                      <MapPin
-                        className="w-4 h-4 flex-shrink-0"
-                        style={{ color: "#72e3ad" }}
-                      />
+                      <MapPin className="w-4 h-4 flex-shrink-0 text-gray-700" />
                       <span className="break-all text-xs">
                         {data.contractor?.contact_details?.address
                           ? data.contractor.contact_details.address
@@ -656,10 +658,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             {/* Who Benefits - Clearer Layout */}
             <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white">
               <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
-                <Users
-                  className="w-4 h-4 sm:w-5 sm:h-5"
-                  style={{ color: "#72e3ad" }}
-                />
+                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                 <span>Who Will Benefit From This Road?</span>
               </h3>
               <p className="text-xs text-gray-600 mb-3 sm:mb-4">
@@ -731,17 +730,11 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
               </h3>
               <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
                 <button className="flex items-center gap-1 px-3 py-2 bg-white text-gray-900 rounded-lg text-xs sm:text-sm border border-gray-200">
-                  <Phone
-                    className="w-3 h-3 sm:w-4 sm:h-4"
-                    style={{ color: "#72e3ad" }}
-                  />
+                  <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700" />
                   <span>Contact PWD</span>
                 </button>
                 <button className="flex items-center gap-1 px-3 py-2 bg-white text-gray-900 rounded-lg text-xs sm:text-sm border border-gray-200">
-                  <MapPin
-                    className="w-3 h-3 sm:w-4 sm:h-4"
-                    style={{ color: "#72e3ad" }}
-                  />
+                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700" />
                   <span>View on Map</span>
                 </button>
               </div>

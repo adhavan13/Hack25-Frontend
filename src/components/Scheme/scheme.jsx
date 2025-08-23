@@ -203,6 +203,38 @@ const DesignGallery = () => {
     // eslint-disable-next-line
   }, []);
 
+  // Skeleton Loading Component
+  const SkeletonCard = () => (
+    <div className="bg-white rounded-xl border border-gray-100 overflow-hidden animate-pulse">
+      {/* Gradient header section */}
+      <div className="h-32 bg-gradient-to-br from-gray-300 to-gray-400 p-4 flex items-end">
+        <div className="w-3/4 h-6 bg-white/20 rounded"></div>
+      </div>
+      
+      {/* Content section */}
+      <div className="p-4">
+        {/* Project title */}
+        <div className="h-5 bg-gray-200 rounded mb-2 w-4/5"></div>
+        
+        {/* Project subtitle/description */}
+        <div className="h-4 bg-gray-200 rounded mb-3 w-3/5"></div>
+        
+        {/* Status badge */}
+        <div className="flex justify-end">
+          <div className="h-6 bg-gray-200 rounded-full w-20"></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SkeletonGrid = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {Array.from({ length: 8 }).map((_, index) => (
+        <SkeletonCard key={index} />
+      ))}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation Bar */}
@@ -337,7 +369,7 @@ const DesignGallery = () => {
       {/* Project Grid */}
       <div className="px-4 sm:px-6 md:px-10 lg:px-14 py-4 md:py-8 bg-white">
         {loading ? (
-          <div className="text-center py-10 text-gray-500">Loading...</div>
+          <SkeletonGrid />
         ) : (
           <ProjectGrid projects={projects} />
         )}
@@ -347,3 +379,4 @@ const DesignGallery = () => {
 };
 
 export default DesignGallery;
+    
