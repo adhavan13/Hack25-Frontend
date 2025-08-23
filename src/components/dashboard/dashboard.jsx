@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { 
   PieChart, Pie, BarChart, Bar, LineChart, Line, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
@@ -12,97 +12,8 @@ import { motion } from 'framer-motion';
 import useDashboardStore from '../../store/dashboard';
 
 const Dashboard = () => {
-  // Get dashboard data from store
-  const { 
-    dashboardData, 
-    loading, 
-    error, 
-    location, 
-    fetchDashboardData 
-  } = useDashboardStore();
-
-  // Fetch data on component mount only if location is set
-  useEffect(() => {
-    if (location && location.trim()) {
-      fetchDashboardData();
-    }
-  }, [location, fetchDashboardData]);
-
-  // Skeleton Loading Components
-  const SkeletonMetricCard = () => (
-    <div className="bg-white rounded-lg p-6 shadow-sm border animate-pulse">
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
-          <div className="h-8 bg-gray-200 rounded w-16"></div>
-        </div>
-        <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-      </div>
-      <div className="mt-4 flex items-center">
-        <div className="h-4 bg-gray-200 rounded w-12 mr-2"></div>
-        <div className="h-4 bg-gray-200 rounded w-24"></div>
-      </div>
-    </div>
-  );
-
-  const SkeletonChart = ({ height = "h-80" }) => (
-    <div className={`bg-white rounded-lg p-6 shadow-sm border animate-pulse ${height}`}>
-      <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
-      <div className="h-full bg-gray-100 rounded"></div>
-    </div>
-  );
-
-  const SkeletonProjectCard = () => (
-    <div className="bg-white rounded-lg p-4 shadow-sm border animate-pulse">
-      <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
-      <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <div className="h-4 bg-gray-200 rounded w-20"></div>
-          <div className="h-4 bg-gray-200 rounded w-16"></div>
-        </div>
-        <div className="flex justify-between">
-          <div className="h-4 bg-gray-200 rounded w-24"></div>
-          <div className="h-4 bg-gray-200 rounded w-20"></div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const DashboardSkeleton = () => (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="h-8 bg-gray-200 rounded w-64 mb-2 animate-pulse"></div>
-          <div className="h-4 bg-gray-200 rounded w-48 animate-pulse"></div>
-        </div>
-
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <SkeletonMetricCard key={index} />
-          ))}
-        </div>
-
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <SkeletonChart />
-          <SkeletonChart />
-        </div>
-
-        {/* Projects Section */}
-        <div className="mb-8">
-          <div className="h-6 bg-gray-200 rounded w-48 mb-4 animate-pulse"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <SkeletonProjectCard key={index} />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  // Get location from store
+  const { location } = useDashboardStore();
 
   // Show empty state when no location is selected
   if (!location || !location.trim()) {
@@ -123,215 +34,340 @@ const Dashboard = () => {
     );
   }
 
-  // Show loading state
-  if (loading) {
-    return <DashboardSkeleton />;
-  }
-
-  // Show error state
-  if (error && !dashboardData) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">Error: {error}</p>
-          <button 
-            onClick={fetchDashboardData}
-            className="px-4 py-2 bg-[#72e3ad] text-black rounded-lg hover:bg-opacity-90"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Extract data from API response or use defaults
-  const apiData = dashboardData || {};
-  
-  // Extract new sector data from API response
-  const newSectorData = {
-    "Agriculture and Allied Services": apiData["Agriculture and Allied Services"] || {
-      "name": "Agriculture and Allied Services",
-      "total_projects": 0,
-      "planned": 0,
-      "ongoing": 0,
-      "completed": 0,
-      "budget_allocated": 0,
-      "budget_spent": 0
-    },
-    "Rural Development": apiData["Rural Development"] || {
-      "name": "Rural Development", 
-      "total_projects": 0,
-      "planned": 0,
-      "ongoing": 0,
-      "completed": 0,
-      "budget_allocated": 0,
-      "budget_spent": 0
-    },
-    "Irrigation and Flood Control": apiData["Irrigation and Flood Control"] || {
-      "name": "Irrigation and Flood Control",
-      "total_projects": 0,
-      "planned": 0,
-      "ongoing": 0,
-      "completed": 0,
-      "budget_allocated": 0,
-      "budget_spent": 0
-    }
-  };
-
-  const newMetrics = apiData.metrics || {
-    "transparencyPercentage": 0,
-    "complaintResolutionPercentage": 0,
-    "onTimeTrendPercentage": 0,
-    "budgetTrendPercentage": 0,
-    "projectTrendPercentage": 0,
-    "categoryTrendPercentage": 0,
-    "efficiencyTrendPercentage": 0
-  };
-
-  const enhancedSatisfactionData = apiData.satisfactionData || [];
-  // Real government data
-  const governmentData = {
-    "categories": [
-      {
-        "name": "Agriculture",
-        "budget_allocated": 15000000,
-        "budget_spent": 10200000,
-        "projects": {
-          "planned": 10,
-          "ongoing": 7,
-          "completed": 5
-        }
+  // District-specific data for Kerala districts
+  const getDistrictData = (location) => {
+    const districtDataMap = {
+      "Thiruvananthapuram": {
+        "categories": [
+          {
+            "name": "Agriculture",
+            "budget_allocated": 2500000,
+            "budget_spent": 1850000,
+            "projects": {
+              "planned": 8,
+              "ongoing": 5,
+              "completed": 12
+            }
+          },
+          {
+            "name": "Rural Dev.",
+            "budget_allocated": 3200000,
+            "budget_spent": 2450000,
+            "projects": {
+              "planned": 6,
+              "ongoing": 8,
+              "completed": 15
+            }
+          },
+          {
+            "name": "Health Services",
+            "budget_allocated": 4100000,
+            "budget_spent": 3750000,
+            "projects": {
+              "planned": 4,
+              "ongoing": 7,
+              "completed": 18
+            }
+          },
+          {
+            "name": "Education",
+            "budget_allocated": 3800000,
+            "budget_spent": 3200000,
+            "projects": {
+              "planned": 5,
+              "ongoing": 6,
+              "completed": 22
+            }
+          },
+          {
+            "name": "Transport",
+            "budget_allocated": 2800000,
+            "budget_spent": 2100000,
+            "projects": {
+              "planned": 7,
+              "ongoing": 4,
+              "completed": 9
+            }
+          },
+          {
+            "name": "Water Supply",
+            "budget_allocated": 2100000,
+            "budget_spent": 1650000,
+            "projects": {
+              "planned": 3,
+              "ongoing": 5,
+              "completed": 8
+            }
+          }
+        ]
       },
-      {
-        "name": "Rural Dev.",
-        "budget_allocated": 20000000,
-        "budget_spent": 14500000,
-        "projects": {
-          "planned": 12,
-          "ongoing": 8,
-          "completed": 9
-        }
+      "Kochi": {
+        "categories": [
+          {
+            "name": "Agriculture",
+            "budget_allocated": 1800000,
+            "budget_spent": 1420000,
+            "projects": {
+              "planned": 6,
+              "ongoing": 4,
+              "completed": 10
+            }
+          },
+          {
+            "name": "Rural Dev.",
+            "budget_allocated": 2600000,
+            "budget_spent": 2050000,
+            "projects": {
+              "planned": 5,
+              "ongoing": 6,
+              "completed": 12
+            }
+          },
+          {
+            "name": "Industry",
+            "budget_allocated": 4200000,
+            "budget_spent": 3850000,
+            "projects": {
+              "planned": 8,
+              "ongoing": 9,
+              "completed": 16
+            }
+          },
+          {
+            "name": "Tourism",
+            "budget_allocated": 3100000,
+            "budget_spent": 2750000,
+            "projects": {
+              "planned": 4,
+              "ongoing": 5,
+              "completed": 14
+            }
+          },
+          {
+            "name": "Transport",
+            "budget_allocated": 3500000,
+            "budget_spent": 2900000,
+            "projects": {
+              "planned": 6,
+              "ongoing": 7,
+              "completed": 11
+            }
+          },
+          {
+            "name": "IT Services",
+            "budget_allocated": 2400000,
+            "budget_spent": 2150000,
+            "projects": {
+              "planned": 3,
+              "ongoing": 4,
+              "completed": 8
+            }
+          }
+        ]
       },
-      {
-        "name": "Co-operation",
-        "budget_allocated": 8000000,
-        "budget_spent": 5200000,
-        "projects": {
-          "planned": 6,
-          "ongoing": 3,
-          "completed": 2
-        }
+      "Kozhikode": {
+        "categories": [
+          {
+            "name": "Agriculture",
+            "budget_allocated": 2200000,
+            "budget_spent": 1750000,
+            "projects": {
+              "planned": 7,
+              "ongoing": 5,
+              "completed": 11
+            }
+          },
+          {
+            "name": "Fisheries",
+            "budget_allocated": 1900000,
+            "budget_spent": 1500000,
+            "projects": {
+              "planned": 4,
+              "ongoing": 6,
+              "completed": 9
+            }
+          },
+          {
+            "name": "Education",
+            "budget_allocated": 3400000,
+            "budget_spent": 2950000,
+            "projects": {
+              "planned": 5,
+              "ongoing": 8,
+              "completed": 19
+            }
+          },
+          {
+            "name": "Health Services",
+            "budget_allocated": 2800000,
+            "budget_spent": 2300000,
+            "projects": {
+              "planned": 3,
+              "ongoing": 6,
+              "completed": 13
+            }
+          },
+          {
+            "name": "Tourism",
+            "budget_allocated": 2100000,
+            "budget_spent": 1650000,
+            "projects": {
+              "planned": 6,
+              "ongoing": 4,
+              "completed": 7
+            }
+          },
+          {
+            "name": "Small Industries",
+            "budget_allocated": 1600000,
+            "budget_spent": 1200000,
+            "projects": {
+              "planned": 4,
+              "ongoing": 3,
+              "completed": 6
+            }
+          }
+        ]
       },
-      {
-        "name": "Irrigation & Flood",
-        "budget_allocated": 18000000,
-        "budget_spent": 12000000,
-        "projects": {
-          "planned": 9,
-          "ongoing": 6,
-          "completed": 4
-        }
+      "Alappuzha": {
+        "categories": [
+          {
+            "name": "Agriculture",
+            "budget_allocated": 2800000,
+            "budget_spent": 2200000,
+            "projects": {
+              "planned": 9,
+              "ongoing": 6,
+              "completed": 14
+            }
+          },
+          {
+            "name": "Fisheries",
+            "budget_allocated": 2400000,
+            "budget_spent": 2050000,
+            "projects": {
+              "planned": 6,
+              "ongoing": 8,
+              "completed": 12
+            }
+          },
+          {
+            "name": "Tourism",
+            "budget_allocated": 3200000,
+            "budget_spent": 2750000,
+            "projects": {
+              "planned": 5,
+              "ongoing": 7,
+              "completed": 15
+            }
+          },
+          {
+            "name": "Rural Dev.",
+            "budget_allocated": 2100000,
+            "budget_spent": 1650000,
+            "projects": {
+              "planned": 4,
+              "ongoing": 5,
+              "completed": 9
+            }
+          },
+          {
+            "name": "Water Management",
+            "budget_allocated": 2600000,
+            "budget_spent": 2150000,
+            "projects": {
+              "planned": 7,
+              "ongoing": 6,
+              "completed": 10
+            }
+          },
+          {
+            "name": "Coir Industry",
+            "budget_allocated": 1500000,
+            "budget_spent": 1150000,
+            "projects": {
+              "planned": 3,
+              "ongoing": 4,
+              "completed": 7
+            }
+          }
+        ]
       },
-      {
-        "name": "Energy",
-        "budget_allocated": 22000000,
-        "budget_spent": 16500000,
-        "projects": {
-          "planned": 11,
-          "ongoing": 8,
-          "completed": 6
-        }
-      },
-      {
-        "name": "Industry & Minerals",
-        "budget_allocated": 16000000,
-        "budget_spent": 10500000,
-        "projects": {
-          "planned": 8,
-          "ongoing": 6,
-          "completed": 3
-        }
-      },
-      {
-        "name": "Transport & Comm.",
-        "budget_allocated": 25000000,
-        "budget_spent": 18700000,
-        "projects": {
-          "planned": 15,
-          "ongoing": 10,
-          "completed": 9
-        }
-      },
-      {
-        "name": "Scientific Research",
-        "budget_allocated": 7000000,
-        "budget_spent": 4200000,
-        "projects": {
-          "planned": 5,
-          "ongoing": 2,
-          "completed": 2
-        }
-      },
-      {
-        "name": "Social Services",
-        "budget_allocated": 14000000,
-        "budget_spent": 10000000,
-        "projects": {
-          "planned": 9,
-          "ongoing": 5,
-          "completed": 4
-        }
-      },
-      {
-        "name": "Economic Services",
-        "budget_allocated": 12000000,
-        "budget_spent": 8000000,
-        "projects": {
-          "planned": 7,
-          "ongoing": 4,
-          "completed": 3
-        }
-      },
-      {
-        "name": "General Services",
-        "budget_allocated": 6000000,
-        "budget_spent": 3500000,
-        "projects": {
-          "planned": 4,
-          "ongoing": 2,
-          "completed": 1
-        }
-      },
-      {
-        "name": "Local Plan Prog.",
-        "budget_allocated": 10000000,
-        "budget_spent": 7200000,
-        "projects": {
-          "planned": 6,
-          "ongoing": 4,
-          "completed": 3
-        }
+      "Thrissur": {
+        "categories": [
+          {
+            "name": "Agriculture",
+            "budget_allocated": 2600000,
+            "budget_spent": 2100000,
+            "projects": {
+              "planned": 8,
+              "ongoing": 6,
+              "completed": 13
+            }
+          },
+          {
+            "name": "Cultural Heritage",
+            "budget_allocated": 1800000,
+            "budget_spent": 1450000,
+            "projects": {
+              "planned": 4,
+              "ongoing": 5,
+              "completed": 8
+            }
+          },
+          {
+            "name": "Education",
+            "budget_allocated": 3100000,
+            "budget_spent": 2650000,
+            "projects": {
+              "planned": 6,
+              "ongoing": 7,
+              "completed": 17
+            }
+          },
+          {
+            "name": "Health Services",
+            "budget_allocated": 2500000,
+            "budget_spent": 2050000,
+            "projects": {
+              "planned": 4,
+              "ongoing": 6,
+              "completed": 11
+            }
+          },
+          {
+            "name": "Small Industries",
+            "budget_allocated": 2200000,
+            "budget_spent": 1750000,
+            "projects": {
+              "planned": 5,
+              "ongoing": 4,
+              "completed": 9
+            }
+          },
+          {
+            "name": "Tourism",
+            "budget_allocated": 1900000,
+            "budget_spent": 1500000,
+            "projects": {
+              "planned": 3,
+              "ongoing": 4,
+              "completed": 6
+            }
+          }
+        ]
       }
-    ]
+    };
+
+    // Return data for the specific district, fallback to Thiruvananthapuram if not found
+    return districtDataMap[location] || districtDataMap["Thiruvananthapuram"];
   };
+
+  // Get data based on selected location
+  const governmentData = getDistrictData(location);
 
   // Combine new sector data with existing data
   const enhancedCategories = [...governmentData.categories];
-  
-  // Add new sector data to categories
-  Object.values(newSectorData).forEach(sector => {
-    enhancedCategories.push({
-      name: sector.name.length > 15 ? sector.name.substring(0, 15) + '...' : sector.name,
-      budget_allocated: sector.budget_allocated,
-      budget_spent: sector.budget_spent,
-      projects: {
-        planned: sector.planned,
-        ongoing: sector.ongoing,
-        completed: sector.completed
-      }
-    });
-  });
 
   // Calculate totals using enhanced data
   const totalBudgetAllocated = enhancedCategories.reduce((sum, cat) => sum + cat.budget_allocated, 0);
@@ -505,8 +541,8 @@ const Dashboard = () => {
         >
           <MetricCard
             title="Total Budget"
-            value={`₹${Math.round(totalBudgetAllocated / 10000000)}Cr`}
-            subtitle={`${spentPercentage}% Spent (₹${Math.round(totalBudgetSpent / 10000000)}Cr)`}
+            value={`₹${Math.round(totalBudgetAllocated / 1000000)}Cr`}
+            subtitle={`${spentPercentage}% Spent (₹${Math.round(totalBudgetSpent / 1000000)}Cr)`}
             icon={DollarSign}
             trend={spentPercentage > 70 ? 5.2 : -2.3}
             index={0}
