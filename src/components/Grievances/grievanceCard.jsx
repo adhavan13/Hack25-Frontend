@@ -1,7 +1,7 @@
-import React from 'react';
-import { ArrowBigUp, ArrowBigDown, MapPin, Calendar, User } from 'lucide-react';
+import React from "react";
+import { ArrowBigUp, ArrowBigDown, MapPin, Calendar, User } from "lucide-react";
 
-export default function GrievanceCard({ 
+export default function GrievanceCard({
   id,
   title,
   category,
@@ -16,15 +16,20 @@ export default function GrievanceCard({
   evidence,
   onUpvote,
   onDownvote,
-  userVote
+  userVote,
 }) {
   const getStatusColor = (status) => {
-    switch ((status || '').toLowerCase()) {
-      case 'resolved': return 'bg-[#72e3ad] text-black';
-      case 'pending': return 'bg-gray-200 text-black';
-      case 'in progress': return 'bg-gray-300 text-black';
-      case 'under review': return 'bg-yellow-100 text-black';
-      default: return 'bg-gray-100 text-black';
+    switch ((status || "").toLowerCase()) {
+      case "resolved":
+        return "bg-[#72e3ad] text-black";
+      case "pending":
+        return "bg-gray-200 text-black";
+      case "in progress":
+        return "bg-gray-300 text-black";
+      case "under review":
+        return "bg-yellow-100 text-black";
+      default:
+        return "bg-gray-100 text-black";
     }
   };
 
@@ -36,23 +41,39 @@ export default function GrievanceCard({
           <div className="w-full lg:w-1/3 bg-gradient-to-br from-gray-100 to-gray-200 aspect-video lg:aspect-square relative overflow-hidden">
             <div className="w-full h-full flex items-center justify-center text-gray-500 bg-gradient-to-br from-gray-100 to-gray-200">
               <div className="text-center">
-                {evidence && evidence.startsWith('http') ? (
-                  <img src={evidence} alt="Evidence" className="w-20 h-20 object-cover rounded-xl mx-auto mb-2" />
+                {evidence && evidence.startsWith("http") ? (
+                  <img
+                    src={evidence}
+                    alt="Evidence"
+                    className="w-20 h-20 object-cover rounded-xl mx-auto mb-2"
+                  />
                 ) : (
                   <div className="w-12 h-12 mx-auto mb-2 bg-[#72e3ad] rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="w-6 h-6 text-black"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
-                  </div> 
+                  </div>
                 )}
                 <span className="text-sm font-medium text-black">
-                  {evidence && evidence.startsWith('http') ? 'Photo Evidence' : evidence || 'No Evidence'}
+                  {evidence && evidence.startsWith("http")
+                    ? "Photo Evidence"
+                    : evidence || "No Evidence"}
                 </span>
               </div>
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
-          
+
           {/* Content Section */}
           <div className="w-full lg:w-2/3 p-4 lg:p-6">
             {/* Header with ID and Status */}
@@ -62,7 +83,11 @@ export default function GrievanceCard({
                   {id}
                 </span>
               </div>
-              <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${getStatusColor(status)} ring-1 ring-inset ring-gray-300`}>
+              <span
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${getStatusColor(
+                  status
+                )} ring-1 ring-inset ring-gray-300`}
+              >
                 <div className="w-1.5 h-1.5 rounded-full bg-black mr-1.5"></div>
                 {status}
               </span>
@@ -105,52 +130,66 @@ export default function GrievanceCard({
                 <div className="flex items-center text-gray-600 text-xs">
                   <Calendar className="w-3.5 h-3.5 mr-2 text-black" />
                   <span className="font-medium">
-                    Submitted: {date ? new Date(date).toLocaleDateString() : ''}
+                    Submitted: {date ? new Date(date).toLocaleDateString() : ""}
                   </span>
                 </div>
                 {assignedOfficer && (
                   <div className="flex items-center text-gray-600 text-xs">
                     <User className="w-3.5 h-3.5 mr-2 text-black" />
-                    <span className="font-medium">Assigned to: {assignedOfficer}</span>
+                    <span className="font-medium">
+                      Assigned to: {assignedOfficer}
+                    </span>
                   </div>
                 )}
               </div>
 
               {/* Voting Section */}
               <div className="flex items-center gap-4">
-                <button 
+                <button
                   className={`flex items-center gap-2 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-lg ${
-                    userVote === 'upvote' 
-                      ? 'bg-green-100 border border-green-300 shadow-sm' 
-                      : 'hover:bg-green-50'
+                    userVote === "upvote"
+                      ? "bg-green-100 border border-green-300 shadow-sm"
+                      : "hover:bg-green-50"
                   }`}
                   onClick={onUpvote}
                 >
-                  <ArrowBigUp className={`w-5 h-5 transition-colors ${
-                    userVote === 'upvote' 
-                      ? 'text-green-700 fill-green-600' 
-                      : 'text-green-600 hover:text-green-700'
-                  }`} />
-                  <span className={`text-sm font-bold ${
-                    userVote === 'upvote' ? 'text-green-700' : 'text-black'
-                  }`}>{upvotes}</span>
+                  <ArrowBigUp
+                    className={`w-5 h-5 transition-colors ${
+                      userVote === "upvote"
+                        ? "text-green-700 fill-green-600"
+                        : "text-green-600 hover:text-green-700"
+                    }`}
+                  />
+                  <span
+                    className={`text-sm font-bold ${
+                      userVote === "upvote" ? "text-green-700" : "text-black"
+                    }`}
+                  >
+                    {upvotes}
+                  </span>
                 </button>
-                <button 
+                <button
                   className={`flex items-center gap-2 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-lg ${
-                    userVote === 'downvote' 
-                      ? 'bg-red-100 border border-red-300 shadow-sm' 
-                      : 'hover:bg-red-50'
+                    userVote === "downvote"
+                      ? "bg-red-100 border border-red-300 shadow-sm"
+                      : "hover:bg-red-50"
                   }`}
                   onClick={onDownvote}
                 >
-                  <ArrowBigDown className={`w-5 h-5 transition-colors ${
-                    userVote === 'downvote' 
-                      ? 'text-red-700 fill-red-600' 
-                      : 'text-red-600 hover:text-red-700'
-                  }`} />
-                  <span className={`text-sm font-bold ${
-                    userVote === 'downvote' ? 'text-red-700' : 'text-black'
-                  }`}>{downvotes}</span>
+                  <ArrowBigDown
+                    className={`w-5 h-5 transition-colors ${
+                      userVote === "downvote"
+                        ? "text-red-700 fill-red-600"
+                        : "text-red-600 hover:text-red-700"
+                    }`}
+                  />
+                  <span
+                    className={`text-sm font-bold ${
+                      userVote === "downvote" ? "text-red-700" : "text-black"
+                    }`}
+                  >
+                    {downvotes}
+                  </span>
                 </button>
               </div>
             </div>
