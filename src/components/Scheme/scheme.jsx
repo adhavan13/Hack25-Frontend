@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Filter, ChevronDown, Menu, X } from "lucide-react";
 import ProjectGrid from "./ProjectGrid";
-import axios from "axios"; 
+import axios from "axios";
 
 const DesignGallery = () => {
   const [activeFilter, setActiveFilter] = useState("Latest"); // for time filter (dropdown)
@@ -143,6 +143,9 @@ const DesignGallery = () => {
     "Agriculture and Allied Services",
     "Rural Development",
     "Irrigation and Flood Control",
+    "Economic Services",
+    "Industry and Minerals",
+    "Energy",
   ];
 
   // Handle outside click to close dropdown
@@ -210,15 +213,15 @@ const DesignGallery = () => {
       <div className="h-32 bg-gradient-to-br from-gray-300 to-gray-400 p-4 flex items-end">
         <div className="w-3/4 h-6 bg-white/20 rounded"></div>
       </div>
-      
+
       {/* Content section */}
       <div className="p-4">
         {/* Project title */}
         <div className="h-5 bg-gray-200 rounded mb-2 w-4/5"></div>
-        
+
         {/* Project subtitle/description */}
         <div className="h-4 bg-gray-200 rounded mb-3 w-3/5"></div>
-        
+
         {/* Status badge */}
         <div className="flex justify-end">
           <div className="h-6 bg-gray-200 rounded-full w-20"></div>
@@ -368,15 +371,10 @@ const DesignGallery = () => {
 
       {/* Project Grid */}
       <div className="px-4 sm:px-6 md:px-10 lg:px-14 py-4 md:py-8 bg-white">
-        {loading ? (
-          <SkeletonGrid />
-        ) : (
-          <ProjectGrid projects={projects} />
-        )}
+        {loading ? <SkeletonGrid /> : <ProjectGrid projects={projects} />}
       </div>
     </div>
   );
 };
 
 export default DesignGallery;
-    

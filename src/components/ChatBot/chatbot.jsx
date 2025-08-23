@@ -1,14 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
 
-const ChatBot = ({ onCategoryFilter, onLocationFilter, onSearchFilter, currentFilters = {} }) => {
+const ChatBot = ({
+  onCategoryFilter,
+  onLocationFilter,
+  onSearchFilter,
+  currentFilters = {},
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { 
-      id: 1, 
-      text: "Hi there! 👋 I can help you find specific grievances. Try asking me to:\n\n• Filter by category (e.g., 'Show agriculture grievances')\n• Filter by location (e.g., 'Show grievances from Kochi')\n• Search for specific topics (e.g., 'Find water issues')\n• Clear all filters\n\nHow can I help you today?", 
-      isBot: true 
-    }
+    {
+      id: 1,
+      text: "Hi! How can I help you today?",
+      isBot: true,
+    },
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -35,104 +40,7 @@ const ChatBot = ({ onCategoryFilter, onLocationFilter, onSearchFilter, currentFi
     setInput(e.target.value);
   };
 
-  // Intelligent response system for filtering
-  const processUserInput = (userInput) => {
-    const input = userInput.toLowerCase();
-    
-    // Categories
-    const categories = [
-      'agriculture and allied services',
-      'rural development', 
-      'irrigation and flood control'
-    ];
-    
-    // Kerala locations
-    const locations = [
-      'thiruvananthapuram', 'kollam', 'pathanamthitta', 'alappuzha', 'kottayam',
-      'idukki', 'ernakulam', 'thrissur', 'palakkad', 'malappuram',
-      'kozhikode', 'wayanad', 'kannur', 'kasaragod', 'kochi'
-    ];
-
-    // Clear filters or show all
-    if (input.includes('clear') && (input.includes('filter') || input.includes('all'))) {
-      onCategoryFilter?.('All');
-      onLocationFilter?.('');
-      onSearchFilter?.('');
-      return "✅ All filters have been cleared! You can now see all grievances from the database.";
-    }
-
-    // Show all grievances
-    if (input.includes('show all') || input.includes('display all') || (input.includes('all') && input.includes('grievances'))) {
-      onCategoryFilter?.('All');
-      onLocationFilter?.('');
-      onSearchFilter?.('');
-      return "✅ Displaying all grievances from the database! All filters have been cleared.";
-    }
-
-    // Category filtering
-    for (const category of categories) {
-      if (input.includes(category) || (category.includes('agriculture') && input.includes('agriculture'))) {
-        const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
-        onCategoryFilter?.(categoryName);
-        return `✅ Filtered to show "${categoryName}" grievances only.`;
-      }
-    }
-
-    // Location filtering
-    for (const location of locations) {
-      if (input.includes(location)) {
-        const locationName = location.charAt(0).toUpperCase() + location.slice(1);
-        onLocationFilter?.(locationName);
-        return `✅ Filtered to show grievances from ${locationName}.`;
-      }
-    }
-
-    // Search filtering
-    if (input.includes('search') || input.includes('find')) {
-      // Extract search terms after 'search for' or 'find'
-      let searchTerm = '';
-      if (input.includes('search for')) {
-        searchTerm = input.split('search for')[1]?.trim();
-      } else if (input.includes('find')) {
-        searchTerm = input.split('find')[1]?.trim();
-      }
-      
-      if (searchTerm) {
-        onSearchFilter?.(searchTerm);
-        return `🔍 Searching for grievances containing "${searchTerm}".`;
-      }
-    }
-
-    // Status inquiry
-    if (input.includes('current') && (input.includes('filter') || input.includes('status'))) {
-      const status = [];
-      if (currentFilters.category && currentFilters.category !== 'All') {
-        status.push(`Category: ${currentFilters.category}`);
-      }
-      if (currentFilters.location) {
-        status.push(`Location: ${currentFilters.location}`);
-      }
-      if (currentFilters.search) {
-        status.push(`Search: "${currentFilters.search}"`);
-      }
-      
-      if (status.length === 0) {
-        return "📋 No filters are currently active. Showing all grievances.";
-      } else {
-        return `📋 Current filters:\n${status.map(s => `• ${s}`).join('\n')}`;
-      }
-    }
-
-    // Help commands
-    if (input.includes('help') || input.includes('what can you do')) {
-      return "🤖 I can help you filter and view grievances! Try these commands:\n\n• 'Show all grievances' - Display all grievances from database\n• 'Show agriculture grievances'\n• 'Find grievances from Kochi'\n• 'Search for water issues'\n• 'Clear all filters'\n• 'What are my current filters?'\n\nJust ask naturally!";
-    }
-
-    // Default response for unrecognized input
-    return "🤔 I didn't quite understand that. I can help you filter grievances by:\n\n• Showing all grievances from the database\n• Category (Agriculture, Rural Development, Irrigation)\n• Location (any Kerala city/district)\n• Search terms\n\nTry saying something like 'Show all grievances', 'Show agriculture grievances' or 'Find issues in Kochi'!";
-  };
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (input.trim() === "") return;
 
     // Add user message
@@ -142,17 +50,37 @@ const ChatBot = ({ onCategoryFilter, onLocationFilter, onSearchFilter, currentFi
     setInput("");
     setIsTyping(true);
 
-    // Process the input and generate intelligent response
-    setTimeout(() => {
-      const botResponse = processUserInput(userInput);
+    // Call backend API for response
+    try {
+      const res = await fetch(
+        "https://hack25-backend-x7el.vercel.app/api/chatbot/chat",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: userInput }),
+        }
+      );
+      const data = await res.json();
+      const botResponse =
+        data?.response ||
+        "🤔 Sorry, I couldn't get a response. Please try again.";
       const botMessage = {
         id: Date.now() + 1,
         text: botResponse,
         isBot: true,
       };
       setMessages((prev) => [...prev, botMessage]);
-      setIsTyping(false);
-    }, 1000);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          text: "⚠️ There was an error connecting to the chatbot service.",
+          isBot: true,
+        },
+      ]);
+    }
+    setIsTyping(false);
   };
 
   const handleKeyPress = (e) => {
@@ -161,6 +89,23 @@ const ChatBot = ({ onCategoryFilter, onLocationFilter, onSearchFilter, currentFi
       handleSubmit();
     }
   };
+
+  // Add a simple Markdown-to-HTML converter for bold, lists, and line breaks
+  function formatBotMessage(text) {
+    // Bold: **text** or *text*
+    let html = text
+      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+      .replace(/\*(.*?)\*/g, "<b>$1</b>");
+    // Lists: lines starting with *
+    html = html.replace(/(^|\n)\* (.*?)(?=\n|$)/g, '$1<li>$2</li>');
+    // Wrap <li> in <ul> if any <li> present
+    if (html.includes("<li>")) {
+      html = html.replace(/((<li>.*<\/li>\s*)+)/g, '<ul>$1</ul>');
+    }
+    // Line breaks: double newlines to <br/><br/>, single newline to <br/>
+    html = html.replace(/\n\n/g, "<br/><br/>").replace(/\n/g, "<br/>");
+    return html;
+  }
 
   return (
     <div className="fixed bottom-6 right-6 z-50 font-sans">
@@ -224,18 +169,24 @@ const ChatBot = ({ onCategoryFilter, onLocationFilter, onSearchFilter, currentFi
                 message.isBot ? "justify-start" : "justify-end"
               } animate-in slide-in-from-bottom-2 duration-300`}
             >
-              <div
-                className={`
-                  max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed
-                  ${
-                    message.isBot
-                      ? "bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-md"
-                      : "bg-[#72e3ad] text-black shadow-sm rounded-br-md"
-                  }
-                `}
-              >
-                {message.text}
-              </div>
+              {message.isBot ? (
+                <div
+                  className={`
+                    max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed
+                    bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-md
+                  `}
+                  dangerouslySetInnerHTML={{ __html: formatBotMessage(message.text) }}
+                />
+              ) : (
+                <div
+                  className={`
+                    max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed
+                    bg-[#72e3ad] text-black shadow-sm rounded-br-md
+                  `}
+                >
+                  {message.text}
+                </div>
+              )}
             </div>
           ))}
 
@@ -297,6 +248,7 @@ const ChatBot = ({ onCategoryFilter, onLocationFilter, onSearchFilter, currentFi
             </button>
           </div>
         </div>
+        {/* End Input */}
       </div>
     </div>
   );

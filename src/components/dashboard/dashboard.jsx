@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
-  PieChart, Pie, BarChart, Bar, LineChart, Line, AreaChart, Area,
+  PieChart, Pie, BarChart, Bar, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   Cell
 } from 'recharts';
 import { 
   DollarSign, TrendingUp, Clock, Users, 
-  CheckCircle, AlertTriangle, FileText, Award
+  CheckCircle, AlertTriangle, FileText
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import useDashboardStore from '../../store/dashboard';
 
 const Dashboard = () => {
-  // Get location from store
-  const { location } = useDashboardStore();
+  // Get location, dashboardData, loading, and fetchDashboardData from store
+  const { location, dashboardData, loading, fetchDashboardData } = useDashboardStore();
+
+  // Fetch data when location changes
+  useEffect(() => {
+    if (location && location.trim()) {
+      fetchDashboardData();
+    }
+    // eslint-disable-next-line
+  }, [location]);
 
   // Show empty state when no location is selected
   if (!location || !location.trim()) {
@@ -34,416 +42,81 @@ const Dashboard = () => {
     );
   }
 
-  // District-specific data for Kerala districts
-  const getDistrictData = (location) => {
-    const districtDataMap = {
-      "Thiruvananthapuram": {
-        "categories": [
-          {
-            "name": "Agriculture",
-            "budget_allocated": 2500000,
-            "budget_spent": 1850000,
-            "projects": {
-              "planned": 8,
-              "ongoing": 5,
-              "completed": 12
-            }
-          },
-          {
-            "name": "Rural Dev.",
-            "budget_allocated": 3200000,
-            "budget_spent": 2450000,
-            "projects": {
-              "planned": 6,
-              "ongoing": 8,
-              "completed": 15
-            }
-          },
-          {
-            "name": "Health Services",
-            "budget_allocated": 4100000,
-            "budget_spent": 3750000,
-            "projects": {
-              "planned": 4,
-              "ongoing": 7,
-              "completed": 18
-            }
-          },
-          {
-            "name": "Education",
-            "budget_allocated": 3800000,
-            "budget_spent": 3200000,
-            "projects": {
-              "planned": 5,
-              "ongoing": 6,
-              "completed": 22
-            }
-          },
-          {
-            "name": "Transport",
-            "budget_allocated": 2800000,
-            "budget_spent": 2100000,
-            "projects": {
-              "planned": 7,
-              "ongoing": 4,
-              "completed": 9
-            }
-          },
-          {
-            "name": "Water Supply",
-            "budget_allocated": 2100000,
-            "budget_spent": 1650000,
-            "projects": {
-              "planned": 3,
-              "ongoing": 5,
-              "completed": 8
-            }
-          }
-        ]
-      },
-      "Kochi": {
-        "categories": [
-          {
-            "name": "Agriculture",
-            "budget_allocated": 1800000,
-            "budget_spent": 1420000,
-            "projects": {
-              "planned": 6,
-              "ongoing": 4,
-              "completed": 10
-            }
-          },
-          {
-            "name": "Rural Dev.",
-            "budget_allocated": 2600000,
-            "budget_spent": 2050000,
-            "projects": {
-              "planned": 5,
-              "ongoing": 6,
-              "completed": 12
-            }
-          },
-          {
-            "name": "Industry",
-            "budget_allocated": 4200000,
-            "budget_spent": 3850000,
-            "projects": {
-              "planned": 8,
-              "ongoing": 9,
-              "completed": 16
-            }
-          },
-          {
-            "name": "Tourism",
-            "budget_allocated": 3100000,
-            "budget_spent": 2750000,
-            "projects": {
-              "planned": 4,
-              "ongoing": 5,
-              "completed": 14
-            }
-          },
-          {
-            "name": "Transport",
-            "budget_allocated": 3500000,
-            "budget_spent": 2900000,
-            "projects": {
-              "planned": 6,
-              "ongoing": 7,
-              "completed": 11
-            }
-          },
-          {
-            "name": "IT Services",
-            "budget_allocated": 2400000,
-            "budget_spent": 2150000,
-            "projects": {
-              "planned": 3,
-              "ongoing": 4,
-              "completed": 8
-            }
-          }
-        ]
-      },
-      "Kozhikode": {
-        "categories": [
-          {
-            "name": "Agriculture",
-            "budget_allocated": 2200000,
-            "budget_spent": 1750000,
-            "projects": {
-              "planned": 7,
-              "ongoing": 5,
-              "completed": 11
-            }
-          },
-          {
-            "name": "Fisheries",
-            "budget_allocated": 1900000,
-            "budget_spent": 1500000,
-            "projects": {
-              "planned": 4,
-              "ongoing": 6,
-              "completed": 9
-            }
-          },
-          {
-            "name": "Education",
-            "budget_allocated": 3400000,
-            "budget_spent": 2950000,
-            "projects": {
-              "planned": 5,
-              "ongoing": 8,
-              "completed": 19
-            }
-          },
-          {
-            "name": "Health Services",
-            "budget_allocated": 2800000,
-            "budget_spent": 2300000,
-            "projects": {
-              "planned": 3,
-              "ongoing": 6,
-              "completed": 13
-            }
-          },
-          {
-            "name": "Tourism",
-            "budget_allocated": 2100000,
-            "budget_spent": 1650000,
-            "projects": {
-              "planned": 6,
-              "ongoing": 4,
-              "completed": 7
-            }
-          },
-          {
-            "name": "Small Industries",
-            "budget_allocated": 1600000,
-            "budget_spent": 1200000,
-            "projects": {
-              "planned": 4,
-              "ongoing": 3,
-              "completed": 6
-            }
-          }
-        ]
-      },
-      "Alappuzha": {
-        "categories": [
-          {
-            "name": "Agriculture",
-            "budget_allocated": 2800000,
-            "budget_spent": 2200000,
-            "projects": {
-              "planned": 9,
-              "ongoing": 6,
-              "completed": 14
-            }
-          },
-          {
-            "name": "Fisheries",
-            "budget_allocated": 2400000,
-            "budget_spent": 2050000,
-            "projects": {
-              "planned": 6,
-              "ongoing": 8,
-              "completed": 12
-            }
-          },
-          {
-            "name": "Tourism",
-            "budget_allocated": 3200000,
-            "budget_spent": 2750000,
-            "projects": {
-              "planned": 5,
-              "ongoing": 7,
-              "completed": 15
-            }
-          },
-          {
-            "name": "Rural Dev.",
-            "budget_allocated": 2100000,
-            "budget_spent": 1650000,
-            "projects": {
-              "planned": 4,
-              "ongoing": 5,
-              "completed": 9
-            }
-          },
-          {
-            "name": "Water Management",
-            "budget_allocated": 2600000,
-            "budget_spent": 2150000,
-            "projects": {
-              "planned": 7,
-              "ongoing": 6,
-              "completed": 10
-            }
-          },
-          {
-            "name": "Coir Industry",
-            "budget_allocated": 1500000,
-            "budget_spent": 1150000,
-            "projects": {
-              "planned": 3,
-              "ongoing": 4,
-              "completed": 7
-            }
-          }
-        ]
-      },
-      "Thrissur": {
-        "categories": [
-          {
-            "name": "Agriculture",
-            "budget_allocated": 2600000,
-            "budget_spent": 2100000,
-            "projects": {
-              "planned": 8,
-              "ongoing": 6,
-              "completed": 13
-            }
-          },
-          {
-            "name": "Cultural Heritage",
-            "budget_allocated": 1800000,
-            "budget_spent": 1450000,
-            "projects": {
-              "planned": 4,
-              "ongoing": 5,
-              "completed": 8
-            }
-          },
-          {
-            "name": "Education",
-            "budget_allocated": 3100000,
-            "budget_spent": 2650000,
-            "projects": {
-              "planned": 6,
-              "ongoing": 7,
-              "completed": 17
-            }
-          },
-          {
-            "name": "Health Services",
-            "budget_allocated": 2500000,
-            "budget_spent": 2050000,
-            "projects": {
-              "planned": 4,
-              "ongoing": 6,
-              "completed": 11
-            }
-          },
-          {
-            "name": "Small Industries",
-            "budget_allocated": 2200000,
-            "budget_spent": 1750000,
-            "projects": {
-              "planned": 5,
-              "ongoing": 4,
-              "completed": 9
-            }
-          },
-          {
-            "name": "Tourism",
-            "budget_allocated": 1900000,
-            "budget_spent": 1500000,
-            "projects": {
-              "planned": 3,
-              "ongoing": 4,
-              "completed": 6
-            }
-          }
-        ]
-      }
-    };
+  // Show loading state
+  if (loading || !dashboardData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center animate-spin">
+            <svg className="w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            Loading dashboard data...
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
-    // Return data for the specific district, fallback to Thiruvananthapuram if not found
-    return districtDataMap[location] || districtDataMap["Thiruvananthapuram"];
-  };
+  // Prepare data from API response
+  const categories = Object.keys(dashboardData)
+    .filter(key => key !== 'satisfactionData' && key !== 'metrics')
+    .map(key => dashboardData[key]);
 
-  // Get data based on selected location
-  const governmentData = getDistrictData(location);
+  // Calculate totals
+  const totalBudgetAllocated = categories.reduce((sum, cat) => sum + (cat.budget_allocated || 0), 0);
+  const totalBudgetSpent = categories.reduce((sum, cat) => sum + (cat.budget_spent || 0), 0);
+  const spentPercentage = totalBudgetAllocated > 0 ? Math.round((totalBudgetSpent / totalBudgetAllocated) * 100) : 0;
 
-  // Combine new sector data with existing data
-  const enhancedCategories = [...governmentData.categories];
-
-  // Calculate totals using enhanced data
-  const totalBudgetAllocated = enhancedCategories.reduce((sum, cat) => sum + cat.budget_allocated, 0);
-  const totalBudgetSpent = enhancedCategories.reduce((sum, cat) => sum + cat.budget_spent, 0);
-  const spentPercentage = Math.round((totalBudgetSpent / totalBudgetAllocated) * 100);
-
-  // Calculate project totals using enhanced data
-  const totalProjects = enhancedCategories.reduce((acc, cat) => ({
-    planned: acc.planned + cat.projects.planned,
-    ongoing: acc.ongoing + cat.projects.ongoing,
-    completed: acc.completed + cat.projects.completed
+  // Calculate project totals
+  const totalProjects = categories.reduce((acc, cat) => ({
+    planned: acc.planned + (cat.planned || 0),
+    ongoing: acc.ongoing + (cat.ongoing || 0),
+    completed: acc.completed + (cat.completed || 0)
   }), { planned: 0, ongoing: 0, completed: 0 });
 
   // Professional color palette
   const chartColors = [
-    '#2563eb', // blue
-    '#14b8a6', // teal
-    '#f59e42', // orange
-    '#a78bfa', // purple
-    '#64748b', // slate
-    '#f43f5e', // rose
-    '#facc15', // yellow
-    '#6366f1', // indigo
-    '#10b981', // emerald
-    '#eab308', // gold
-    '#0ea5e9', // sky
-    '#d946ef'  // fuchsia
+    '#2563eb', '#14b8a6', '#f59e42', '#a78bfa', '#64748b', '#f43f5e',
+    '#facc15', '#6366f1', '#10b981', '#eab308', '#0ea5e9', '#d946ef'
   ];
 
   // Prepare data for charts
-  const topExpenditureData = governmentData.categories
-    .sort((a, b) => b.budget_spent - a.budget_spent)
+  const topExpenditureData = categories
+    .sort((a, b) => (b.budget_spent || 0) - (a.budget_spent || 0))
     .slice(0, 6)
     .map((cat, index) => ({
       sector: cat.name.length > 25 ? cat.name.substring(0, 25) + '...' : cat.name,
-      amount: Math.round(cat.budget_spent / 1000000), // Convert to millions
-      allocated: Math.round(cat.budget_allocated / 1000000),
+      amount: Math.round((cat.budget_spent || 0) / 10000000) / 10, // Crores, 1 decimal
+      allocated: Math.round((cat.budget_allocated || 0) / 10000000) / 10,
       color: chartColors[index % chartColors.length]
     }));
 
-  const budgetUtilizationData = governmentData.categories
+  const budgetUtilizationData = categories
     .slice(0, 6)
     .map((cat, index) => ({
       name: cat.name.length > 12 ? cat.name.substring(0, 12) + '...' : cat.name,
-      utilized: Math.round((cat.budget_spent / cat.budget_allocated) * 100),
+      utilized: cat.budget_allocated ? Math.round((cat.budget_spent / cat.budget_allocated) * 100) : 0,
       color: chartColors[index % chartColors.length]
     }));
 
-  // Add this missing definition:
   const projectStatusData = [
     { status: 'Planned', count: totalProjects.planned, color: chartColors[0] },
     { status: 'Ongoing', count: totalProjects.ongoing, color: chartColors[1] },
     { status: 'Completed', count: totalProjects.completed, color: chartColors[2] }
   ];
 
-  // Calculate on-time delivery percentage (mock calculation)
-  const onTimePercentage = Math.round((totalProjects.completed / (totalProjects.completed + totalProjects.ongoing)) * 100);
+  // On-time delivery percentage (mock: completed/(completed+ongoing))
+  const onTimePercentage = (totalProjects.completed + totalProjects.ongoing) > 0
+    ? Math.round((totalProjects.completed / (totalProjects.completed + totalProjects.ongoing)) * 100)
+    : 0;
 
-  // Sample service data (you can replace with real data)
-  const serviceTimeData = [
-    { month: 'Jan', time: 5.2, target: 4.0 },
-    { month: 'Feb', time: 4.8, target: 4.0 },
-    { month: 'Mar', time: 4.5, target: 4.0 },
-    { month: 'Apr', time: 4.2, target: 4.0 },
-    { month: 'May', time: 3.9, target: 4.0 },
-    { month: 'Jun', time: 3.7, target: 4.0 }
-  ];
-
-  const satisfactionData = [
-    { month: 'Jan', score: 7.2, target: 8.0 },
-    { month: 'Feb', score: 7.5, target: 8.0 },
-    { month: 'Mar', score: 7.8, target: 8.0 },
-    { month: 'Apr', score: 8.1, target: 8.0 },
-    { month: 'May', score: 8.3, target: 8.0 },
-    { month: 'Jun', score: 8.5, target: 8.0 }
-  ];
+  // Use satisfactionData and metrics from API
+  const satisfactionData = dashboardData.satisfactionData || [];
+  const metrics = dashboardData.metrics || {};
 
   // Animation variants
   const cardVariants = {
@@ -468,7 +141,6 @@ const Dashboard = () => {
       custom={index}
     >
       <div className="flex items-center justify-between mb-2">
-        {/* If icon is green, use bg-gray-100 and text-black */}
         <div className="p-3 rounded-lg bg-gray-100">
           <Icon className="w-6 h-6 text-black" />
         </div>
@@ -493,7 +165,6 @@ const Dashboard = () => {
       custom={index}
     >
       <div className="flex items-center mb-4">
-        {/* If icon is green, use bg-gray-100 and text-black */}
         <div className="p-2 rounded-lg bg-gray-100 mr-3">
           <Icon className="w-5 h-5 text-black" />
         </div>
@@ -541,10 +212,10 @@ const Dashboard = () => {
         >
           <MetricCard
             title="Total Budget"
-            value={`₹${Math.round(totalBudgetAllocated / 1000000)}Cr`}
-            subtitle={`${spentPercentage}% Spent (₹${Math.round(totalBudgetSpent / 1000000)}Cr)`}
+            value={`₹${Math.round(totalBudgetAllocated / 10000000) / 10}Cr`}
+            subtitle={`${spentPercentage}% Spent (₹${Math.round(totalBudgetSpent / 10000000) / 10}Cr)`}
             icon={DollarSign}
-            trend={spentPercentage > 70 ? 5.2 : -2.3}
+            trend={metrics.budgetTrendPercentage}
             index={0}
           />
           <GaugeChart
@@ -564,7 +235,7 @@ const Dashboard = () => {
             value={totalProjects.planned + totalProjects.ongoing + totalProjects.completed}
             subtitle={`${totalProjects.completed} Completed, ${totalProjects.ongoing} Ongoing`}
             icon={FileText}
-            trend={2.1}
+            trend={metrics.projectTrendPercentage}
             index={3}
           />
         </motion.div>
@@ -592,7 +263,7 @@ const Dashboard = () => {
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie
-                  data={budgetUtilizationData.slice(0, 6)}
+                  data={budgetUtilizationData}
                   cx="50%"
                   cy="50%"
                   innerRadius={40}
@@ -600,8 +271,7 @@ const Dashboard = () => {
                   paddingAngle={5}
                   dataKey="utilized"
                 >
-                  {/* Use professional palette for slices */}
-                  {budgetUtilizationData.slice(0, 6).map((entry, index) => (
+                  {budgetUtilizationData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                   ))}
                 </Pie>
@@ -777,9 +447,15 @@ const Dashboard = () => {
               </AreaChart>
             </ResponsiveContainer>
             <div className="mt-4 text-center">
-              <span className="text-3xl font-bold text-black">8.5</span>
+              <span className="text-3xl font-bold text-black">
+                {satisfactionData.length > 0 ? satisfactionData[satisfactionData.length - 1].score : '-'}
+              </span>
               <span className="text-gray-500 text-sm ml-1">/10</span>
-              <p className="text-xs text-gray-600 mt-1">+0.2 from last month</p>
+              <p className="text-xs text-gray-600 mt-1">
+                {satisfactionData.length > 1
+                  ? `${(satisfactionData[satisfactionData.length - 1].score - satisfactionData[satisfactionData.length - 2].score).toFixed(1)} from last month`
+                  : ''}
+              </p>
             </div>
           </motion.div>
         </motion.div>
@@ -795,16 +471,16 @@ const Dashboard = () => {
         >
           <MetricCard
             title="Active Departments"
-            value="12"
+            value={categories.length}
             icon={Users}
             index={0}
           />
           <MetricCard
             title="Active Categories"
-            value="12"
+            value={categories.length}
             subtitle="Government service categories"
             icon={TrendingUp}
-            trend={1.5}
+            trend={metrics.categoryTrendPercentage}
             index={1}
           />
           <MetricCard
@@ -812,11 +488,11 @@ const Dashboard = () => {
             value={`${100 - spentPercentage}%`}
             subtitle="Remaining budget allocation"
             icon={DollarSign}
-            trend={spentPercentage < 80 ? 3.2 : -1.8}
+            trend={metrics.efficiencyTrendPercentage}
             index={2}
           />
           <GaugeChart
-            percentage={92}
+            percentage={metrics.complaintResolutionPercentage || 0}
             title="Complaint Resolution"
             icon={AlertTriangle}
             index={3}
