@@ -17,6 +17,7 @@ export default function GrievanceCard({
   onUpvote,
   onDownvote,
   userVote,
+  showReadMore = false,
 }) {
   const getStatusColor = (status) => {
     switch ((status || "").toLowerCase()) {
@@ -34,12 +35,14 @@ export default function GrievanceCard({
   };
 
   // Read more/less state for description
-  const [showFullDesc, setShowFullDesc] = useState(false);
-  const descLimit = 180;
-  const isLongDesc = description && description.length > descLimit;
-  const descToShow = isLongDesc && !showFullDesc
-    ? description.slice(0, descLimit) + "..."
-    : description;
+  const [expanded, setExpanded] = useState(false);
+  const maxLength = 200;
+  let displayText = description;
+  let shouldTruncate = showReadMore && description && description.length > maxLength;
+
+  if (shouldTruncate && !expanded) {
+    displayText = description.slice(0, maxLength) + '...';
+  }
 
   return (
     <div className="bg-transparent p-1 sm:p-2 md:p-3">
@@ -132,13 +135,13 @@ export default function GrievanceCard({
             {/* Description */}
             <div className="bg-gray-100 rounded-lg p-2 sm:p-3 mb-2 sm:mb-4 border border-gray-200">
               <p className="text-gray-800 leading-relaxed text-xs sm:text-sm break-words">
-                {descToShow}
-                {isLongDesc && (
+                {displayText}
+                {shouldTruncate && !expanded && (
                   <button
                     className="ml-2 text-blue-600 hover:underline text-xs sm:text-sm font-medium"
-                    onClick={() => setShowFullDesc((v) => !v)}
+                    onClick={() => setExpanded(true)}
                   >
-                    {showFullDesc ? "Show less" : "Read more..."}
+                    Read more
                   </button>
                 )}
               </p>

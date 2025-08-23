@@ -1,38 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Search, Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
-import useDashboardStore from "../../store/dashboard";
+import React, { useState, useEffect } from 'react';
+import { Search, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import useDashboardStore from '../../store/dashboard';
 
 // Valid Kerala districts
 const KERALA_DISTRICTS = [
-  "THIRUVANANTHAPURAM",
-  "KOLLAM",
-  "PATHANAMTHITTA",
-  "ALAPPUZHA",
-  "KOTTAYAM",
-  "IDUKKI",
-  "ERNAKULAM",
-  "THRISSUR",
-  "PALAKKAD",
-  "MALAPPURAM",
-  "KOZHIKODE",
-  "WAYANAD",
-  "KANNUR",
-  "KASARAGOD",
+  'THIRUVANANTHAPURAM', 'KOLLAM', 'PATHANAMTHITTA', 'ALAPPUZHA', 'KOTTAYAM',
+  'IDUKKI', 'ERNAKULAM', 'THRISSUR', 'PALAKKAD', 'MALAPPURAM',
+  'KOZHIKODE', 'WAYANAD', 'KANNUR', 'KASARAGOD'
 ];
 
 const DribbbleNav = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activePage, setActivePage] = useState(""); // Add state for active page
-  const [searchError, setSearchError] = useState("");
-
+  const [activePage, setActivePage] = useState(''); // Add state for active page
+  const [searchError, setSearchError] = useState('');
+  
   // Get dashboard store actions and state
   const { location, setLocation, fetchDashboardData } = useDashboardStore();
 
   // Initialize search value with current location
   useEffect(() => {
-    setSearchValue(location || "");
+    setSearchValue(location || '');
   }, [location]);
 
   const toggleMobileMenu = () => {
@@ -43,31 +32,31 @@ const DribbbleNav = () => {
   const handleSearch = () => {
     if (searchValue.trim()) {
       const searchTerm = searchValue.trim();
-
+      
       // Check if the search term is a valid Kerala district (case-insensitive)
       const isValidDistrict = KERALA_DISTRICTS.some(
-        (district) => district.toLowerCase() === searchTerm.toLowerCase()
+        district => district.toLowerCase() === searchTerm.toLowerCase()
       );
-
+      
       if (isValidDistrict) {
         // Find the correct case district name
         const correctDistrictName = KERALA_DISTRICTS.find(
-          (district) => district.toLowerCase() === searchTerm.toLowerCase()
+          district => district.toLowerCase() === searchTerm.toLowerCase()
         );
-
+        
         setLocation(correctDistrictName);
-        setSearchError("");
+        setSearchError('');
         fetchDashboardData();
       } else {
-        setSearchError("Please enter a valid Kerala district");
-        setTimeout(() => setSearchError(""), 3000); // Clear error after 3 seconds
+        setSearchError('Please enter a valid Kerala district');
+        setTimeout(() => setSearchError(''), 3000); // Clear error after 3 seconds
       }
     }
   };
 
   // Handle Enter key press in search input
   const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleSearch();
     }
   };
@@ -82,16 +71,18 @@ const DribbbleNav = () => {
   // Helper function to determine active page style
   const getPageStyle = (page) => {
     return activePage === page
-      ? "text-[#72e3ad] font-semibold border-b-2 border-[#72e3ad] pb-1"
-      : "text-black hover:text-gray-500 transition-colors";
+      ? 'text-[#72e3ad] font-semibold border-b-2 border-[#72e3ad] pb-1'
+      : 'text-black hover:text-gray-500 transition-colors';
   };
 
+
+  
   const navItems = [
-    { name: "Home", path: "/" },
-    { name: "Grievances", path: "/grievances" },
-    { name: "Dashboard", path: "/dashboard" },
-    { name: "RTI", path: "/rti" },
-    { name: "Schemes", path: "/suggestion" },
+    { name: 'Dashboard', path: '/' },
+    { name: 'Projects', path: '/projects' }, // Projects is now home
+    { name: 'Grievances', path: '/grievances' },
+    { name: 'RTI', path: '/rti' },
+    { name: 'Schemes', path: '/schemes' },
   ];
 
   return (
@@ -117,12 +108,10 @@ const DribbbleNav = () => {
                   onKeyPress={handleKeyPress}
                   placeholder="Search for a Kerala district "
                   className={`w-full px-4 py-4.5 pl-6 pr-12 text-sm text-gray-700 placeholder-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:border-transparent ${
-                    searchError
-                      ? "focus:ring-red-500 ring-1 ring-red-500"
-                      : "focus:ring-[#72e3ad]"
+                    searchError ? 'focus:ring-red-500 ring-1 ring-red-500' : 'focus:ring-[#72e3ad]'
                   }`}
                 />
-                <button
+                <button 
                   onClick={handleSearch}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors"
                 >
@@ -141,9 +130,7 @@ const DribbbleNav = () => {
               <div className="relative group" key={item.name}>
                 <Link
                   to={item.path}
-                  className={`flex items-center space-x-1 ${getPageStyle(
-                    item.path
-                  )} cursor-pointer`}
+                  className={`flex items-center space-x-1 ${getPageStyle(item.path)} cursor-pointer`}
                   onClick={() => handlePageClick(item.path)}
                 >
                   <span className="font-medium">{item.name}</span>
@@ -173,12 +160,10 @@ const DribbbleNav = () => {
               onKeyPress={handleKeyPress}
               placeholder="Search for a Kerala district"
               className={`w-full px-4 py-3 pl-4 pr-12 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:border-transparent ${
-                searchError
-                  ? "focus:ring-red-500 ring-1 ring-red-500"
-                  : "focus:ring-[#72e3ad]"
+                searchError ? 'focus:ring-red-500 ring-1 ring-red-500' : 'focus:ring-[#72e3ad]'
               }`}
             />
-            <button
+            <button 
               onClick={handleSearch}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors"
             >
@@ -198,9 +183,7 @@ const DribbbleNav = () => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`flex items-center justify-between ${getPageStyle(
-                    item.path
-                  )} py-2 cursor-pointer`}
+                  className={`flex items-center justify-between ${getPageStyle(item.path)} py-2 cursor-pointer`}
                   onClick={() => handlePageClick(item.path)}
                 >
                   <span className="font-medium">{item.name}</span>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function CategoryNavigation({ onCategoryChange, selectedCategory = 'All' }) {
+export default function CategoryNavigation({ onCategoryChange, selectedCategory = 'All', categories: propsCategories }) {
   const [activeCategory, setActiveCategory] = useState(selectedCategory);
   
   // Update internal state when props change
@@ -8,11 +8,14 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
     setActiveCategory(selectedCategory);
   }, [selectedCategory]);
   
-  const categories = [
+  const categoriesList = propsCategories || [
     'All',
     'Agriculture and Allied Services',
     'Rural Development',
-    'Irrigation and Flood Control'
+    'Irrigation and Flood Control',
+    'Economic Services',
+    'Industry and Minerals',
+    'Energy'
   ];
 
   const handleCategoryClick = (category) => {
@@ -35,7 +38,7 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
               scrollbarWidth: 'none'
             }}
           >
-            {categories.map((category) => (
+            {categoriesList.map((category) => (
               <button
                 key={category}
                 onClick={() => handleCategoryClick(category)}

@@ -20,6 +20,7 @@ export default function Grievances() {
   const [userVotes, setUserVotes] = useState({}); // Track user votes: { grievanceId: 'upvote'|'downvote'|null }
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // <-- Add state
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
   // Handle search input
   const handleSearch = (term) => {
@@ -286,6 +287,12 @@ export default function Grievances() {
     }));
   };
 
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -415,6 +422,15 @@ export default function Grievances() {
               onLocationChange={handleLocationChange}
               selectedCategory={selectedCategory}
               selectedLocation={selectedLocation}
+              categories={[
+                'All',
+                'Agriculture and Allied Services',
+                'Rural Development',
+                'Irrigation and Flood Control',
+                'Economic Services',
+                'Industry and Minerals',
+                'Energy'
+              ]}
             />
           </div>
           {/* Show filters on mobile only when menu is open */}
@@ -509,6 +525,7 @@ export default function Grievances() {
                       onUpvote={() => handleUpvote(grievance.grievance_id)}
                       onDownvote={() => handleDownvote(grievance.grievance_id)}
                       userVote={userVotes[grievance.grievance_id]}
+                      showReadMore={isMobile} // <-- Only show on mobile
                     />
                   </motion.div>
                 ))}
