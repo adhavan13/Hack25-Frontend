@@ -1,7 +1,7 @@
-import React from 'react';
-import { ArrowBigUp, ArrowBigDown, MapPin, Calendar, User } from 'lucide-react';
+import React from "react";
+import { ArrowBigUp, ArrowBigDown, MapPin, Calendar, User } from "lucide-react";
 
-export default function GrievanceCard({ 
+export default function GrievanceCard({
   id,
   title,
   category,
@@ -16,15 +16,20 @@ export default function GrievanceCard({
   evidence,
   onUpvote,
   onDownvote,
-  userVote
+  userVote,
 }) {
   const getStatusColor = (status) => {
-    switch ((status || '').toLowerCase()) {
-      case 'resolved': return 'bg-[#72e3ad] text-black';
-      case 'pending': return 'bg-gray-200 text-black';
-      case 'in progress': return 'bg-gray-300 text-black';
-      case 'under review': return 'bg-yellow-100 text-black';
-      default: return 'bg-gray-100 text-black';
+    switch ((status || "").toLowerCase()) {
+      case "resolved":
+        return "bg-[#72e3ad] text-black";
+      case "pending":
+        return "bg-gray-200 text-black";
+      case "in progress":
+        return "bg-gray-300 text-black";
+      case "under review":
+        return "bg-yellow-100 text-black";
+      default:
+        return "bg-gray-100 text-black";
     }
   };
 
@@ -51,8 +56,18 @@ export default function GrievanceCard({
               <div className="w-full h-full flex items-center justify-center text-gray-500">
                 <div className="text-center">
                   <div className="w-12 h-12 mx-auto mb-2 bg-[#72e3ad] rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="w-6 h-6 text-black"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div> 
                   <span className="text-sm font-medium text-black">
@@ -63,7 +78,7 @@ export default function GrievanceCard({
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
-          
+
           {/* Content Section */}
           <div className="w-full lg:w-2/3 p-3 sm:p-4 lg:p-6">
             {/* Header with ID and Status */}
@@ -116,13 +131,15 @@ export default function GrievanceCard({
                 <div className="flex items-center text-gray-600 text-[10px] sm:text-xs">
                   <Calendar className="w-3.5 h-3.5 mr-2 text-black" />
                   <span className="font-medium">
-                    Submitted: {date ? new Date(date).toLocaleDateString() : ''}
+                    Submitted: {date ? new Date(date).toLocaleDateString() : ""}
                   </span>
                 </div>
                 {assignedOfficer && (
                   <div className="flex items-center text-gray-600 text-[10px] sm:text-xs">
                     <User className="w-3.5 h-3.5 mr-2 text-black" />
-                    <span className="font-medium">Assigned to: {assignedOfficer}</span>
+                    <span className="font-medium">
+                      Assigned to: {assignedOfficer}
+                    </span>
                   </div>
                 )}
               </div>
