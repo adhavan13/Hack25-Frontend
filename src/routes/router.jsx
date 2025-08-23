@@ -4,7 +4,7 @@ import ChatBot from "@/components/ChatBot/chatbot";
 import { Routes, Route } from "react-router-dom";
 import GrievancesPage from "../components/Grievances/grievances";
 import Dashboard from "../components/dashboard/dashboard";
-import RTI from "../components/RTI/RTI_Interface";
+import RTI from "../components/RTI/rtiInterface";
 import Suggestions from "../components/SchemeSuggestion/schemeSuggestion";
 // Add scrollbar styling
 const scrollbarStyle = `
