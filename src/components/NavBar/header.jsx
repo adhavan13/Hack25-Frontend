@@ -91,7 +91,7 @@ const DribbbleNav = () => {
     { name: "Grievances", path: "/grievances" },
     { name: "Dashboard", path: "/dashboard" },
     { name: "RTI", path: "/rti" },
-    { name: "Schemes", path: "/schemes" },
+    { name: "Schemes", path: "/suggestion" },
   ];
 
   return (
