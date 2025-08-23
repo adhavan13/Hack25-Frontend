@@ -196,37 +196,33 @@ const Dashboard = () => {
   ];
 
   const MetricCard = ({ title, value, subtitle, icon: Icon, trend }) => (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow flex flex-col gap-2">
+      <div className="flex items-center justify-between mb-2">
         <div className="p-3 rounded-lg bg-gray-100">
           <Icon className="w-6 h-6 text-black" />
         </div>
         {trend !== undefined && (
-          <div className={`flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-            trend > 0 ? 'bg-gray-200 text-gray-800' : 
-            trend < 0 ? 'bg-gray-300 text-gray-900' : 
-            'bg-gray-100 text-gray-800'
-          }`}>
+          <div className={`flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-black`}>
             {trend > 0 ? '↗' : trend < 0 ? '↘' : '→'} {Math.abs(trend)}%
           </div>
         )}
       </div>
       <h3 className="text-3xl font-bold text-black mb-1">{value}</h3>
-      <p className="text-gray-600 text-sm font-medium">{title}</p>
+      <p className="text-gray-700 text-sm font-medium">{title}</p>
       {subtitle && <p className="text-gray-400 text-xs mt-1">{subtitle}</p>}
     </div>
   );
 
   const GaugeChart = ({ percentage, title, icon: Icon }) => (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
-      <div className="flex items-center mb-6">
+    <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex items-center mb-4">
         <div className="p-2 rounded-lg bg-gray-100 mr-3">
           <Icon className="w-5 h-5 text-black" />
         </div>
         <h3 className="text-sm font-semibold text-black">{title}</h3>
       </div>
-      <div className="relative w-36 h-36 mx-auto">
-        <svg className="w-36 h-36 transform -rotate-90" viewBox="0 0 100 100">
+      <div className="relative w-32 h-32 mx-auto">
+        <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
           <circle
             cx="50" cy="50" r="35"
             fill="none" stroke="#E5E7EB" strokeWidth="6"
@@ -247,16 +243,16 @@ const Dashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
+    <div className="min-h-screen bg-white pt-10 overflow-auto">
+      <div className="px-4 lg:px-16 pb-10">
+        <header className="mb-10">
           <h1 className="text-3xl font-bold text-black mb-2">Government Dashboard</h1>
-          <p className="text-gray-600">Comprehensive overview of public sector performance</p>
+          <p className="text-gray-500">Comprehensive overview of public sector performance</p>
         </header>
 
         {/* Row 1 - Financials */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 mb-8">
-          <div className="lg:col-span-1 flex flex-col gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 mb-10">
+          <div className="lg:col-span-1 flex flex-col gap-8">
             <MetricCard
               title="Total Budget"
               value={`₹${Math.round(totalBudgetAllocated / 10000000)}Cr`}
@@ -271,8 +267,8 @@ const Dashboard = () => {
             />
           </div>
           
-          <div className="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
+          <div className="lg:col-span-2 bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
+            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
               <TrendingUp className="w-5 h-5 mr-2 text-black" />
               Budget Utilization by Category
             </h3>
@@ -309,38 +305,47 @@ const Dashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="lg:col-span-3 bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
+          <div className="lg:col-span-3 bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
+            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
               <FileText className="w-5 h-5 mr-2 text-black" />
               Top Expenditure by Sector (₹ Crores)
             </h3>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart 
-                data={topExpenditureData} 
+              <BarChart
+                data={topExpenditureData}
                 layout="vertical"
-                margin={{ top: 5, right: 30, left: 5, bottom: 5 }}
+                margin={{ top: 10, right: 30, left: 60, bottom: 10 }}
+                barCategoryGap={18}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
-                <XAxis type="number" tick={{ fontSize: 12, fill: '#000000' }} />
-                <YAxis 
-                  type="category"
-                  dataKey="sector" 
-                  tick={{ fontSize: 10, fill: '#000000' }} 
-                  width={120}
+                <XAxis
+                  type="number"
+                  tick={{ fontSize: 12, fill: '#000000' }}
+                  axisLine={false}
+                  tickLine={false}
                 />
-                <Tooltip 
+                <YAxis
+                  type="category"
+                  dataKey="sector"
+                  tick={{ fontSize: 13, fill: '#000000', fontWeight: 500 }}
+                  width={200}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
                   formatter={(value) => [`₹${value} Cr`, 'Amount Spent']}
                   labelStyle={{ color: '#000000' }}
-                  contentStyle={{ 
-                    backgroundColor: '#F9FAFB', 
+                  contentStyle={{
+                    backgroundColor: '#F9FAFB',
                     border: '1px solid #E5E7EB',
                     borderRadius: '8px'
                   }}
                 />
-                <Bar 
-                  dataKey="amount" 
-                  fill="#000000" 
-                  radius={[0, 6, 6, 0]}
+                <Bar
+                  dataKey="amount"
+                  fill="#72e3ad"
+                  radius={[8, 8, 8, 8]}
+                  barSize={18}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -348,9 +353,9 @@ const Dashboard = () => {
         </div>
 
         {/* Row 2 - Projects */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          <div className="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-10">
+          <div className="lg:col-span-2 bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
+            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
               <FileText className="w-5 h-5 mr-2 text-black" />
               Projects by Status
             </h3>
@@ -389,9 +394,9 @@ const Dashboard = () => {
         </div>
 
         {/* Row 3 - Citizen Services */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          <div className="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-10">
+          <div className="lg:col-span-2 bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
+            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
               <Clock className="w-5 h-5 mr-2 text-black" />
               Service Delivery Performance
             </h3>
@@ -441,8 +446,8 @@ const Dashboard = () => {
             icon={AlertTriangle}
           />
 
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
+            <h3 className="text-lg font-semibold text-black mb-6 flex items-center">
               <Users className="w-5 h-5 mr-2 text-black" />
               Citizen Satisfaction Trend
             </h3>
@@ -482,7 +487,7 @@ const Dashboard = () => {
         </div>
 
         {/* Row 4 - Transparency & Summary */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <GaugeChart
             percentage={87}
             title="Open Bidding Contracts"
