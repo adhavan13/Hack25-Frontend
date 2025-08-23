@@ -235,7 +235,7 @@ const Dashboard = () => {
   return (
     <div className={`min-h-screen bg-white pt-6 md:pt-10 overflow-auto ${isMobile ? 'pt-5' : ''}`}>
       <div className={`pb-6 md:pb-10 ${isMobile ? 'px-4' : 'px-2 sm:px-4 md:px-8 lg:px-16'}`}>
-        <header className={`mb-6 md:mb-10 ${isMobile ? 'mb-5' : ''}`}>
+        <header className={`mb-6 md:mb-10 ${isMobile ? 'mb-5 px-1' : ''}`}>
           <h1 className={`font-bold text-black mb-1 md:mb-2 ${isMobile ? 'text-lg mb-2' : 'text-2xl md:text-3xl'}`}>
             Government Dashboard for {location}
           </h1>
@@ -245,7 +245,7 @@ const Dashboard = () => {
         {/* Row 1 - Key Metrics */}
         <div
           className={`mb-6 md:mb-10 grid gap-4 md:gap-8
-            ${isMobile ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
+            ${isMobile ? 'grid-cols-1 px-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
           style={isMobile ? { marginBottom: 24 } : {}}
         >
           <MetricCard
@@ -281,7 +281,7 @@ const Dashboard = () => {
         {/* Row 2 - Financials & Projects */}
         <div
           className={`mb-6 md:mb-10 grid gap-4 md:gap-8
-            ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}
+            ${isMobile ? 'grid-cols-1 px-1' : 'grid-cols-1 md:grid-cols-2'}`}
           style={isMobile ? { marginBottom: 24 } : {}}
         >
           <div
@@ -423,7 +423,7 @@ const Dashboard = () => {
         {/* Row 3 - Projects by Status & Citizen Satisfaction Trend */}
         <div
           className={`mb-6 md:mb-10 grid gap-4 md:gap-8
-            ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}
+            ${isMobile ? 'grid-cols-1 px-1' : 'grid-cols-1 md:grid-cols-2'}`}
           style={isMobile ? { marginBottom: 24 } : {}}
         >
           <div
@@ -525,4 +525,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-            

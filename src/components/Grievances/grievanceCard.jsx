@@ -45,11 +45,11 @@ export default function GrievanceCard({
   }
 
   return (
-    <div className="bg-transparent p-1 sm:p-2 md:p-3">
+    <div className="bg-transparent p-2 sm:p-3 md:p-4"> {/* Increased base padding */}
       <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-300 hover:border-[#72e3ad] group">
         <div className="flex flex-col lg:flex-row">
           {/* Image Section */}
-          <div className="w-full lg:w-1/3 bg-gradient-to-br from-gray-100 to-gray-200 aspect-video lg:aspect-square relative overflow-hidden min-h-[140px] sm:min-h-[160px]">
+          <div className="w-full lg:w-1/3 bg-gradient-to-br from-gray-100 to-gray-200 aspect-video lg:aspect-square relative overflow-hidden min-h-[140px] sm:min-h-[160px] p-2 sm:p-0"> {/* Added p-2 for mobile */}
 
             {evidence && evidence.startsWith('http') ? (
               <>
@@ -95,9 +95,9 @@ export default function GrievanceCard({
           </div>
 
           {/* Content Section */}
-          <div className="w-full lg:w-2/3 p-2 sm:p-4 lg:p-6">
+          <div className="w-full lg:w-2/3 p-3 sm:p-5 lg:p-6 flex flex-col justify-between"> {/* Increased padding for mobile */}
             {/* Header with ID and Status */}
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 sm:mb-3 gap-1">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 sm:mb-4 gap-2"> {/* Increased mb/gap */}
               <div className="flex items-center gap-2 mb-1 sm:mb-0">
                 <span className="text-[10px] sm:text-xs text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded-md break-all">
                   {id}
@@ -110,12 +110,12 @@ export default function GrievanceCard({
             </div>
 
             {/* Title */}
-            <h2 className="text-base sm:text-xl lg:text-2xl font-bold text-black mb-2 sm:mb-3 leading-tight group-hover:text-gray-800 transition-colors duration-200 break-words">
+            <h2 className="text-base sm:text-xl lg:text-2xl font-bold text-black mb-3 sm:mb-4 leading-tight group-hover:text-gray-800 transition-colors duration-200 break-words">
               {title}
             </h2>
 
             {/* Category and Project/Service */}
-            <div className="flex flex-wrap gap-2 mb-2 sm:mb-4">
+            <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
               <span className="inline-flex items-center bg-[#72e3ad] text-black px-2 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm">
                 {category}
               </span>
@@ -127,13 +127,13 @@ export default function GrievanceCard({
             </div>
 
             {/* Location */}
-            <div className="flex items-start text-gray-700 mb-2 sm:mb-4">
+            <div className="flex items-start text-gray-700 mb-3 sm:mb-4">
               <MapPin className="w-4 h-4 mr-2 mt-0.5 text-black flex-shrink-0" />
               <span className="text-xs sm:text-sm leading-relaxed break-words">{location}</span>
             </div>
 
             {/* Description */}
-            <div className="bg-gray-100 rounded-lg p-2 sm:p-3 mb-2 sm:mb-4 border border-gray-200">
+            <div className="bg-gray-100 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4 border border-gray-200">
               <p className="text-gray-800 leading-relaxed text-xs sm:text-sm break-words">
                 {displayText}
                 {shouldTruncate && !expanded && (
@@ -148,7 +148,7 @@ export default function GrievanceCard({
             </div>
 
             {/* Bottom Section */}
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pt-2 sm:pt-4 border-t border-gray-200">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pt-3 sm:pt-4 border-t border-gray-200">
               {/* Date and Officer */}
               <div className="flex flex-col gap-1 sm:gap-2 mb-1 sm:mb-0">
                 <div className="flex items-center text-gray-600 text-[10px] sm:text-xs">

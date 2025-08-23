@@ -57,6 +57,7 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
                   }
                   flex-shrink-0
                   focus:outline-none focus:ring-2 focus:ring-[#72e3ad]
+                  mobile-category-btn
                 `}
                 style={
                   activeCategory === category
@@ -86,13 +87,25 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
             scrollbar-width: none;
           }
           @media (max-width: 640px) {
-            .scrollbar-hide button {
-              min-width: 120px;
+            .scrollbar-hide {
+              padding-left: 8px;
+              padding-right: 8px;
+            }
+            .mobile-category-btn {
+              min-width: 110px;
               font-size: 13px;
-              padding-left: 12px;
-              padding-right: 12px;
-              padding-top: 10px;
-              padding-bottom: 10px;
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+              padding-top: 10px !important;
+              padding-bottom: 10px !important;
+              margin-left: 4px;
+              margin-right: 4px;
+            }
+            .scrollbar-hide > .mobile-category-btn:first-child {
+              margin-left: 0;
+            }
+            .scrollbar-hide > .mobile-category-btn:last-child {
+              margin-right: 0;
             }
           }
         `}

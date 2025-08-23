@@ -294,11 +294,11 @@ export default function Grievances() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white px-4 sm:px-0"> {/* Added px-4 for mobile */}
       {/* Header */}
       {/* <Header /> */}
 
-      <div className="px-2 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8 border-b shadow-[0_4px_12px_0_rgba(0,0,0,0.06)]">
+      <div className="px-0 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8 border-b shadow-[0_4px_12px_0_rgba(0,0,0,0.06)]">
         {/* Responsive: px-2/py-3 for mobile, sm:px-6/py-6 for desktop */}
         <div className="px-0 sm:pl-5 flex flex-col sm:flex-row justify-between items-start gap-3">
           <div className="w-full sm:w-auto">
@@ -435,7 +435,7 @@ export default function Grievances() {
           </div>
           {/* Show filters on mobile only when menu is open */}
           {mobileMenuOpen && (
-            <div className="block sm:hidden w-full">
+            <div className="block sm:hidden w-full px-1"> {/* Added px-1 for mobile */}
               <div className="flex flex-wrap gap-2 px-1 py-2">
                 {['All', 'Agriculture and Allied Services', 'Rural Development', 'Irrigation and Flood Control', 'Economic Services', 'Industry and Minerals', 'Energy'].map((category) => (
                   <button
@@ -459,10 +459,10 @@ export default function Grievances() {
         </div>
 
         {/* Grievances Cards */}
-        <div className="mt-4 sm:mt-8">
+        <div className="mt-4 sm:mt-8 px-1 sm:px-5"> {/* Added px-1 for mobile */}
           {/* Results summary */}
           {!loading && !error && (
-            <div className="mb-3 sm:mb-4 px-0 sm:px-5">
+            <div className="mb-3 sm:mb-4 px-0">
               <p className="text-xs sm:text-sm text-gray-600">
                 Showing {grievances.length} of {allGrievances.length} grievances
                 {(searchTerm ||
