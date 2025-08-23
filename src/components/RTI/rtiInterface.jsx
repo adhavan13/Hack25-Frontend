@@ -24,16 +24,128 @@ import {
   Download,
   Star
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 const SUGGESTIONS = [
   "Provide the latest government circulars on education policy.",
-  "What is the status of my RTI application number 2024/1234?",
   "List all government tenders issued in Kerala in 2024.",
   "Show me the annual expenditure report for public health.",
   "Give details of sanctioned government jobs in the last year.",
-  "Share the RTI response for road construction in Ernakulam.",
-  "How many RTI requests were rejected in 2023?",
-  "Provide the RTI report on welfare scheme beneficiaries."
+  "Share the RTI response for road construction in Ernakulam."
+];
+
+const RECENT_QUERIES = [
+  {
+    query: "Latest government job notifications in Kerala",
+    time: "1.2s",
+    category: "Employment"
+  },
+  {
+    query: "Budget allocation for road infrastructure 2024",
+    time: "0.8s",
+    category: "Infrastructure"
+  },
+  {
+    query: "Education policy updates for higher secondary",
+    time: "1.5s",
+    category: "Education"
+  },
+  {
+    query: "Healthcare scheme beneficiary statistics",
+    time: "2.1s",
+    category: "Healthcare"
+  },
+  {
+    query: "Municipal corporation tender details",
+    time: "1.7s",
+    category: "Tenders"
+  },
+  {
+    query: "Environmental clearance status reports",
+    time: "1.3s",
+    category: "Environment"
+  }
+];
+
+const RTI_CATEGORIES = [
+  {
+    id: "employment",
+    name: "Employment & Jobs",
+    icon: Users,
+    queries: 1250,
+    avgTime: "1.2s",
+    description: "Government job notifications, recruitment details, and employment schemes",
+    examples: [
+      "Latest job notifications",
+      "Selection list status",
+      "Employment scheme details"
+    ]
+  },
+  {
+    id: "tenders",
+    name: "Tenders & Contracts",
+    icon: FileText,
+    queries: 980,
+    avgTime: "1.5s",
+    description: "Government tenders, contract awards, and procurement information",
+    examples: [
+      "Active tender notifications",
+      "Contract award details",
+      "Vendor registration info"
+    ]
+  },
+  {
+    id: "budget",
+    name: "Budget & Finance",
+    icon: DollarSign,
+    queries: 856,
+    avgTime: "1.8s",
+    description: "Budget allocations, expenditure reports, and financial schemes",
+    examples: [
+      "Annual budget breakdown",
+      "Scheme fund allocation",
+      "Expenditure reports"
+    ]
+  },
+  {
+    id: "infrastructure",
+    name: "Infrastructure",
+    icon: Building,
+    queries: 742,
+    avgTime: "1.3s",
+    description: "Road projects, construction updates, and development plans",
+    examples: [
+      "Road construction status",
+      "Infrastructure projects",
+      "Development plans"
+    ]
+  },
+  {
+    id: "education",
+    name: "Education",
+    icon: FileText,
+    queries: 698,
+    avgTime: "1.1s",
+    description: "Educational policies, schemes, and institutional information",
+    examples: [
+      "Admission notifications",
+      "Scholarship details",
+      "Policy updates"
+    ]
+  },
+  {
+    id: "healthcare",
+    name: "Healthcare",
+    icon: Shield,
+    queries: 634,
+    avgTime: "1.4s",
+    description: "Health schemes, hospital information, and medical services",
+    examples: [
+      "Health scheme eligibility",
+      "Hospital facilities",
+      "Medical assistance programs"
+    ]
+  }
 ];
 
 const RTI_Interface = () => {
@@ -79,29 +191,76 @@ const RTI_Interface = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query })
       });
-      // Debug: log status and response
-      console.log("API status:", res.status);
-      const text = await res.text();
-      console.log("API raw response:", text);
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        // If not JSON, just return the raw text so you see something in the UI
-        return text || "❌ Backend did not return valid JSON.";
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
-      // Show the whole response if no report/message field
-      if (data && data.report) {
-        return data.report;
+      
+      const data = await res.json();
+      
+      let reportText = '';
+      if (data && data.rtiReport) {
+        reportText = data.rtiReport;
+      } else if (data && data.report) {
+        reportText = data.report;
       } else if (data && data.message) {
-        return data.message;
+        reportText = data.message;
       } else {
-        // Show the stringified data so you see something in the chat
-        return typeof data === "string" ? data : JSON.stringify(data, null, 2);
+        reportText = typeof data === "string" ? data : JSON.stringify(data, null, 2);
       }
+      
+      // More comprehensive text cleaning and markdown processing
+      reportText = reportText
+        // First, handle JSON-escaped content if it exists
+        .replace(/\\"/g, '"')
+        .replace(/\\'/g, "'")
+        .replace(/\\\\/g, '\\')
+        
+        // Convert literal \n and \t to actual characters
+        .replace(/\\n/g, '\n')
+        .replace(/\\t/g, '\t')
+        .replace(/\\r/g, '\r')
+        
+        // Fix escaped markdown characters
+        .replace(/\\#/g, '#')
+        .replace(/\\\*/g, '*')
+        .replace(/\\-/g, '-')
+        .replace(/\\\|/g, '|')
+        .replace(/\\`/g, '`')
+        
+        // Clean up multiple consecutive newlines
+        .replace(/\n{3,}/g, '\n\n')
+        
+        // Ensure proper header spacing
+        .replace(/^(#{1,6})\s*/gm, '$1 ')
+        
+        // Ensure proper list formatting
+        .replace(/^\*\s+/gm, '* ')
+        .replace(/^-\s+/gm, '- ')
+        .replace(/^\+\s+/gm, '+ ')
+        
+        // Fix bold text formatting
+        .replace(/\*\*([^*]+)\*\*/g, '**$1**')
+        
+        // Fix table formatting - ensure proper spacing
+        .replace(/\|\s*([^|]+)\s*\|/g, '| $1 |')
+        
+        // Clean up horizontal rules
+        .replace(/^-{3,}$/gm, '---')
+        
+        // Remove trailing spaces
+        .replace(/[ \t]+$/gm, '')
+        
+        // Clean up the beginning and end
+        .trim();
+      
+      // Log the processed text to debug
+      console.log("Processed markdown:", reportText.substring(0, 200) + "...");
+      
+      return reportText;
     } catch (err) {
       console.error("Fetch error:", err);
-      return "❌ Failed to fetch RTI data. Please try again later.";
+      return "❌ Failed to fetch RTI data. Please check your connection and try again.";
     }
   };
 
@@ -233,7 +392,48 @@ const RTI_Interface = () => {
                                 : "bg-gray-100 text-black"
                             } shadow-sm`}
                           >
-                            <div className="text-sm leading-relaxed whitespace-pre-line">{msg.text}</div>
+                            <div className={`text-sm leading-relaxed ${msg.sender === "bot" ? "prose prose-sm max-w-none overflow-hidden" : ""}`}>
+                              {msg.sender === "bot" ? (
+                                <ReactMarkdown
+                                  components={{
+                                    a: ({node, ...props}) => <a {...props} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer" />,
+                                    code: ({node, inline, ...props}) => 
+                                      inline ? (
+                                        <code {...props} className="bg-gray-200 px-1 rounded text-xs break-words" />
+                                      ) : (
+                                        <code {...props} className="block bg-gray-200 px-1 rounded text-xs break-words whitespace-pre-wrap" />
+                                      ),
+                                    pre: ({node, ...props}) => (
+                                      <pre {...props} className="bg-gray-100 p-3 rounded mb-3 overflow-x-auto max-w-full text-xs" style={{wordBreak: 'break-word', whiteSpace: 'pre-wrap'}} />
+                                    ),
+                                    ul: ({node, ...props}) => <ul {...props} className="list-disc ml-5 mb-3" />,
+                                    ol: ({node, ...props}) => <ol {...props} className="list-decimal ml-5 mb-3" />,
+                                    li: ({node, ...props}) => <li {...props} className="mb-1 break-words" />,
+                                    blockquote: ({node, ...props}) => <blockquote {...props} className="border-l-4 border-gray-300 pl-3 text-gray-600 italic mb-3 break-words" />,
+                                    table: ({node, ...props}) => (
+                                      <div className="overflow-x-auto mb-3">
+                                        <table {...props} className="min-w-full border border-gray-300 text-xs" />
+                                      </div>
+                                    ),
+                                    th: ({node, ...props}) => <th {...props} className="border border-gray-300 px-2 py-1 bg-gray-100 text-left break-words" />,
+                                    td: ({node, ...props}) => <td {...props} className="border border-gray-300 px-2 py-1 break-words" />,
+                                    h1: ({node, ...props}) => <h1 {...props} className="text-lg font-bold mb-3 mt-4 break-words" />,
+                                    h2: ({node, ...props}) => <h2 {...props} className="text-base font-bold mb-2 mt-3 break-words" />,
+                                    h3: ({node, ...props}) => <h3 {...props} className="text-sm font-bold mb-2 mt-3 break-words" />,
+                                    h4: ({node, ...props}) => <h4 {...props} className="text-sm font-semibold mb-2 mt-2 break-words" />,
+                                    h5: ({node, ...props}) => <h5 {...props} className="text-xs font-semibold mb-1 mt-2 break-words" />,
+                                    h6: ({node, ...props}) => <h6 {...props} className="text-xs font-semibold mb-1 mt-2 break-words" />,
+                                    p: ({node, ...props}) => <p {...props} className="mb-3 break-words leading-relaxed" />,
+                                    strong: ({node, ...props}) => <strong {...props} className="font-semibold break-words" />,
+                                    em: ({node, ...props}) => <em {...props} className="italic break-words" />,
+                                  }}
+                                >
+                                  {msg.text}
+                                </ReactMarkdown>
+                              ) : (
+                                <span className="whitespace-pre-line break-words">{msg.text}</span>
+                              )}
+                            </div>
                             {msg.queryResolved && (
                               <div className="mt-3 pt-3 border-t border-gray-200 flex items-center gap-4 text-xs">
                                 <div className="flex items-center gap-1 text-green-600">

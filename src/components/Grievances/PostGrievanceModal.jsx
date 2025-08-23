@@ -46,9 +46,27 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
   // Convert image to base64 and store in state
   // Store the file object directly
   const handleImageChange = (e) => {
+    console.log("🎯 handleImageChange triggered");
+    console.log("📁 e.target:", e.target);
+    console.log("📁 e.target.files:", e.target.files);
+    console.log("📁 e.target.files.length:", e.target.files?.length);
+
     const file = e.target.files[0];
+    console.log("📁 Selected file:", file);
+
     if (file) {
+      console.log("✅ File details:", {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        constructor: file.constructor.name,
+        lastModified: file.lastModified,
+      });
       setImage(file);
+      console.log("💾 File stored in state");
+    } else {
+      console.log("❌ No file selected or file is undefined");
+      setImage(null);
     }
   };
 
@@ -66,7 +84,10 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
       fd.append("location", formData.location);
       fd.append("long_description", formData.long_description);
       fd.append("short_description", formData.short_description);
-      fd.append("assigned_officer_department", formData.assigned_officer_department);
+      fd.append(
+        "assigned_officer_department",
+        formData.assigned_officer_department
+      );
       fd.append("grievance_id", `GRV${Date.now()}`);
       fd.append("date_of_submission", new Date().toISOString());
       fd.append("status", "Pending");
@@ -91,8 +112,8 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
       // Show backend error if available, else generic message
       setError(
         err.response?.data?.message ||
-        err.response?.data?.error ||
-        "Failed to submit grievance. Please try again."
+          err.response?.data?.error ||
+          "Failed to submit grievance. Please try again."
       );
     }
     setLoading(false);
@@ -622,4 +643,3 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
     </>
   );
 }
-
