@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from './Modal';
+import ProjectModal from './Modal';
 import { Heart, Eye } from 'lucide-react';
 
 const ProjectGrid = ({ projects }) => {
@@ -124,17 +124,16 @@ const ProjectGrid = ({ projects }) => {
   };
 
   const [modalOpen, setModalOpen] = useState(false);
-  // Optionally, you can store selected project for dynamic modal content in the future
-  // const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const handleGridItemClick = (project) => {
     setModalOpen(true);
-    // setSelectedProject(project); // For dynamic content later
+    setSelectedProject(project); // Store the selected project
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    // setSelectedProject(null);
+    setSelectedProject(null);
   };
 
   return (
@@ -189,7 +188,7 @@ const ProjectGrid = ({ projects }) => {
           </div>
         ))}
       </div>
-      <Modal isOpen={modalOpen} onClose={handleCloseModal} />
+      {selectedProject && <ProjectModal isOpen={modalOpen} onClose={handleCloseModal} project={selectedProject} />}
     </>
   );
 };
