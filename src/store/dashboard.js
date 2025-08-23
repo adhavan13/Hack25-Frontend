@@ -61,74 +61,7 @@ const useDashboardStore = create((set, get) => ({
 
 // Mock data function (fallback when API is not available)
 const getMockDashboardData = () => ({
-  "Agriculture and Allied Services": {
-    name: "Agriculture and Allied Services",
-    total_projects: 20,
-    planned: 0,
-    ongoing: 20,
-    completed: 0,
-    budget_allocated: 608000000,
-    budget_spent: 200600000,
-  },
-  "Rural Development": {
-    name: "Rural Development",
-    total_projects: 20,
-    planned: 0,
-    ongoing: 20,
-    completed: 0,
-    budget_allocated: 1052000000,
-    budget_spent: 356200000,
-  },
-  "Irrigation and Flood Control": {
-    name: "Irrigation and Flood Control",
-    total_projects: 20,
-    planned: 0,
-    ongoing: 20,
-    completed: 0,
-    budget_allocated: 1125000000,
-    budget_spent: 366200000,
-  },
-  satisfactionData: [
-    {
-      month: "Jan",
-      score: 7.9,
-      target: 8,
-    },
-    {
-      month: "Feb",
-      score: 7.5,
-      target: 8,
-    },
-    {
-      month: "Mar",
-      score: 7.1,
-      target: 8,
-    },
-    {
-      month: "Apr",
-      score: 7.5,
-      target: 8,
-    },
-    {
-      month: "May",
-      score: 8.1,
-      target: 8,
-    },
-    {
-      month: "Jun",
-      score: 8.3,
-      target: 8,
-    },
-  ],
-  metrics: {
-    transparencyPercentage: 80,
-    complaintResolutionPercentage: 91,
-    onTimeTrendPercentage: -1.6,
-    budgetTrendPercentage: -2.8,
-    projectTrendPercentage: 1.9,
-    categoryTrendPercentage: 2.1,
-    efficiencyTrendPercentage: 3.2,
-  },
+  // Will be replaced by dynamic data provided by the user
 });
 
 export default useDashboardStore;
