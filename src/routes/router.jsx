@@ -1,6 +1,8 @@
 import Header from "@/components/NavBar/header";
 import Scheme from "@/components/Scheme/scheme";
 import ChatBot from "@/components/ChatBot/chatbot";
+import { Routes, Route } from "react-router-dom";
+import GrievancesPage from '../components/Grievances/grievances';
 
 // Add scrollbar styling
 const scrollbarStyle = `
@@ -27,7 +29,11 @@ export default function Router() {
         <Header />
       </header>
       <main>
-        <Scheme />
+        <Routes>
+          <Route path="/" element={<Scheme />} />
+          <Route path="/grievances" element={<GrievancesPage />} />
+          {/* Add other routes here as needed */}
+        </Routes>
       </main>
       <ChatBot />
     </div>

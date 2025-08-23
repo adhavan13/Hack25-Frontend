@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const DribbbleNav = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -55,65 +56,58 @@ const DribbbleNav = () => {
 
           {/* Right side: Navigation Links */}
           <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
-            {/* Designers Dropdown */}
+            {/* Grievances Link */}
             <div className="relative group">
-              <button
-                className={`flex items-center space-x-1 ${getPageStyle(
-                  'designers'
-                )} cursor-pointer`}
-                onClick={() => handlePageClick('designers')}
+              <Link 
+                to="/grievances" 
+                className={`flex items-center space-x-1 ${getPageStyle('grievances')} nav-links cursor-pointer`}
+                onClick={() => handlePageClick('grievances')}
               >
-                <span className="font-medium">Designers</span>
-              </button>
+                <span className="font-medium">Grievances</span>
+              </Link>
             </div>
 
-            {/* Explore Dropdown */}
+            {/* Explore Link */}
             <div className="relative group">
-              <button
-                className={`flex items-center space-x-1 ${getPageStyle(
-                  'explore'
-                )} cursor-pointer`}
+              <Link 
+                to="/explore" 
+                className={`flex items-center space-x-1 ${getPageStyle('explore')} cursor-pointer`}
                 onClick={() => handlePageClick('explore')}
               >
                 <span className="font-medium">Explore</span>
-              </button>
+              </Link>
             </div>
 
-            {/* Find Talent Dropdown */}
+            {/* Find Talent Link */}
             <div className="relative group">
-              <button
-                className={`flex items-center space-x-1 ${getPageStyle(
-                  'talent'
-                )} cursor-pointer`}
+              <Link 
+                to="/talent" 
+                className={`flex items-center space-x-1 ${getPageStyle('talent')} cursor-pointer`}
                 onClick={() => handlePageClick('talent')}
               >
                 <span className="font-medium">Find Talent</span>
-              </button>
+              </Link>
             </div>
 
-            {/* Get Hired Dropdown */}
+            {/* Get Hired Link */}
             <div className="relative group">
-              <button
-                className={`flex items-center space-x-1 ${getPageStyle(
-                  'hired'
-                )} cursor-pointer`}
+              <Link 
+                to="/hired" 
+                className={`flex items-center space-x-1 ${getPageStyle('hired')} cursor-pointer`}
                 onClick={() => handlePageClick('hired')}
               >
                 <span className="font-medium">Get Hired</span>
-              </button>
+              </Link>
             </div>
 
             {/* Blog */}
-            <a
-              href="#"
+            <Link
+              to="/blog"
               className={`${getPageStyle('blog')} font-medium cursor-pointer`}
-              onClick={(e) => {
-                e.preventDefault();
-                handlePageClick('blog');
-              }}
+              onClick={() => handlePageClick('blog')}
             >
               Blog
-            </a>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -147,48 +141,41 @@ const DribbbleNav = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 py-3 space-y-4">
             <div className="flex flex-col space-y-4">
-              <button
-                className={`flex items-center justify-between ${getPageStyle(
-                  'designers'
-                )} py-2 cursor-pointer`}
-                onClick={() => handlePageClick('designers')}
+              <Link
+                to="/grievances"
+                className={`flex items-center justify-between ${getPageStyle('grievances')} py-2 nav-links cursor-pointer`}
+                onClick={() => handlePageClick('grievances')}
               >
-                <span className="font-medium">Designers</span>
-              </button>
-              <button
-                className={`flex items-center justify-between ${getPageStyle(
-                  'explore'
-                )} py-2 cursor-pointer`}
+                <span className="font-medium">Grievances</span>
+              </Link>
+              <Link
+                to="/explore"
+                className={`flex items-center justify-between ${getPageStyle('explore')} py-2 cursor-pointer`}
                 onClick={() => handlePageClick('explore')}
               >
                 <span className="font-medium">Explore</span>
-              </button>
-              <button
-                className={`flex items-center justify-between ${getPageStyle(
-                  'talent'
-                )} py-2 cursor-pointer`}
+              </Link>
+              <Link
+                to="/talent"
+                className={`flex items-center justify-between ${getPageStyle('talent')} py-2 cursor-pointer`}
                 onClick={() => handlePageClick('talent')}
               >
                 <span className="font-medium">Find Talent</span>
-              </button>
-              <button
-                className={`flex items-center justify-between ${getPageStyle(
-                  'hired'
-                )} py-2 cursor-pointer`}
+              </Link>
+              <Link
+                to="/hired"
+                className={`flex items-center justify-between ${getPageStyle('hired')} py-2 cursor-pointer`}
                 onClick={() => handlePageClick('hired')}
               >
                 <span className="font-medium">Get Hired</span>
-              </button>
-              <a
-                href="#"
+              </Link>
+              <Link
+                to="/blog"
                 className={`${getPageStyle('blog')} font-medium py-2 cursor-pointer`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageClick('blog');
-                }}
+                onClick={() => handlePageClick('blog')}
               >
                 Blog
-              </a>
+              </Link>
             </div>
           </div>
         )}

@@ -18,12 +18,11 @@ const DesignGallery = () => {
   const projects = [
     {
       id: 1,
-      title: 'Study Planning',
-      author: 'Emote',
-      badge: 'TEAM',
+      project_title: 'PM Kaushal Vikas Yojana',
+      scheme: 'Skill Development',
+      status: 'Active',
       likes: 111,
       views: 14.1,
-      image: '/api/placeholder/400/300',
       preview: [
         { type: 'mobile', color: 'bg-blue-500' },
         { type: 'mobile', color: 'bg-gray-900' },
@@ -33,12 +32,11 @@ const DesignGallery = () => {
     },
     {
       id: 2,
-      title: 'Lantern',
-      author: 'Jeroen van Eerden',
-      badge: 'PRO',
+      project_title: 'Swachh Bharat Mission',
+      scheme: 'Sanitation & Cleanliness',
+      status: 'Pending',
       likes: 54,
       views: 4.2,
-      image: '/api/placeholder/400/300',
       preview: [
         { type: 'card', color: 'bg-gradient-to-br from-pink-200 to-orange-400' },
         { type: 'card', color: 'bg-gradient-to-br from-gray-800 to-orange-600' }
@@ -46,12 +44,11 @@ const DesignGallery = () => {
     },
     {
       id: 3,
-      title: 'Afterglow',
-      author: 'Afterglow',
-      badge: 'TEAM',
+      project_title: 'Pradhan Mantri Ujjwala Yojana',
+      scheme: 'Clean Fuel Access',
+      status: 'Completed',
       likes: 88,
       views: 13.4,
-      image: '/api/placeholder/400/300',
       preview: [
         { type: 'mobile', color: 'bg-gray-900' },
         { type: 'mobile', color: 'bg-orange-600' },
@@ -60,12 +57,11 @@ const DesignGallery = () => {
     },
     {
       id: 4,
-      title: 'DUAAL',
-      author: 'Mihai Dolganiuc',
-      badge: 'PRO',
+      project_title: 'Digital India Programme',
+      scheme: 'Digital Empowerment',
+      status: 'Active',
       likes: 37,
       views: 2.9,
-      image: '/api/placeholder/400/300',
       preview: [
         { type: 'logo', color: 'bg-gradient-to-r from-red-500 to-yellow-400', text: 'DUAAL' },
         { type: 'logo', color: 'bg-gradient-to-r from-red-500 to-yellow-400', text: 'DUAAL' }
@@ -73,12 +69,11 @@ const DesignGallery = () => {
     },
     {
       id: 5,
-      title: 'LUMINA',
-      author: 'Slavisa Dujkovic',
-      badge: 'PRO',
+      project_title: 'Smart Cities Mission',
+      scheme: 'Urban Development',
+      status: 'Pending',
       likes: 31,
       views: 1.8,
-      image: '/api/placeholder/400/300',
       preview: [
         { type: 'logo', color: 'bg-white', text: 'LUMINA', textColor: 'text-gray-800' },
         { type: 'brand', color: 'bg-gradient-to-br from-pink-300 to-orange-400' }
@@ -86,12 +81,11 @@ const DesignGallery = () => {
     },
     {
       id: 6,
-      title: 'Nixtio',
-      author: 'Nixtio',
-      badge: 'TEAM',
+      project_title: 'PM Jan Dhan Yojana',
+      scheme: 'Financial Inclusion',
+      status: 'Completed',
       likes: 97,
       views: 3.9,
-      image: '/api/placeholder/400/300',
       preview: [
         { type: 'mobile', color: 'bg-gradient-to-br from-green-400 to-blue-600' },
         { type: 'mobile', color: 'bg-gray-900' },
@@ -100,12 +94,11 @@ const DesignGallery = () => {
     },
     {
       id: 7,
-      title: 'Outcrowd',
-      author: 'Outcrowd',
-      badge: 'PRO',
+      project_title: 'Ayushman Bharat',
+      scheme: 'Healthcare Coverage',
+      status: 'Active',
       likes: 111,
       views: 14.7,
-      image: '/api/placeholder/400/300',
       preview: [
         { type: 'dashboard', color: 'bg-gray-900' },
         { type: 'dashboard', color: 'bg-white' }
@@ -113,12 +106,11 @@ const DesignGallery = () => {
     },
     {
       id: 8,
-      title: 'Wegrow',
-      author: 'Wegrow',
-      badge: 'TEAM',
+      project_title: 'PM Kisan Samman Nidhi',
+      scheme: 'Agricultural Support',
+      status: 'Pending',
       likes: 36,
       views: 5.7,
-      image: '/api/placeholder/400/300',
       preview: [
         { type: 'web', color: 'bg-gray-900' }
       ]
@@ -150,7 +142,7 @@ const DesignGallery = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation Bar */}
-      <div className="bg-white sticky top-0 z-10">
+      <div className="bg-white sticky top-0 z-10 shadow-sm">
         <div className="px-4 md:px-8 lg:px-12">
           <div className="flex items-center justify-between h-16">
             {/* Mobile Menu Button */}
@@ -169,7 +161,7 @@ const DesignGallery = () => {
             <div className="hidden md:flex items-center relative" ref={dropdownRef}>
               <button
                 onClick={toggleDropdown}
-                className={`flex items-center justify-center space-x-1 px-3 lg:px-5 py-2 text-sm font-medium transition-colors whitespace-nowrap border border-gray-120 rounded-lg text-gray-800 bg-white`}
+                className={`flex items-center justify-center space-x-1 px-3 lg:px-5 py-2 text-sm font-medium transition-colors whitespace-nowrap border border-gray-100 rounded-lg text-gray-800 bg-white`}
               >
                 <span>{activeFilter}</span>
                 <ChevronDown 
@@ -208,7 +200,7 @@ const DesignGallery = () => {
                   className={`flex items-center space-x-1 px-2 lg:px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap cursor-pointer ${
                     activeFilter === filter
                       ? 'text-black font-semibold bg-[#72e3ad] rounded-full'
-                      : 'text-gray-800 font-medium hover:text-gray-600 hover:bg-gray-50 rounded-lg'
+                      : 'text-gray-800 font-medium hover:text-gray-600 hover:bg-white border border-gray-100 rounded-lg'
                   }`}
                 >
                   <span>{filter}</span>
@@ -240,7 +232,7 @@ const DesignGallery = () => {
                 className={`flex items-center space-x-1 px-3 py-1.5 text-sm font-medium transition-colors ${
                   activeFilter === filter
                     ? 'bg-[#72e3ad] text-black font-semibold rounded-full'
-                    : 'bg-gray-50 text-gray-700 hover:text-gray-600 hover:bg-gray-50 rounded-full'
+                    : 'bg-white text-gray-700 hover:text-gray-600 border border-gray-100 rounded-full'
                 }`}
               >
                 <span>{filter}</span>
@@ -259,7 +251,7 @@ const DesignGallery = () => {
                 className={`flex items-center space-x-1 px-3 py-1.5 text-sm font-medium transition-colors ${
                   activeFilter === filter
                     ? 'bg-[#72e3ad] text-black font-semibold rounded-full'
-                    : 'bg-gray-50 text-gray-700 hover:text-gray-600 hover:bg-gray-50 rounded-full'
+                    : 'bg-white text-gray-700 hover:text-gray-600 border border-gray-100 rounded-full'
                 }`}
               >
                 <span>{filter}</span>
@@ -270,7 +262,7 @@ const DesignGallery = () => {
       )}
 
       {/* Project Grid */}
-      <div className="px-4 sm:px-6 md:px-10 lg:px-14 py-4 md:py-8">
+      <div className="px-4 sm:px-6 md:px-10 lg:px-14 py-4 md:py-8 bg-white">
         <ProjectGrid projects={projects} />
       </div>
     </div>
