@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import CategoryNavigation from "./sectors";
-import PostGrievanceModal from "./PostGrievanceModal";
-import ChatBot from "../ChatBot/chatbot";
-import { motion, AnimatePresence } from "framer-motion";
-import { Search, X } from "lucide-react";
-import GrievanceCard from "./grievanceCard";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+import CategoryNavigation from './sectors';
+import GrievanceCard from './grievanceCard';
+import PostGrievanceModal from './PostGrievanceModal';
+import ChatBot from '../ChatBot/chatbot';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, X } from 'lucide-react';
 
 export default function Grievances() {
   const [searchTerm, setSearchTerm] = useState("");
