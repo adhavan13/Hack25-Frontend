@@ -56,6 +56,15 @@ const DribbbleNav = () => {
 
           {/* Right side: Navigation Links */}
           <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
+            <div className="relative group">
+              <Link 
+                to="/" 
+                className={`flex items-center space-x-1 ${getPageStyle('/')} cursor-pointer`}
+                onClick={() => handlePageClick('/')}
+              >
+                <span className="font-medium">Home</span>
+              </Link>
+            </div>
             {/* Grievances Link */}
             <div className="relative group">
               <Link 
@@ -68,15 +77,6 @@ const DribbbleNav = () => {
             </div>
 
             {/* Explore Link */}
-            <div className="relative group">
-              <Link 
-                to="/explore" 
-                className={`flex items-center space-x-1 ${getPageStyle('explore')} cursor-pointer`}
-                onClick={() => handlePageClick('explore')}
-              >
-                <span className="font-medium">Explore</span>
-              </Link>
-            </div>
 
             {/* Find Talent Link */}
             <div className="relative group">
