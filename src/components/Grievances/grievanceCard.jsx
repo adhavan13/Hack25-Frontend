@@ -39,25 +39,15 @@ export default function GrievanceCard({
         <div className="flex flex-col lg:flex-row">
           {/* Image Section */}
           <div className="w-full lg:w-1/3 bg-gradient-to-br from-gray-100 to-gray-200 aspect-video lg:aspect-square relative overflow-hidden">
-
-            {evidence && evidence.startsWith('http') ? (
-              <>
-                <img 
-                  src={evidence} 
-                  alt="Evidence" 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                  <span className="text-sm font-medium text-white">
-                    Photo Evidence
-                  </span>
-                </div>
-              </>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-500">
-                <div className="text-center">
-
-
+            <div className="w-full h-full flex items-center justify-center text-gray-500 bg-gradient-to-br from-gray-100 to-gray-200">
+              <div className="text-center">
+                {evidence && evidence.startsWith("http") ? (
+                  <img
+                    src={evidence}
+                    alt="Evidence"
+                    className="w-20 h-20 object-cover rounded-xl mx-auto mb-2"
+                  />
+                ) : (
                   <div className="w-12 h-12 mx-auto mb-2 bg-[#72e3ad] rounded-full flex items-center justify-center">
                     <svg
                       className="w-6 h-6 text-black"
@@ -72,14 +62,15 @@ export default function GrievanceCard({
                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-
-                  </div> 
-                  <span className="text-sm font-medium text-black">
-                    {evidence || 'No Evidence'}
-                  </span>
-                </div>
+                  </div>
+                )}
+                <span className="text-sm font-medium text-black">
+                  {evidence && evidence.startsWith("http")
+                    ? "Photo Evidence"
+                    : evidence || "No Evidence"}
+                </span>
               </div>
-            )}
+            </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
 
