@@ -7,9 +7,8 @@ import {
 import { 
   DollarSign, TrendingUp, Clock, Users, 
   CheckCircle, AlertTriangle, FileText,
-  ArrowUpRight, ArrowDownRight, ArrowRight // <-- add these
+  ArrowUpRight, ArrowDownRight, ArrowRight
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import useDashboardStore from '../../store/dashboard';
 
 const Dashboard = () => {
@@ -169,28 +168,10 @@ const Dashboard = () => {
   const satisfactionData = dashboardData.satisfactionData || [];
   const metrics = dashboardData.metrics || {};
 
-  // Animation variants
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i = 1) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.08,
-        duration: 0.5,
-        type: "spring"
-      }
-    })
-  };
-
   const MetricCard = ({ title, value, subtitle, icon: Icon, trend, index }) => (
-    <motion.div
+    <div
       className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow flex flex-col gap-2
         ${isMobile ? 'p-5 mb-4' : ''}`}
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      custom={index}
       style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
     >
       <div className={`flex items-center justify-between mb-2 ${isMobile ? 'mb-4' : ''}`}>
@@ -213,21 +194,14 @@ const Dashboard = () => {
       <h3 className={`font-bold text-black mb-1 ${isMobile ? 'text-xl' : 'text-3xl mb-2'}`}>{value}</h3>
       <p className={`text-gray-700 font-medium ${isMobile ? 'text-xs mb-1' : 'text-sm'}`}>{title}</p>
       {subtitle && <p className={`text-gray-400 mt-1 ${isMobile ? 'text-[10px] mb-1' : 'text-xs'}`}>{subtitle}</p>}
-    </motion.div>
+    </div>
   );
 
   const GaugeChart = ({ percentage, title, icon: Icon, index }) => {
-    // Responsive utility: detect mobile
     const isMobile = window.innerWidth < 640;
     if (isMobile) return null;
     return (
-      <motion.div
-        className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow`}
-        variants={cardVariants}
-        initial="hidden"
-        animate="visible"
-        custom={index}
-      >
+      <div className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow`}>
         <div className="flex items-center mb-4">
           <div className="p-2 rounded-lg bg-gray-100 mr-3">
             <Icon className="text-black w-5 h-5" />
@@ -251,7 +225,7 @@ const Dashboard = () => {
             <span className="font-bold text-black text-2xl">{percentage}%</span>
           </div>
         </div>
-      </motion.div>
+      </div>
     );
   };
 
@@ -269,15 +243,10 @@ const Dashboard = () => {
         </header>
 
         {/* Row 1 - Key Metrics */}
-        <motion.div
+        <div
           className={`mb-6 md:mb-10 grid gap-4 md:gap-8
             ${isMobile ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
           style={isMobile ? { marginBottom: 24 } : {}}
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: { transition: { staggerChildren: 0.08 } }
-          }}
         >
           <MetricCard
             title="Total Budget"
@@ -307,24 +276,15 @@ const Dashboard = () => {
             trend={metrics.projectTrendPercentage}
             index={3}
           />
-        </motion.div>
+        </div>
 
         {/* Row 2 - Financials & Projects */}
-        <motion.div
+        <div
           className={`mb-6 md:mb-10 grid gap-4 md:gap-8
             ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}
           style={isMobile ? { marginBottom: 24 } : {}}
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: { transition: { staggerChildren: 0.08 } }
-          }}
         >
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            custom={0}
+          <div
             className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
             style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
@@ -393,12 +353,8 @@ const Dashboard = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </motion.div>
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            custom={1}
+          </div>
+          <div
             className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
             style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
@@ -461,25 +417,16 @@ const Dashboard = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Row 3 - Projects by Status & Citizen Satisfaction Trend */}
-        <motion.div
+        <div
           className={`mb-6 md:mb-10 grid gap-4 md:gap-8
             ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}
           style={isMobile ? { marginBottom: 24 } : {}}
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: { transition: { staggerChildren: 0.08 } }
-          }}
         >
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            custom={0}
+          <div
             className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
             style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
@@ -519,12 +466,8 @@ const Dashboard = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </motion.div>
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            custom={1}
+          </div>
+          <div
             className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
             style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
@@ -571,8 +514,8 @@ const Dashboard = () => {
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Row 4 - Placeholder for future widgets or summary cards */}
         {/* ...existing code for Row 4 or additional widgets... */}
@@ -582,3 +525,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+            
