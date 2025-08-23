@@ -15,7 +15,7 @@ const Dashboard = () => {
   const governmentData = {
     "categories": [
       {
-        "name": "Agriculture and Allied Services",
+        "name": "Agriculture",
         "budget_allocated": 15000000,
         "budget_spent": 10200000,
         "projects": {
@@ -25,7 +25,7 @@ const Dashboard = () => {
         }
       },
       {
-        "name": "Rural Development",
+        "name": "Rural Dev.",
         "budget_allocated": 20000000,
         "budget_spent": 14500000,
         "projects": {
@@ -45,7 +45,7 @@ const Dashboard = () => {
         }
       },
       {
-        "name": "Irrigation and Flood Control",
+        "name": "Irrigation & Flood",
         "budget_allocated": 18000000,
         "budget_spent": 12000000,
         "projects": {
@@ -65,7 +65,7 @@ const Dashboard = () => {
         }
       },
       {
-        "name": "Industry and Minerals",
+        "name": "Industry & Minerals",
         "budget_allocated": 16000000,
         "budget_spent": 10500000,
         "projects": {
@@ -75,7 +75,7 @@ const Dashboard = () => {
         }
       },
       {
-        "name": "Transport and Communications",
+        "name": "Transport & Comm.",
         "budget_allocated": 25000000,
         "budget_spent": 18700000,
         "projects": {
@@ -85,7 +85,7 @@ const Dashboard = () => {
         }
       },
       {
-        "name": "Scientific Services and Research",
+        "name": "Scientific Research",
         "budget_allocated": 7000000,
         "budget_spent": 4200000,
         "projects": {
@@ -95,7 +95,7 @@ const Dashboard = () => {
         }
       },
       {
-        "name": "Social and Community Services",
+        "name": "Social Services",
         "budget_allocated": 14000000,
         "budget_spent": 10000000,
         "projects": {
@@ -125,7 +125,7 @@ const Dashboard = () => {
         }
       },
       {
-        "name": "Local Level Plan Programmes",
+        "name": "Local Plan Prog.",
         "budget_allocated": 10000000,
         "budget_spent": 7200000,
         "projects": {
@@ -149,6 +149,22 @@ const Dashboard = () => {
     completed: acc.completed + cat.projects.completed
   }), { planned: 0, ongoing: 0, completed: 0 });
 
+  // Professional color palette
+  const chartColors = [
+    '#2563eb', // blue
+    '#14b8a6', // teal
+    '#f59e42', // orange
+    '#a78bfa', // purple
+    '#64748b', // slate
+    '#f43f5e', // rose
+    '#facc15', // yellow
+    '#6366f1', // indigo
+    '#10b981', // emerald
+    '#eab308', // gold
+    '#0ea5e9', // sky
+    '#d946ef'  // fuchsia
+  ];
+
   // Prepare data for charts
   const topExpenditureData = governmentData.categories
     .sort((a, b) => b.budget_spent - a.budget_spent)
@@ -157,8 +173,7 @@ const Dashboard = () => {
       sector: cat.name.length > 25 ? cat.name.substring(0, 25) + '...' : cat.name,
       amount: Math.round(cat.budget_spent / 1000000), // Convert to millions
       allocated: Math.round(cat.budget_allocated / 1000000),
-      // Use accent color for all bars
-      color: '#72e3ad'
+      color: chartColors[index % chartColors.length]
     }));
 
   const budgetUtilizationData = governmentData.categories
@@ -166,15 +181,14 @@ const Dashboard = () => {
     .map((cat, index) => ({
       name: cat.name.length > 12 ? cat.name.substring(0, 12) + '...' : cat.name,
       utilized: Math.round((cat.budget_spent / cat.budget_allocated) * 100),
-      // Use accent color for all pie slices
-      color: '#72e3ad'
+      color: chartColors[index % chartColors.length]
     }));
 
   // Add this missing definition:
   const projectStatusData = [
-    { status: 'Planned', count: totalProjects.planned, color: '#404040' },
-    { status: 'Ongoing', count: totalProjects.ongoing, color: '#808080' },
-    { status: 'Completed', count: totalProjects.completed, color: '#000000' }
+    { status: 'Planned', count: totalProjects.planned, color: chartColors[0] },
+    { status: 'Ongoing', count: totalProjects.ongoing, color: chartColors[1] },
+    { status: 'Completed', count: totalProjects.completed, color: chartColors[2] }
   ];
 
   // Calculate on-time delivery percentage (mock calculation)
@@ -352,9 +366,9 @@ const Dashboard = () => {
                   paddingAngle={5}
                   dataKey="utilized"
                 >
-                  {/* Use accent color for all slices, with bg-gray-100 and text-black in tooltip */}
+                  {/* Use professional palette for slices */}
                   {budgetUtilizationData.slice(0, 6).map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill="#72e3ad" />
+                    <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
                   ))}
                 </Pie>
                 <Tooltip 
@@ -370,7 +384,20 @@ const Dashboard = () => {
                 <Legend 
                   verticalAlign="bottom" 
                   height={36}
-                  formatter={(value) => <span style={{ color: '#000000', fontSize: '12px' }}>{value}</span>}
+                  formatter={(value, entry, index) => (
+                    <span style={{ color: '#000000', fontSize: '12px' }}>
+                      <span style={{
+                        display: 'inline-block',
+                        width: 10,
+                        height: 10,
+                        backgroundColor: chartColors[index % chartColors.length],
+                        borderRadius: '50%',
+                        marginRight: 6,
+                        verticalAlign: 'middle'
+                      }}></span>
+                      {value}
+                    </span>
+                  )}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -420,10 +447,13 @@ const Dashboard = () => {
                 />
                 <Bar
                   dataKey="amount"
-                  fill="#72e3ad"
                   radius={[8, 8, 8, 8]}
                   barSize={18}
-                />
+                >
+                  {topExpenditureData.map((entry, index) => (
+                    <Cell key={`bar-cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
@@ -464,10 +494,12 @@ const Dashboard = () => {
                 />
                 <Bar 
                   dataKey="count" 
-                  // Use accent color for all bars
-                  fill="#72e3ad"
                   radius={[4, 4, 0, 0]}
-                />
+                >
+                  {projectStatusData.map((entry, index) => (
+                    <Cell key={`status-bar-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
@@ -486,8 +518,8 @@ const Dashboard = () => {
               <AreaChart data={satisfactionData}>
                 <defs>
                   <linearGradient id="colorSatisfaction" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#72e3ad" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#72e3ad" stopOpacity={0.1}/>
+                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0.1}/>
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#000000' }} />
@@ -504,7 +536,7 @@ const Dashboard = () => {
                 <Area 
                   type="monotone" 
                   dataKey="score" 
-                  stroke="#72e3ad" 
+                  stroke="#2563eb" 
                   strokeWidth={2}
                   fill="url(#colorSatisfaction)" 
                 />
