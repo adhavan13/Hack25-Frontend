@@ -25,106 +25,22 @@ import {
   Star
 } from "lucide-react";
 
-// Mock database of RTI information categories
-const RTI_CATEGORIES = [
-  {
-    id: "budget",
-    name: "Budget & Finance",
-    icon: DollarSign,
-    description: "Government budget allocation, spending reports, financial data",
-    queries: 1247,
-    avgTime: "< 30 seconds",
-    examples: ["Education budget 2024", "Healthcare spending", "Road construction costs"]
-  },
-  {
-    id: "education",
-    name: "Education",
-    icon: Users,
-    description: "School data, teacher appointments, infrastructure, schemes",
-    queries: 892,
-    avgTime: "< 45 seconds",
-    examples: ["School enrollment data", "Teacher vacancies", "Scholarship lists"]
-  },
-  {
-    id: "healthcare",
-    name: "Healthcare",
-    icon: Shield,
-    description: "Hospital records, medical schemes, health infrastructure",
-    queries: 674,
-    avgTime: "< 1 minute",
-    examples: ["Hospital bed availability", "Medicine procurement", "Health schemes"]
-  },
-  {
-    id: "infrastructure",
-    name: "Infrastructure",
-    icon: Building,
-    description: "Roads, bridges, public works, construction projects",
-    queries: 1156,
-    avgTime: "< 2 minutes",
-    examples: ["Road construction status", "Bridge projects", "Public works tenders"]
-  },
-  {
-    id: "employment",
-    name: "Employment",
-    icon: FileText,
-    description: "Job vacancies, recruitment data, government positions",
-    queries: 534,
-    avgTime: "< 1 minute",
-    examples: ["Government job openings", "Recruitment results", "Vacancy lists"]
-  },
-  {
-    id: "welfare",
-    name: "Welfare Schemes",
-    icon: Users,
-    description: "Social schemes, beneficiary lists, welfare programs",
-    queries: 789,
-    avgTime: "< 45 seconds",
-    examples: ["Pension beneficiaries", "Subsidy schemes", "Welfare program data"]
-  }
-];
-
-const QUICK_STATS = [
-  { label: "Queries Resolved", value: "45,672", icon: CheckCircle, color: "text-green-600" },
-  { label: "Average Response", value: "< 2 mins", icon: Timer, color: "text-blue-600" },
-  { label: "Success Rate", value: "96.8%", icon: TrendingUp, color: "text-green-600" },
-  { label: "Active Users", value: "8,234", icon: Users, color: "text-purple-600" }
-];
-
-const RECENT_QUERIES = [
-  {
-    query: "Budget allocation for primary education in Kerala 2024",
-    status: "resolved",
-    time: "23 seconds",
-    category: "Education"
-  },
-  {
-    query: "List of approved road construction projects in Ernakulam",
-    status: "resolved", 
-    time: "1.2 minutes",
-    category: "Infrastructure"
-  },
-  {
-    query: "Healthcare spending breakdown by district",
-    status: "resolved",
-    time: "45 seconds", 
-    category: "Healthcare"
-  }
-];
-
 const SUGGESTIONS = [
-  "Show me education budget for 2024",
-  "List government job vacancies",
-  "Road construction projects status",
-  "Healthcare scheme beneficiaries",
-  "Government tender information",
-  "Welfare program data by district"
+  "Provide the latest government circulars on education policy.",
+  "What is the status of my RTI application number 2024/1234?",
+  "List all government tenders issued in Kerala in 2024.",
+  "Show me the annual expenditure report for public health.",
+  "Give details of sanctioned government jobs in the last year.",
+  "Share the RTI response for road construction in Ernakulam.",
+  "How many RTI requests were rejected in 2023?",
+  "Provide the RTI report on welfare scheme beneficiaries."
 ];
 
 const RTI_Interface = () => {
   const [messages, setMessages] = useState([
     { 
       sender: "bot", 
-      text: "🏛️ Welcome to RTI AutoBot! I can instantly provide government information without filing traditional RTI requests. Just ask your question and I'll search through our comprehensive database to give you accurate information in minutes, not months!",
+      text: "🏛️ Welcome to RTI AutoBot! Instantly access government information and RTI reports. Ask your question and I'll fetch the latest data for you.",
       timestamp: new Date()
     },
   ]);
@@ -146,45 +62,53 @@ const RTI_Interface = () => {
     }
   }, [activeTab]);
 
-  const simulateDataRetrieval = (query) => {
-    // Simulate realistic government data responses
-    const responses = {
-      "education": "📊 **Education Budget 2024-25 (Kerala)**\n\n• Total Allocation: ₹18,245 crores\n• Primary Education: ₹7,432 crores (40.7%)\n• Secondary Education: ₹5,678 crores (31.1%)\n• Higher Education: ₹3,234 crores (17.7%)\n• Infrastructure: ₹1,901 crores (10.4%)\n\n**Key Highlights:**\n✓ 15% increase from previous year\n✓ Focus on digital infrastructure\n✓ Teacher recruitment: 5,600 new positions\n\n*Source: Kerala Education Department Budget 2024-25*",
-      
-      "job": "🏢 **Current Government Job Vacancies**\n\n**Central Government:**\n• Railway Recruitment: 1,03,769 positions\n• Banking Sector: 45,230 positions\n• Defence Services: 23,567 positions\n\n**State Government (Kerala):**\n• Education Department: 5,600 teachers\n• Health Department: 3,400 staff\n• Police Department: 2,100 constables\n\n**Application Deadlines:**\n⏰ Most positions: 15-30 days from notification\n📱 Apply online through respective portals\n\n*Updated: " + new Date().toLocaleDateString() + "*",
-      
-      "road": "🛣️ **Road Construction Projects Status (Ernakulam)**\n\n**Ongoing Projects:**\n• NH-66 Upgrade: 78% complete (₹245 cr)\n• Kochi Metro Feeder Roads: 65% complete (₹89 cr)\n• Rural Connectivity: 12 roads under construction\n\n**Completed (2024):**\n✅ Kakkanad-Infopark Road: ₹67 crores\n✅ Marine Drive Extension: ₹34 crores\n✅ Vytilla-Aroor Bypass: ₹156 crores\n\n**Upcoming Tenders:**\n📋 Aluva-Munnar Highway: Tender opens next month\n📋 Port-Airport Road: Under planning\n\n*Source: PWD Kerala, Updated: Today*",
-      
-      "healthcare": "🏥 **Healthcare Infrastructure & Schemes**\n\n**Hospital Capacity (Kerala):**\n• Government Hospitals: 234 facilities\n• Total Beds: 45,678 (Occupancy: 76%)\n• ICU Beds: 2,340 (Available: 561)\n\n**Active Health Schemes:**\n💊 Karunya Benevolent Fund: 2.3 lakh beneficiaries\n🏥 Comprehensive Health Insurance: 76% coverage\n👩‍⚕️ ASHA Workers: 23,400 active\n\n**Recent Achievements:**\n✓ COVID recovery rate: 98.2%\n✓ Infant mortality rate: Lowest in India (7/1000)\n✓ Life expectancy: 75 years (National avg: 69)\n\n*Source: Health Department Kerala*",
-      
-      "tender": "📋 **Government Tender Information**\n\n**Active Tenders (Closing Soon):**\n• Road Construction Package-VII: ₹89 cr (Closes: 3 days)\n• Medical Equipment Supply: ₹45 cr (Closes: 7 days)\n• School Building Construction: ₹67 cr (Closes: 12 days)\n\n**Recently Awarded:**\n✅ IT Infrastructure: L&T Limited (₹234 cr)\n✅ Solar Power Project: Adani Green (₹156 cr)\n✅ Waste Management: Ramky Enviro (₹78 cr)\n\n**How to Participate:**\n🌐 Visit: etenders.kerala.gov.in\n📝 Registration required\n💳 EMD: 2-5% of tender value\n\n*Updated: Real-time from eTender Portal*",
-      
-      "welfare": "🤝 **Welfare Scheme Beneficiaries Data**\n\n**Pension Schemes (Kerala):**\n👴 Old Age Pension: 8.9 lakh beneficiaries\n♿ Disability Pension: 2.4 lakh beneficiaries\n👩 Widow Pension: 3.2 lakh beneficiaries\n\n**Subsidy Programs:**\n🏠 Housing Scheme: 45,600 houses completed\n⚡ Electricity Subsidy: 67% households covered\n🍚 Food Security: 2.1 crore beneficiaries\n\n**Recent Disbursements:**\n💰 Total Amount: ₹2,340 crores (This quarter)\n📅 Next Payment: 1st of next month\n🏦 Direct Benefit Transfer: 99.2% success rate\n\n*Source: Social Welfare Department*"
-    };
+  // Common reasons for this issue:
+  // 1. **CORS error**: Check your browser console for CORS errors. If present, your backend must allow requests from your frontend's origin.
+  // 2. **Network error**: Open browser dev tools → Network tab, check if the request is sent and what response you get.
+  // 3. **Incorrect API URL**: Make sure the URL in fetch matches exactly what works in Postman.
+  // 4. **HTTPS/HTTP mismatch**: If your frontend is served over HTTPS, your backend must also be HTTPS.
+  // 5. **Request body/headers**: Ensure Content-Type and body format in fetch matches what works in Postman.
+  // 6. **Backend expects authentication**: If your backend expects headers (like auth tokens), add them in fetch.
+  // 7. **Backend response format**: If backend doesn't return JSON, `await res.json()` will fail. Use `await res.text()` to debug.
 
-    // Match query to appropriate response
-    const query_lower = query.toLowerCase();
-    if (query_lower.includes("education") || query_lower.includes("budget") || query_lower.includes("school")) {
-      return responses.education;
-    } else if (query_lower.includes("job") || query_lower.includes("vacancy") || query_lower.includes("recruitment")) {
-      return responses.job;
-    } else if (query_lower.includes("road") || query_lower.includes("construction") || query_lower.includes("infrastructure")) {
-      return responses.road;
-    } else if (query_lower.includes("health") || query_lower.includes("hospital") || query_lower.includes("medical")) {
-      return responses.healthcare;
-    } else if (query_lower.includes("tender") || query_lower.includes("contract") || query_lower.includes("bid")) {
-      return responses.tender;
-    } else if (query_lower.includes("welfare") || query_lower.includes("pension") || query_lower.includes("scheme")) {
-      return responses.welfare;
-    } else {
-      return `🔍 **Information Retrieved Successfully**\n\nBased on your query: "${query}"\n\nI found relevant information in our government database. Here's what I can provide:\n\n• Official records and data\n• Real-time status updates\n• Contact information for further queries\n• Related documents and reports\n\n*This information would typically take 30+ days to obtain through traditional RTI process.*\n\n**Need more specific details?** Please refine your question or specify the exact information you're looking for.`;
+  // To debug, add a console log for errors and the response:
+  const fetchRTIReport = async (query) => {
+    try {
+      const res = await fetch("https://hack25-backend-x7el.vercel.app/api/rti/getReport", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
+      });
+      // Debug: log status and response
+      console.log("API status:", res.status);
+      const text = await res.text();
+      console.log("API raw response:", text);
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        // If not JSON, just return the raw text so you see something in the UI
+        return text || "❌ Backend did not return valid JSON.";
+      }
+      // Show the whole response if no report/message field
+      if (data && data.report) {
+        return data.report;
+      } else if (data && data.message) {
+        return data.message;
+      } else {
+        // Show the stringified data so you see something in the chat
+        return typeof data === "string" ? data : JSON.stringify(data, null, 2);
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+      return "❌ Failed to fetch RTI data. Please try again later.";
     }
   };
 
-  const handleSend = (msg) => {
+  const handleSend = async (msg) => {
     const messageToSend = typeof msg === "string" ? msg : input;
     if (!messageToSend.trim()) return;
-    
+
     setMessages(prev => [...prev, { 
       sender: "user", 
       text: messageToSend, 
@@ -192,30 +116,23 @@ const RTI_Interface = () => {
     }]);
     setInput("");
     setIsTyping(true);
-    
-    // Simulate database search and information retrieval
-    const searchTime = Math.random() * 2000 + 1000; // 1-3 seconds
-    
-    setTimeout(() => {
-      setIsTyping(false);
-      const response = simulateDataRetrieval(messageToSend);
-      
-      setMessages(prev => [...prev, { 
-        sender: "bot", 
-        text: response, 
-        timestamp: new Date(),
-        queryResolved: true,
-        responseTime: `${(searchTime / 1000).toFixed(1)}s`
-      }]);
-      
-      // Update query stats
-      setQueryStats(prev => ({
-        total: prev.total + 1,
-        resolved: prev.resolved + 1
-      }));
-      
-    }, searchTime);
-    
+
+    const start = Date.now();
+    const response = await fetchRTIReport(messageToSend);
+    const responseTime = ((Date.now() - start) / 1000).toFixed(1) + "s";
+
+    setIsTyping(false);
+    setMessages(prev => [...prev, { 
+      sender: "bot", 
+      text: response, 
+      timestamp: new Date(),
+      queryResolved: true,
+      responseTime
+    }]);
+    setQueryStats(prev => ({
+      total: prev.total + 1,
+      resolved: prev.resolved + 1
+    }));
     inputRef.current?.focus();
   };
 
@@ -275,17 +192,6 @@ const RTI_Interface = () => {
                 <span className="text-gray-600">{queryStats.total.toLocaleString()} queries resolved</span>
               </div>
             </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-4 gap-4 mt-6">
-            {QUICK_STATS.map((stat, i) => (
-              <div key={i} className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
-                <stat.icon className={`w-5 h-5 mx-auto mb-2 ${stat.color}`} />
-                <div className="text-lg font-semibold text-gray-900">{stat.value}</div>
-                <div className="text-xs text-gray-500">{stat.label}</div>
-              </div>
-            ))}
           </div>
         </div>
       </header>
