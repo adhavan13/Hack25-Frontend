@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import GrievancesPage from "../components/Grievances/grievances";
 import Dashboard from "../components/dashboard/dashboard";
 import RTI from "../components/RTI/RTI_Interface";
+import Suggestions from "../components/SchemeSuggestion/schemeSuggestion";
 // Add scrollbar styling
 const scrollbarStyle = `
   ::-webkit-scrollbar {
@@ -35,6 +36,7 @@ export default function Router() {
           <Route path="/grievances" element={<GrievancesPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/rti" element={<RTI />} />
+          <Route path="/suggestion" element={<Suggestions />} />
           {/* Add other routes here as needed */}
         </Routes>
       </main>
