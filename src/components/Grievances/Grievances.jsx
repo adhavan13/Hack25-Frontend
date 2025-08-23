@@ -115,11 +115,7 @@ export default function Grievances() {
         </div>
 
         {/* Grievances Cards */}
-<<<<<<< HEAD
         <div className="mt-8 grid gap-6 grid-cols-1">
-=======
-        <div className="mt-6 sm:mt-8 grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
->>>>>>> 827bbb4310429b2889cb57a75e2ad34cbb7b2cf5
           {sampleGrievances.length > 0 ? (
             sampleGrievances.map((grievance) => (
               <GrievanceCard
