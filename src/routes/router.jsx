@@ -2,8 +2,8 @@ import Header from "@/components/NavBar/header";
 import Scheme from "@/components/Scheme/scheme";
 import ChatBot from "@/components/ChatBot/chatbot";
 import { Routes, Route } from "react-router-dom";
-import GrievancesPage from '../components/Grievances/grievances';
-import Dashboard from '../components/dashboard/dashboard';
+import Dashboard from "../components/dashboard/dashboard";
+import GrievancesPage from "@/components/Grievances/Grievances";
 
 // Add scrollbar styling
 const scrollbarStyle = `
