@@ -270,14 +270,14 @@ export default function Grievances() {
       {/* Header */}
       {/* <Header /> */}
 
-      <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 border-b shadow-[0_4px_12px_0_rgba(0,0,0,0.06)]">
-        {/* Added border-b and shadow for bottom border shadow */}
-        <div className="px-2 sm:pl-5 flex justify-between items-start">
-          <div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+      <div className="px-2 sm:px-4 lg:px-8 py-3 sm:py-6 lg:py-8 border-b shadow-[0_4px_12px_0_rgba(0,0,0,0.06)]">
+        {/* Responsive paddings */}
+        <div className="px-0 sm:pl-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+          <div className="w-full sm:w-auto">
+            <h1 className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900">
               Grievances
             </h1>
-            <p className="mt-1 sm:mt-2 text-sm sm:text-base lg:text-lg text-gray-600">
+            <p className="mt-1 sm:mt-2 text-xs sm:text-base lg:text-lg text-gray-600">
               View and submit grievances across different sectors
             </p>
             {(searchTerm || selectedCategory !== 'All' || selectedLocation) && (
@@ -315,7 +315,7 @@ export default function Grievances() {
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={() => setShowSearchBar(!showSearchBar)}
               className="text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
@@ -325,13 +325,14 @@ export default function Grievances() {
             </button>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="text-black px-4 py-2 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2"
+              className="text-black px-3 py-2 sm:px-4 rounded-lg font-medium transition-colors duration-200 whitespace-nowrap flex items-center gap-2 w-full sm:w-auto justify-center"
               style={{ backgroundColor: "#72e3a6" }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#5dd490")}
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#72e3a6")}
             >
               <span className="text-lg">+</span>
-              Post Grievance
+              <span className="hidden xs:inline">Post Grievance</span>
+              <span className="inline xs:hidden text-sm">Post</span>
             </button>
           </div>
         </div>
@@ -342,7 +343,7 @@ export default function Grievances() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-4 px-2 sm:px-5"
+            className="mt-3 px-0 sm:px-5"
           >
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -351,7 +352,7 @@ export default function Grievances() {
                 placeholder="Search grievances by title, description, location, or category..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                className="w-full pl-10 pr-10 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm sm:text-base"
               />
               {searchTerm && (
                 <button
@@ -366,7 +367,7 @@ export default function Grievances() {
         )}
 
         {/* Category Navigation */}
-        <div className="mt-4 sm:mt-6">
+        <div className="mt-3 sm:mt-6">
           <CategoryNavigation 
             onCategoryChange={handleCategoryChange} 
             onLocationChange={handleLocationChange}
@@ -376,11 +377,11 @@ export default function Grievances() {
         </div>
 
         {/* Grievances Cards */}
-        <div className="mt-6 sm:mt-8">
+        <div className="mt-5 sm:mt-8">
           {/* Results summary */}
           {!loading && !error && (
-            <div className="mb-4 px-2 sm:px-5">
-              <p className="text-sm text-gray-600">
+            <div className="mb-3 px-0 sm:px-5">
+              <p className="text-xs sm:text-sm text-gray-600">
                 Showing {grievances.length} of {allGrievances.length} grievances
                 {(searchTerm || selectedCategory !== 'All' || selectedLocation) && (
                   <span className="ml-1 text-blue-600">
@@ -391,19 +392,19 @@ export default function Grievances() {
             </div>
           )}
           
-          <div className="grid gap-4 sm:gap-6 grid-cols-1">
+          <div className="grid gap-3 sm:gap-6 grid-cols-1 sm:grid-cols-1">
             {loading ? (
               // Skeleton loader: show 3 skeleton cards
               <>
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="animate-pulse bg-gray-100 rounded-lg p-6 flex flex-col gap-3"
+                    className="animate-pulse bg-gray-100 rounded-lg p-4 sm:p-6 flex flex-col gap-2 sm:gap-3"
                   >
-                    <div className="h-5 w-1/3 bg-gray-300 rounded mb-2"></div>
-                    <div className="h-4 w-2/3 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 w-1/2 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 w-1/4 bg-gray-200 rounded"></div>
+                    <div className="h-4 sm:h-5 w-1/3 bg-gray-300 rounded mb-1 sm:mb-2"></div>
+                    <div className="h-3 sm:h-4 w-2/3 bg-gray-200 rounded mb-1 sm:mb-2"></div>
+                    <div className="h-2 sm:h-3 w-1/2 bg-gray-200 rounded mb-1 sm:mb-2"></div>
+                    <div className="h-2 sm:h-3 w-1/4 bg-gray-200 rounded"></div>
                   </div>
                 ))}
               </>
@@ -444,9 +445,9 @@ export default function Grievances() {
             ) : (
               <div className="col-span-full text-center py-8 lg:py-16">
                 <div className="max-w-md mx-auto">
-                  <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No grievances found</h3>
-                  <p className="text-gray-500 mb-4">
+                  <Search className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mb-3 sm:mb-4" />
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2">No grievances found</h3>
+                  <p className="text-gray-500 mb-3 sm:mb-4 text-sm sm:text-base">
                     {(searchTerm || selectedCategory !== 'All' || selectedLocation) 
                       ? "Try adjusting your search criteria or filters"
                       : "No grievances have been submitted yet"
@@ -455,7 +456,7 @@ export default function Grievances() {
                   {(searchTerm || selectedCategory !== 'All' || selectedLocation) && (
                     <button
                       onClick={clearFilters}
-                      className="text-blue-600 hover:text-blue-800 font-medium underline"
+                      className="text-blue-600 hover:text-blue-800 font-medium underline text-sm"
                     >
                       Clear all filters
                     </button>
@@ -474,16 +475,18 @@ export default function Grievances() {
       />
       
       {/* Enhanced ChatBot with filter integration */}
-      <ChatBot 
-        onCategoryFilter={handleCategoryChange}
-        onLocationFilter={handleLocationChange}
-        onSearchFilter={handleSearch}
-        currentFilters={{
-          category: selectedCategory,
-          location: selectedLocation,
-          search: searchTerm
-        }}
-      />
+      <div className="fixed bottom-3 right-3 z-50 w-[90vw] max-w-xs sm:max-w-sm md:max-w-md">
+        <ChatBot 
+          onCategoryFilter={handleCategoryChange}
+          onLocationFilter={handleLocationChange}
+          onSearchFilter={handleSearch}
+          currentFilters={{
+            category: selectedCategory,
+            location: selectedLocation,
+            search: searchTerm
+          }}
+        />
+      </div>
     </div>
   );
 }

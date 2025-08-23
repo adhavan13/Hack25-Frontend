@@ -151,19 +151,19 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
       <AnimatePresence>
         {/* Main Modal */}
         {isOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-10 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-10 z-50 flex items-center justify-center p-2 sm:p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl shadow-xl max-w-5xl w-full max-h-[90vh] overflow-hidden"
+              className="bg-white rounded-2xl sm:rounded-3xl shadow-xl w-full max-w-lg sm:max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col"
             >
               {/* Header */}
-              <div className="relative bg-white px-8 py-6 border-b border-gray-200">
+              <div className="relative bg-white px-4 py-4 sm:px-8 sm:py-6 border-b border-gray-200">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   <svg
                     className="w-6 h-6"
@@ -179,16 +179,16 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                     />
                   </svg>
                 </button>
-                <h1 className="text-3xl font-bold text-black mb-2">
+                <h1 className="text-2xl sm:text-3xl font-bold text-black mb-2">
                   Submit Grievance
                 </h1>
               </div>
 
               {/* Form Content */}
-              <div className="overflow-y-auto max-h-[calc(90vh-180px)]">
-                <form onSubmit={handleSubmit} className="p-8">
+              <div className="overflow-y-auto max-h-[calc(95vh-120px)] sm:max-h-[calc(90vh-180px)]">
+                <form onSubmit={handleSubmit} className="p-4 sm:p-8">
                   {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl mb-8 flex items-start">
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 sm:px-6 sm:py-4 rounded-2xl mb-6 sm:mb-8 flex items-start text-sm sm:text-base">
                       <svg
                         className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0"
                         fill="currentColor"
@@ -208,11 +208,11 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                   )}
 
                   {/* Basic Information Section */}
-                  <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-                    <h3 className="text-lg font-semibold text-black mb-4">
+                  <div className="bg-gray-50 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+                    <h3 className="text-base sm:text-lg font-semibold text-black mb-3 sm:mb-4">
                       Basic Information
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                       <div>
                         <label className="block text-sm font-medium text-black mb-2">
                           Grievance Title{" "}
@@ -306,11 +306,11 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                   </div>
 
                   {/* Description Section */}
-                  <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-                    <h3 className="text-lg font-semibold text-black mb-4">
+                  <div className="bg-gray-50 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+                    <h3 className="text-base sm:text-lg font-semibold text-black mb-3 sm:mb-4">
                       Description & Details
                     </h3>
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                       <div>
                         <label className="block text-sm font-medium text-black mb-2">
                           Short Description{" "}
@@ -385,11 +385,11 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                   </div>
 
                   {/* Evidence Section */}
-                  <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-                    <h3 className="text-lg font-semibold text-black mb-4">
+                  <div className="bg-gray-50 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+                    <h3 className="text-base sm:text-lg font-semibold text-black mb-3 sm:mb-4">
                       Supporting Evidence
                     </h3>
-                    <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center bg-white hover:border-gray-400 transition-colors">
+                    <div className="border-2 border-dashed border-gray-300 rounded-2xl p-4 sm:p-8 text-center bg-white hover:border-gray-400 transition-colors">
                       <input
                         type="file"
                         accept="image/*"
@@ -427,7 +427,7 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                       </label>
                     </div>
                     {image && (
-                      <div className="mt-4 p-4 bg-white border border-gray-200 rounded-xl flex items-center">
+                      <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-white border border-gray-200 rounded-xl flex items-center">
                         <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
                           <svg
                             className="w-5 h-5 text-black"
@@ -454,13 +454,14 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                       <img
                         src={URL.createObjectURL(image)}
                         alt="Preview"
-                        className="max-w-xs rounded-xl mt-4"
+                        className="w-full max-w-xs rounded-xl mt-3 sm:mt-4 mx-auto"
+                        style={{ maxHeight: 200, objectFit: "contain" }}
                       />
                     )}
                   </div>
 
                   {/* Submit Section */}
-                  <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6">
+                  <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4 sm:pt-6">
                     <button
                       type="button"
                       onClick={onClose}
@@ -532,12 +533,12 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
 
         {/* Success Modal */}
         {showSuccessModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-15 z-[60] flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-15 z-[60] flex items-center justify-center p-2 sm:p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center"
+              className="bg-white rounded-2xl shadow-2xl max-w-xs sm:max-w-md w-full p-6 sm:p-8 text-center"
             >
               <div
                 className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center"
@@ -583,12 +584,12 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
 
         {/* Failure Modal */}
         {showFailureModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-15 z-[60] flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-15 z-[60] flex items-center justify-center p-2 sm:p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center"
+              className="bg-white rounded-2xl shadow-2xl max-w-xs sm:max-w-md w-full p-6 sm:p-8 text-center"
             >
               <div className="w-16 h-16 bg-red-100 mx-auto mb-6 rounded-full flex items-center justify-center">
                 <svg

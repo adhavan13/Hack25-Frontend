@@ -29,11 +29,11 @@ export default function GrievanceCard({
   };
 
   return (
-    <div className="bg-transparent p-2 md:p-3">
+    <div className="bg-transparent p-1 sm:p-2 md:p-3">
       <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-300 hover:border-[#72e3ad] group">
         <div className="flex flex-col lg:flex-row">
           {/* Image Section */}
-          <div className="w-full lg:w-1/3 bg-gradient-to-br from-gray-100 to-gray-200 aspect-video lg:aspect-square relative overflow-hidden">
+          <div className="w-full lg:w-1/3 bg-gradient-to-br from-gray-100 to-gray-200 aspect-video lg:aspect-square relative overflow-hidden min-h-[160px]">
             {evidence && evidence.startsWith('http') ? (
               <>
                 <img 
@@ -65,62 +65,62 @@ export default function GrievanceCard({
           </div>
           
           {/* Content Section */}
-          <div className="w-full lg:w-2/3 p-4 lg:p-6">
+          <div className="w-full lg:w-2/3 p-3 sm:p-4 lg:p-6">
             {/* Header with ID and Status */}
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3">
-              <div className="flex items-center gap-2 mb-2 sm:mb-0">
-                <span className="text-xs text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded-md">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 sm:mb-3 gap-1">
+              <div className="flex items-center gap-2 mb-1 sm:mb-0">
+                <span className="text-[10px] sm:text-xs text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded-md break-all">
                   {id}
                 </span>
               </div>
-              <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${getStatusColor(status)} ring-1 ring-inset ring-gray-300`}>
+              <span className={`inline-flex items-center px-2 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold ${getStatusColor(status)} ring-1 ring-inset ring-gray-300`}>
                 <div className="w-1.5 h-1.5 rounded-full bg-black mr-1.5"></div>
                 {status}
               </span>
             </div>
 
             {/* Title */}
-            <h2 className="text-xl lg:text-2xl font-bold text-black mb-3 leading-tight group-hover:text-gray-800 transition-colors duration-200">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-black mb-2 sm:mb-3 leading-tight group-hover:text-gray-800 transition-colors duration-200 break-words">
               {title}
             </h2>
 
             {/* Category and Project/Service */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              <span className="inline-flex items-center bg-[#72e3ad] text-black px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm">
+            <div className="flex flex-wrap gap-2 mb-2 sm:mb-4">
+              <span className="inline-flex items-center bg-[#72e3ad] text-black px-2 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm">
                 {category}
               </span>
               {projectService && (
-                <span className="inline-flex items-center bg-gray-200 text-black px-3 py-1.5 rounded-full text-xs font-medium">
+                <span className="inline-flex items-center bg-gray-200 text-black px-2 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-medium">
                   {projectService}
                 </span>
               )}
             </div>
 
             {/* Location */}
-            <div className="flex items-start text-gray-700 mb-4">
+            <div className="flex items-start text-gray-700 mb-2 sm:mb-4">
               <MapPin className="w-4 h-4 mr-2 mt-0.5 text-black flex-shrink-0" />
-              <span className="text-sm leading-relaxed">{location}</span>
+              <span className="text-xs sm:text-sm leading-relaxed break-words">{location}</span>
             </div>
 
             {/* Description */}
-            <div className="bg-gray-100 rounded-lg p-3 mb-4 border border-gray-200">
-              <p className="text-gray-800 leading-relaxed text-sm">
+            <div className="bg-gray-100 rounded-lg p-2 sm:p-3 mb-2 sm:mb-4 border border-gray-200">
+              <p className="text-gray-800 leading-relaxed text-xs sm:text-sm break-words">
                 {description}
               </p>
             </div>
 
             {/* Bottom Section */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-gray-200">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pt-2 sm:pt-4 border-t border-gray-200">
               {/* Date and Officer */}
-              <div className="flex flex-col gap-2 mb-3 sm:mb-0">
-                <div className="flex items-center text-gray-600 text-xs">
+              <div className="flex flex-col gap-1 sm:gap-2 mb-1 sm:mb-0">
+                <div className="flex items-center text-gray-600 text-[10px] sm:text-xs">
                   <Calendar className="w-3.5 h-3.5 mr-2 text-black" />
                   <span className="font-medium">
                     Submitted: {date ? new Date(date).toLocaleDateString() : ''}
                   </span>
                 </div>
                 {assignedOfficer && (
-                  <div className="flex items-center text-gray-600 text-xs">
+                  <div className="flex items-center text-gray-600 text-[10px] sm:text-xs">
                     <User className="w-3.5 h-3.5 mr-2 text-black" />
                     <span className="font-medium">Assigned to: {assignedOfficer}</span>
                   </div>
@@ -128,9 +128,9 @@ export default function GrievanceCard({
               </div>
 
               {/* Voting Section */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <button 
-                  className={`flex items-center gap-2 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-lg ${
+                  className={`flex items-center gap-1 sm:gap-2 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-lg ${
                     userVote === 'upvote' 
                       ? 'bg-green-100 border border-green-300 shadow-sm' 
                       : 'hover:bg-green-50'
@@ -142,12 +142,12 @@ export default function GrievanceCard({
                       ? 'text-green-700 fill-green-600' 
                       : 'text-green-600 hover:text-green-700'
                   }`} />
-                  <span className={`text-sm font-bold ${
+                  <span className={`text-xs sm:text-sm font-bold ${
                     userVote === 'upvote' ? 'text-green-700' : 'text-black'
                   }`}>{upvotes}</span>
                 </button>
                 <button 
-                  className={`flex items-center gap-2 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-lg ${
+                  className={`flex items-center gap-1 sm:gap-2 hover:scale-105 transition-all duration-200 px-2 py-1 rounded-lg ${
                     userVote === 'downvote' 
                       ? 'bg-red-100 border border-red-300 shadow-sm' 
                       : 'hover:bg-red-50'
@@ -159,7 +159,7 @@ export default function GrievanceCard({
                       ? 'text-red-700 fill-red-600' 
                       : 'text-red-600 hover:text-red-700'
                   }`} />
-                  <span className={`text-sm font-bold ${
+                  <span className={`text-xs sm:text-sm font-bold ${
                     userVote === 'downvote' ? 'text-red-700' : 'text-black'
                   }`}>{downvotes}</span>
                 </button>
