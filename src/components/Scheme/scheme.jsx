@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Filter, ChevronDown, Menu, X } from "lucide-react";
 import ProjectGrid from "./ProjectGrid";
-import axios from "axios"; // <-- add axios import
+import axios from "axios"; 
 
 const DesignGallery = () => {
   const [activeFilter, setActiveFilter] = useState("Latest"); // for time filter (dropdown)
