@@ -25,6 +25,17 @@ const DribbbleNav = () => {
       : 'text-black hover:text-gray-500 transition-colors';
   };
 
+
+  
+  const navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Grievances', path: '/grievances' },
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Find Talent', path: '/talent' },
+    { name: 'Get Hired', path: '/hired' },
+    { name: 'Blog', path: '/blog' },
+  ];
+
   return (
     <div className="w-full bg-white">
       <nav className="px-6 sm:px-12 py-4">
@@ -57,67 +68,17 @@ const DribbbleNav = () => {
 
           {/* Right side: Navigation Links */}
           <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
-            <div className="relative group">
-              <Link 
-                to="/" 
-                className={`flex items-center space-x-1 ${getPageStyle('/')} cursor-pointer`}
-                onClick={() => handlePageClick('/')}
-              >
-                <span className="font-medium">Home</span>
-              </Link>
-            </div>
-            {/* Grievances Link */}
-            <div className="relative group">
-              <Link 
-                to="/grievances" 
-                className={`flex items-center space-x-1 ${getPageStyle('grievances')} nav-links cursor-pointer`}
-                onClick={() => handlePageClick('grievances')}
-              >
-                <span className="font-medium">Grievances</span>
-              </Link>
-            </div>
-
-            {/* Explore Link - Added to match mobile */}
-            <div className="relative group">
-              <Link 
-                to="/explore" 
-                className={`flex items-center space-x-1 ${getPageStyle('explore')} cursor-pointer`}
-                onClick={() => handlePageClick('explore')}
-              >
-                <span className="font-medium">Explore</span>
-              </Link>
-            </div>
-
-            {/* Find Talent Link */}
-            <div className="relative group">
-              <Link 
-                to="/talent" 
-                className={`flex items-center space-x-1 ${getPageStyle('talent')} cursor-pointer`}
-                onClick={() => handlePageClick('talent')}
-              >
-                <span className="font-medium">Find Talent</span>
-              </Link>
-            </div>
-
-            {/* Get Hired Link */}
-            <div className="relative group">
-              <Link 
-                to="/hired" 
-                className={`flex items-center space-x-1 ${getPageStyle('hired')} cursor-pointer`}
-                onClick={() => handlePageClick('hired')}
-              >
-                <span className="font-medium">Get Hired</span>
-              </Link>
-            </div>
-
-            {/* Blog */}
-            <Link
-              to="/blog"
-              className={`${getPageStyle('blog')} font-medium cursor-pointer`}
-              onClick={() => handlePageClick('blog')}
-            >
-              Blog
-            </Link>
+            {navItems.map((item) => (
+              <div className="relative group" key={item.name}>
+                <Link
+                  to={item.path}
+                  className={`flex items-center space-x-1 ${getPageStyle(item.path)} cursor-pointer`}
+                  onClick={() => handlePageClick(item.path)}
+                >
+                  <span className="font-medium">{item.name}</span>
+                </Link>
+              </div>
+            ))}
           </div>
 
           {/* Mobile menu button */}
@@ -151,49 +112,16 @@ const DribbbleNav = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 py-3 space-y-4">
             <div className="flex flex-col space-y-4">
-              {/* Home Link - Added to match desktop */}
-              <Link
-                to="/"
-                className={`flex items-center justify-between ${getPageStyle('/')} py-2 cursor-pointer`}
-                onClick={() => handlePageClick('/')}
-              >
-                <span className="font-medium">Home</span>
-              </Link>
-              <Link
-                to="/grievances"
-                className={`flex items-center justify-between ${getPageStyle('grievances')} py-2 nav-links cursor-pointer`}
-                onClick={() => handlePageClick('grievances')}
-              >
-                <span className="font-medium">Grievances</span>
-              </Link>
-              <Link
-                to="/explore"
-                className={`flex items-center justify-between ${getPageStyle('explore')} py-2 cursor-pointer`}
-                onClick={() => handlePageClick('explore')}
-              >
-                <span className="font-medium">Explore</span>
-              </Link>
-              <Link
-                to="/talent"
-                className={`flex items-center justify-between ${getPageStyle('talent')} py-2 cursor-pointer`}
-                onClick={() => handlePageClick('talent')}
-              >
-                <span className="font-medium">Find Talent</span>
-              </Link>
-              <Link
-                to="/hired"
-                className={`flex items-center justify-between ${getPageStyle('hired')} py-2 cursor-pointer`}
-                onClick={() => handlePageClick('hired')}
-              >
-                <span className="font-medium">Get Hired</span>
-              </Link>
-              <Link
-                to="/blog"
-                className={`${getPageStyle('blog')} font-medium py-2 cursor-pointer`}
-                onClick={() => handlePageClick('blog')}
-              >
-                Blog
-              </Link>
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`flex items-center justify-between ${getPageStyle(item.path)} py-2 cursor-pointer`}
+                  onClick={() => handlePageClick(item.path)}
+                >
+                  <span className="font-medium">{item.name}</span>
+                </Link>
+              ))}
             </div>
           </div>
         )}

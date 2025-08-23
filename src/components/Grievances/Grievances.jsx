@@ -53,22 +53,24 @@ export default function Grievances() {
       {/* Header */}
       {/* <Header /> */}
       
-      <div className="px-2 sm:pl-6 sm:pr-6 lg:pl-8 lg:pr-8 py-6 sm:py-8">
-        <div className="pl-2 sm:pl-5">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Grievances</h1>
-          <p className="mt-1 sm:mt-2 text-base sm:text-lg text-gray-600">
+      <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="px-2 sm:pl-5">
+          <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Grievances</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base lg:text-lg text-gray-600">
             View and submit grievances across different sectors
           </p>
         </div>
 
         {/* Search Bar */}
-        <CategoryNavigation />
-        <div className="mb-4 sm:mb-5">
+        <div className="mt-4 sm:mt-6">
+          <CategoryNavigation />
+        </div>
+        <div className="mb-4 sm:mb-5 mt-4">
           <SearchBar onSearch={handleSearch} />
         </div>
 
         {/* Grievances Cards */}
-        <div className="mt-8 grid gap-6 grid-cols-1">
+        <div className="mt-6 sm:mt-8 grid gap-4 sm:gap-6 grid-cols-1">
           {sampleGrievances.length > 0 ? (
             sampleGrievances.map((grievance) => (
               <GrievanceCard
@@ -81,7 +83,7 @@ export default function Grievances() {
               />
             ))
           ) : (
-            <p className="col-span-full text-left text-gray-500 py-8 sm:py-12">
+            <p className="col-span-full text-left text-gray-500 py-6 sm:py-8 lg:py-12 text-sm sm:text-base">
               No grievances found. Select a different category or try another search term.
             </p>
           )}
