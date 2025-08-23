@@ -5,19 +5,13 @@ export default function CategoryNavigation({ onCategoryChange }) {
   
   const categories = [
     'All',
-    'Product Design',
-    'Web Design',
-    'Illustration',
-    'Branding',
-    'Animation',
-    'Mobile',
-    'Typography',
-    'Print'
+    'Agriculture and Allied Services',
+    'Rural Development',
+    'Irrigation and Flood Control'
   ];
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
-    // If onCategoryChange is provided, call it with the selected category
     if (onCategoryChange) {
       onCategoryChange(category);
     }
