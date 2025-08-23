@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   PieChart, Pie, BarChart, Bar, LineChart, Line, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
@@ -9,8 +9,187 @@ import {
   CheckCircle, AlertTriangle, FileText, Award
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import useDashboardStore from '../../store/dashboard';
 
 const Dashboard = () => {
+  // Get dashboard data from store
+  const { 
+    dashboardData, 
+    loading, 
+    error, 
+    location, 
+    fetchDashboardData 
+  } = useDashboardStore();
+
+  // Fetch data on component mount only if location is set
+  useEffect(() => {
+    if (location && location.trim()) {
+      fetchDashboardData();
+    }
+  }, [location, fetchDashboardData]);
+
+  // Skeleton Loading Components
+  const SkeletonMetricCard = () => (
+    <div className="bg-white rounded-lg p-6 shadow-sm border animate-pulse">
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
+          <div className="h-8 bg-gray-200 rounded w-16"></div>
+        </div>
+        <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+      </div>
+      <div className="mt-4 flex items-center">
+        <div className="h-4 bg-gray-200 rounded w-12 mr-2"></div>
+        <div className="h-4 bg-gray-200 rounded w-24"></div>
+      </div>
+    </div>
+  );
+
+  const SkeletonChart = ({ height = "h-80" }) => (
+    <div className={`bg-white rounded-lg p-6 shadow-sm border animate-pulse ${height}`}>
+      <div className="h-6 bg-gray-200 rounded w-48 mb-4"></div>
+      <div className="h-full bg-gray-100 rounded"></div>
+    </div>
+  );
+
+  const SkeletonProjectCard = () => (
+    <div className="bg-white rounded-lg p-4 shadow-sm border animate-pulse">
+      <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+      <div className="space-y-2">
+        <div className="flex justify-between">
+          <div className="h-4 bg-gray-200 rounded w-20"></div>
+          <div className="h-4 bg-gray-200 rounded w-16"></div>
+        </div>
+        <div className="flex justify-between">
+          <div className="h-4 bg-gray-200 rounded w-24"></div>
+          <div className="h-4 bg-gray-200 rounded w-20"></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const DashboardSkeleton = () => (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="h-8 bg-gray-200 rounded w-64 mb-2 animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded w-48 animate-pulse"></div>
+        </div>
+
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <SkeletonMetricCard key={index} />
+          ))}
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <SkeletonChart />
+          <SkeletonChart />
+        </div>
+
+        {/* Projects Section */}
+        <div className="mb-8">
+          <div className="h-6 bg-gray-200 rounded w-48 mb-4 animate-pulse"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonProjectCard key={index} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Show empty state when no location is selected
+  if (!location || !location.trim()) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center">
+            <FileText size={40} className="text-gray-400" />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+            Select a Kerala District
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Please search and select a valid Kerala district using the search bar above to view the government dashboard data.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
+
+  // Show error state
+  if (error && !dashboardData) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error: {error}</p>
+          <button 
+            onClick={fetchDashboardData}
+            className="px-4 py-2 bg-[#72e3ad] text-black rounded-lg hover:bg-opacity-90"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Extract data from API response or use defaults
+  const apiData = dashboardData || {};
+  
+  // Extract new sector data from API response
+  const newSectorData = {
+    "Agriculture and Allied Services": apiData["Agriculture and Allied Services"] || {
+      "name": "Agriculture and Allied Services",
+      "total_projects": 0,
+      "planned": 0,
+      "ongoing": 0,
+      "completed": 0,
+      "budget_allocated": 0,
+      "budget_spent": 0
+    },
+    "Rural Development": apiData["Rural Development"] || {
+      "name": "Rural Development", 
+      "total_projects": 0,
+      "planned": 0,
+      "ongoing": 0,
+      "completed": 0,
+      "budget_allocated": 0,
+      "budget_spent": 0
+    },
+    "Irrigation and Flood Control": apiData["Irrigation and Flood Control"] || {
+      "name": "Irrigation and Flood Control",
+      "total_projects": 0,
+      "planned": 0,
+      "ongoing": 0,
+      "completed": 0,
+      "budget_allocated": 0,
+      "budget_spent": 0
+    }
+  };
+
+  const newMetrics = apiData.metrics || {
+    "transparencyPercentage": 0,
+    "complaintResolutionPercentage": 0,
+    "onTimeTrendPercentage": 0,
+    "budgetTrendPercentage": 0,
+    "projectTrendPercentage": 0,
+    "categoryTrendPercentage": 0,
+    "efficiencyTrendPercentage": 0
+  };
+
+  const enhancedSatisfactionData = apiData.satisfactionData || [];
   // Real government data
   const governmentData = {
     "categories": [
@@ -137,13 +316,30 @@ const Dashboard = () => {
     ]
   };
 
-  // Calculate totals
-  const totalBudgetAllocated = governmentData.categories.reduce((sum, cat) => sum + cat.budget_allocated, 0);
-  const totalBudgetSpent = governmentData.categories.reduce((sum, cat) => sum + cat.budget_spent, 0);
+  // Combine new sector data with existing data
+  const enhancedCategories = [...governmentData.categories];
+  
+  // Add new sector data to categories
+  Object.values(newSectorData).forEach(sector => {
+    enhancedCategories.push({
+      name: sector.name.length > 15 ? sector.name.substring(0, 15) + '...' : sector.name,
+      budget_allocated: sector.budget_allocated,
+      budget_spent: sector.budget_spent,
+      projects: {
+        planned: sector.planned,
+        ongoing: sector.ongoing,
+        completed: sector.completed
+      }
+    });
+  });
+
+  // Calculate totals using enhanced data
+  const totalBudgetAllocated = enhancedCategories.reduce((sum, cat) => sum + cat.budget_allocated, 0);
+  const totalBudgetSpent = enhancedCategories.reduce((sum, cat) => sum + cat.budget_spent, 0);
   const spentPercentage = Math.round((totalBudgetSpent / totalBudgetAllocated) * 100);
 
-  // Calculate project totals
-  const totalProjects = governmentData.categories.reduce((acc, cat) => ({
+  // Calculate project totals using enhanced data
+  const totalProjects = enhancedCategories.reduce((acc, cat) => ({
     planned: acc.planned + cat.projects.planned,
     ongoing: acc.ongoing + cat.projects.ongoing,
     completed: acc.completed + cat.projects.completed
@@ -292,7 +488,9 @@ const Dashboard = () => {
     <div className="min-h-screen bg-white pt-6 md:pt-10 overflow-auto">
       <div className="px-2 sm:px-4 md:px-8 lg:px-16 pb-6 md:pb-10">
         <header className="mb-6 md:mb-10">
-          <h1 className="text-2xl md:text-3xl font-bold text-black mb-1 md:mb-2">Government Dashboard</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-black mb-1 md:mb-2">
+            Government Dashboard for {location}
+          </h1>
           <p className="text-gray-500 text-sm md:text-base">Comprehensive overview of public sector performance</p>
         </header>
 

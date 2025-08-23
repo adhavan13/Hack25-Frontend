@@ -1,14 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import useDashboardStore from '../../store/dashboard';
+
+// Valid Kerala districts
+const KERALA_DISTRICTS = [
+  'THIRUVANANTHAPURAM', 'KOLLAM', 'PATHANAMTHITTA', 'ALAPPUZHA', 'KOTTAYAM',
+  'IDUKKI', 'ERNAKULAM', 'THRISSUR', 'PALAKKAD', 'MALAPPURAM',
+  'KOZHIKODE', 'WAYANAD', 'KANNUR', 'KASARAGOD'
+];
 
 const DribbbleNav = () => {
   const [searchValue, setSearchValue] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activePage, setActivePage] = useState(''); // Add state for active page
+  const [searchError, setSearchError] = useState('');
+  
+  // Get dashboard store actions and state
+  const { location, setLocation, fetchDashboardData } = useDashboardStore();
+
+  // Initialize search value with current location
+  useEffect(() => {
+    setSearchValue(location || '');
+  }, [location]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Function to handle search/location change
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      const searchTerm = searchValue.trim();
+      
+      // Check if the search term is a valid Kerala district (case-insensitive)
+      const isValidDistrict = KERALA_DISTRICTS.some(
+        district => district.toLowerCase() === searchTerm.toLowerCase()
+      );
+      
+      if (isValidDistrict) {
+        // Find the correct case district name
+        const correctDistrictName = KERALA_DISTRICTS.find(
+          district => district.toLowerCase() === searchTerm.toLowerCase()
+        );
+        
+        setLocation(correctDistrictName);
+        setSearchError('');
+        fetchDashboardData();
+      } else {
+        setSearchError('Please enter a valid Kerala district');
+        setTimeout(() => setSearchError(''), 3000); // Clear error after 3 seconds
+      }
+    }
+  };
+
+  // Handle Enter key press in search input
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   // Function to handle page navigation and set active page
@@ -56,13 +106,22 @@ const DribbbleNav = () => {
                   type="text"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder="Search for a location?"
-                  className="w-full px-4 py-4.5 pl-6 pr-12 text-sm text-gray-700 placeholder-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-[#72e3ad] focus:border-transparent"
+                  onKeyPress={handleKeyPress}
+                  placeholder="Search for a Kerala district "
+                  className={`w-full px-4 py-4.5 pl-6 pr-12 text-sm text-gray-700 placeholder-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:border-transparent ${
+                    searchError ? 'focus:ring-red-500 ring-1 ring-red-500' : 'focus:ring-[#72e3ad]'
+                  }`}
                 />
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors">
+                <button 
+                  onClick={handleSearch}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors"
+                >
                   <Search size={24} />
                 </button>
               </div>
+              {searchError && (
+                <p className="text-red-500 text-sm mt-1 ml-2">{searchError}</p>
+              )}
             </div>
           </div>
 
@@ -99,13 +158,22 @@ const DribbbleNav = () => {
               type="text"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Search for a location"
-              className="w-full px-4 py-3 pl-4 pr-12 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-[#72e3ad] focus:border-transparent"
+              onKeyPress={handleKeyPress}
+              placeholder="Search for a Kerala district"
+              className={`w-full px-4 py-3 pl-4 pr-12 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:border-transparent ${
+                searchError ? 'focus:ring-red-500 ring-1 ring-red-500' : 'focus:ring-[#72e3ad]'
+              }`}
             />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors">
+            <button 
+              onClick={handleSearch}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors"
+            >
               <Search size={16} />
             </button>
           </div>
+          {searchError && (
+            <p className="text-red-500 text-sm mt-1 ml-2">{searchError}</p>
+          )}
         </div>
 
         {/* Mobile menu */}
