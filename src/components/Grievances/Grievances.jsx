@@ -2,54 +2,7 @@ import { useState } from 'react';
 import Header from '../Navbar/Header';
 import CategoryNavigation from './sectors';
 import SearchBar from './SearchBar';
-<<<<<<< HEAD
 import GrievanceCard from './GrievanceCard';
-=======
-
-// GrievanceCard component
-const GrievanceCard = ({ title, description, status, date, category }) => {
-  // Status color mapping with custom green and required backgrounds/text
-  const statusColors = {
-    'Pending': 'bg-yellow-100 text-yellow-800',
-    'In Progress': 'bg-blue-100 text-blue-800',
-    'Resolved': 'bg-gray-100', // Use gray-100 background for green, text-black
-    'Rejected': 'bg-red-100 text-red-800'
-  };
-
-  // Custom style for Resolved status to use #72e3ad as accent
-  const resolvedStyle = status === 'Resolved'
-    ? { color: '#000', backgroundColor: '#f3f4f6', border: '1px solid #72e3ad' }
-    : {};
-
-  return (
-    <div className="bg-white rounded-lg shadow-md p-4 sm:p-5 border border-gray-200 hover:shadow-lg transition-shadow">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <h3 className="text-base sm:text-lg font-medium text-gray-900">{title}</h3>
-        <span
-          className={`px-2 py-1 text-xs font-semibold rounded-full ${statusColors[status]}`}
-          style={status === 'Resolved' ? resolvedStyle : {}}
-        >
-          {status}
-        </span>
-      </div>
-      <p className="mt-2 text-sm text-gray-600 line-clamp-3">{description}</p>
-      <div className="mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <span className="text-xs text-gray-500">{date}</span>
-        <span
-          className={`text-xs font-medium px-2 py-1 rounded-full`}
-          style={
-            category === 'Infrastructure'
-              ? { background: '#f3f4f6', color: '#000', border: '1px solid #72e3ad' }
-              : { background: '#f3f4f6', color: '#374151' }
-          }
-        >
-          {category}
-        </span>
-      </div>
-    </div>
-  );
-};
->>>>>>> 827bbb4310429b2889cb57a75e2ad34cbb7b2cf5
 
 export default function Grievances() { 
   const [searchTerm, setSearchTerm] = useState('');
@@ -136,9 +89,4 @@ export default function Grievances() {
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
-
->>>>>>> 827bbb4310429b2889cb57a75e2ad34cbb7b2cf5
