@@ -19,11 +19,15 @@ import {
   CreditCard,
   TrendingUp,
 } from "lucide-react";
+import LanguageSwitcher from "../NavBar/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
+import "../../i18n/config";
 
 const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [projectDetails, setProjectDetails] = useState(null);
+  const { t } = useTranslation();
 
   // Fetch project details when modal opens and project changes
   useEffect(() => {
@@ -163,7 +167,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
   const data = projectDetails || sampleProject;
 
   const formatMoney = (amount) => {
-    return `₹${(amount / 10000000).toFixed(1)} Crores`;
+    return t("modal.moneyFormat", { amount: (amount / 10000000).toFixed(1) });
   };
 
   const formatDate = (date) => {
@@ -200,32 +204,32 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
   const timelineSteps = [
     {
       key: "proposal_date",
-      label: "Project Planned",
-      simple: "Idea proposed",
+      label: t("modal.timeline.projectPlanned"),
+      simple: t("modal.timeline.ideaProposed"),
       completed: true,
     },
     {
       key: "approval_date",
-      label: "Got Permission",
-      simple: "Government said yes",
+      label: t("modal.timeline.gotPermission"),
+      simple: t("modal.timeline.govtSaidYes"),
       completed: true,
     },
     {
       key: "tender_publication_date",
-      label: "Found Builder",
-      simple: "Selected who will build",
+      label: t("modal.timeline.foundBuilder"),
+      simple: t("modal.timeline.selectedBuilder"),
       completed: true,
     },
     {
       key: "work_commencement_date",
-      label: "Work Started",
-      simple: "Construction began",
+      label: t("modal.timeline.workStarted"),
+      simple: t("modal.timeline.constructionBegan"),
       completed: true,
     },
     {
       key: "scheduled_completion_date",
-      label: "Expected Finish",
-      simple: "When it should be ready",
+      label: t("modal.timeline.expectedFinish"),
+      simple: t("modal.timeline.whenReady"),
       completed: false,
     },
   ];
@@ -251,13 +255,17 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
       >
         {/* Close Button - Fixed at top */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 flex justify-between items-center z-10 shadow-sm">
-          <h1 className="text-lg sm:text-xl font-bold text-gray-900">
-            Project Details
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg sm:text-xl font-bold text-gray-900">
+              {t("modal.projectDetails")}
+            </h1>
+            {/* Language Switcher Dropdown */}
+            <LanguageSwitcher />
+          </div>
           <button
             onClick={handleClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            aria-label="Close modal"
+            aria-label={t("modal.closeModal")}
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />
           </button>
@@ -273,19 +281,19 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             {/* Header with Clear Purpose */}
             <div className="text-center pt-3 sm:pt-4 pb-2 border-b border-gray-100">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-                {data.project_name || "Project Name"}
+                {data.project_name || t("modal.projectName")}
               </h2>
               <div className="bg-gray-100 mx-auto max-w-3xl p-3 rounded-lg mb-4">
                 <p className="text-gray-900 text-xs sm:text-sm leading-relaxed">
-                  {data.project_description || "No description available."}
+                  {data.project_description || t("modal.noDescription")}
                 </p>
               </div>
               <div className="inline-flex items-center justify-center gap-2 bg-gray-100 px-3 py-1 rounded-full mb-2">
                 <AlertTriangle className="w-4 h-4 text-gray-700" />
                 <span className="font-medium text-xs sm:text-sm text-gray-900">
-                  Current Status:{" "}
+                  {t("modal.currentStatus")}{" "}
                   <span className="text-sm sm:text-base font-semibold">
-                    {data.status || "Status Unknown"}
+                    {data.status || t("modal.statusUnknown")}
                   </span>
                 </span>
               </div>
@@ -298,15 +306,15 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                   <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
                 </div>
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
-                  Budget Allocated
+                  {t("modal.budgetAllocated")}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-gray-900">
                   {data.allocated_budget
                     ? formatMoney(data.allocated_budget)
-                    : "N/A"}
+                    : t("modal.na")}
                 </div>
                 <div className="text-xs text-gray-600 mt-1">
-                  Total funds for this project
+                  {t("modal.totalFunds")}
                 </div>
               </div>
 
@@ -315,12 +323,12 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                   <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
                 </div>
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
-                  Money Used So Far
+                  {t("modal.moneyUsedSoFar")}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-gray-900">
                   {data.current_amount_spent
                     ? formatMoney(data.current_amount_spent)
-                    : "N/A"}
+                    : t("modal.na")}
                 </div>
                 <div className="text-xs text-gray-600 mt-1">
                   {data.allocated_budget && data.current_amount_spent
@@ -329,7 +337,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                           100
                       )
                     : 0}
-                  % of budget used
+                  {t("modal.percentBudgetUsed")}
                 </div>
               </div>
 
@@ -338,17 +346,20 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                   <Users className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
                 </div>
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
-                  People Benefiting
+                  {t("modal.peopleBenefiting")}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-gray-900">
                   {data.beneficiaries
                     ? data.beneficiaries.direct_beneficiaries +
                       data.beneficiaries.indirect_beneficiaries
-                    : "N/A"}
+                    : t("modal.na")}
                 </div>
                 <div className="text-xs text-gray-600 mt-1">
                   {data.beneficiaries
-                    ? `${data.beneficiaries.direct_beneficiaries} direct + ${data.beneficiaries.indirect_beneficiaries} indirect`
+                    ? t("modal.directIndirect", {
+                        direct: data.beneficiaries.direct_beneficiaries,
+                        indirect: data.beneficiaries.indirect_beneficiaries,
+                      })
                     : ""}
                 </div>
               </div>
@@ -358,7 +369,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                   <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
                 </div>
                 <div className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
-                  Timeline
+                  {t("modal.timelineLabel")}
                 </div>
                 <div className="text-lg sm:text-xl font-bold text-gray-900">
                   {data.timeline && data.timeline.scheduled_completion_date
@@ -368,10 +379,10 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                         month: "short",
                         year: "numeric",
                       })
-                    : "N/A"}
+                    : t("modal.na")}
                 </div>
                 <div className="text-xs text-gray-600 mt-1">
-                  Expected completion date
+                  {t("modal.expectedCompletion")}
                 </div>
               </div>
             </div>
@@ -380,13 +391,13 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white">
               <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
                 <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                Current Progress
+                {t("modal.currentProgress")}
               </h3>
               <div className="flex flex-col gap-4 sm:gap-6 sm:flex-row sm:items-center">
                 <div className="w-full sm:w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-xs sm:text-sm text-gray-600 font-medium">
-                      Work Completed
+                      {t("modal.workCompleted")}
                     </span>
                     <span className="text-lg sm:text-xl font-bold text-gray-900">
                       {data.physical_progress_percentage}%
@@ -403,25 +414,25 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                   </div>
                   <div className="flex justify-between text-xs text-gray-500 mt-1">
                     <span>
-                      Started:{" "}
+                      {t("modal.started")}{" "}
                       <span className="font-medium">
                         {data.timeline?.work_commencement_date
                           ? new Date(data.timeline.work_commencement_date).toLocaleString("en-IN", {
                               month: "long",
                               year: "numeric",
                             })
-                          : "N/A"}
+                          : t("modal.na")}
                       </span>
                     </span>
                     <span>
-                      Expected End:{" "}
+                      {t("modal.expectedEnd")}{" "}
                       <span className="font-medium">
                         {data.timeline?.scheduled_completion_date
                           ? new Date(data.timeline.scheduled_completion_date).toLocaleString("en-IN", {
                               month: "long",
                               year: "numeric",
                             })
-                          : "N/A"}
+                          : t("modal.na")}
                       </span>
                     </span>
                   </div>
@@ -429,21 +440,20 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                 <div className="w-full sm:w-1/3 bg-gray-100 p-3 rounded-lg">
                   <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
                     <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700" />
-                    What's Happening Now:
+                    {t("modal.whatsHappeningNow")}
                   </h4>
                   <ul className="text-xs sm:text-sm text-gray-900 space-y-3 list-disc pl-4">
-                    {/* You may want to fetch this from API if available, else fallback */}
                     <li>
-                      <span className="font-medium">Road foundation</span> is
-                      being laid
+                      <span className="font-medium">{t("modal.roadFoundation")}</span>{" "}
+                      {t("modal.isBeingLaid")}
                     </li>
                     <li>
-                      <span className="font-medium">Drainage systems</span>{" "}
-                      installation
+                      <span className="font-medium">{t("modal.drainageSystems")}</span>{" "}
+                      {t("modal.installation")}
                     </li>
                     <li>
-                      Preparing for{" "}
-                      <span className="font-medium">street lighting</span>
+                      {t("modal.preparingFor")}{" "}
+                      <span className="font-medium">{t("modal.streetLighting")}</span>
                     </li>
                   </ul>
                 </div>
@@ -454,10 +464,10 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             <div className="border border-gray-200 rounded-lg p-3 sm:p-8 bg-white">
               <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 flex items-center gap-2">
                 <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                Project Timeline
+                {t("modal.projectTimeline")}
               </h3>
               <p className="text-xs text-gray-600 mb-4 sm:mb-6">
-                See how this project has progressed from planning to completion
+                {t("modal.timelineDesc")}
               </p>
 
               {/* Desktop Timeline (Horizontal) - Hidden on mobile */}
@@ -581,10 +591,10 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
               <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white h-full flex flex-col">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
                   <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                  <span>Government Officer In-Charge</span>
+                  <span>{t("modal.govtOfficerInCharge")}</span>
                 </h3>
                 <p className="text-xs text-gray-500 mb-3 sm:mb-4">
-                  This official is responsible for overseeing this project
+                  {t("modal.officialResponsible")}
                 </p>
                 <div className="bg-gray-100 p-3 sm:p-4 rounded-lg flex-grow flex flex-col justify-between">
                   <div className="space-y-3 sm:space-y-4">
@@ -618,10 +628,10 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
               <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white h-full flex flex-col">
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
                   <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                  <span>Construction Company</span>
+                  <span>{t("modal.constructionCompany")}</span>
                 </h3>
                 <p className="text-xs text-gray-500 mb-3 sm:mb-4">
-                  This company was selected to build the project
+                  {t("modal.companySelected")}
                 </p>
                 <div className="bg-gray-100 p-3 sm:p-4 rounded-lg flex-grow flex flex-col justify-between">
                   <div className="space-y-3 sm:space-y-4">
@@ -632,7 +642,7 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                       {data.contractor?.contractor_class || "N/A"}
                     </div>
                     <div className="text-xs sm:text-sm text-gray-900">
-                      Contact: {data.contractor?.contact_person || "N/A"}
+                      {t("modal.contact")}: {data.contractor?.contact_person || "N/A"}
                     </div>
                   </div>
                   <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
@@ -659,11 +669,10 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             <div className="border border-gray-200 rounded-lg p-3 sm:p-6 bg-white">
               <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
                 <Users className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                <span>Who Will Benefit From This Road?</span>
+                <span>{t("modal.whoWillBenefit")}</span>
               </h3>
               <p className="text-xs text-gray-600 mb-3 sm:mb-4">
-                This project will improve transportation and quality of life for
-                these groups
+                {t("modal.projectWillImprove")}
               </p>
 
               <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6">
@@ -672,32 +681,30 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
                     {data.beneficiaries
                       ? data.beneficiaries.direct_beneficiaries +
                         data.beneficiaries.indirect_beneficiaries
-                      : "N/A"}
+                      : t("modal.na")}
                   </div>
                   <div className="text-xs sm:text-sm text-gray-900 font-medium">
-                    Total People Helped
+                    {t("modal.peopleBenefiting")}
                   </div>
                   <div className="flex justify-center gap-4 mt-3">
                     <div className="text-center">
                       <div className="text-sm sm:text-base font-semibold text-gray-900">
-                        {data.beneficiaries?.direct_beneficiaries || "N/A"}
+                        {data.beneficiaries?.direct_beneficiaries || t("modal.na")}
                       </div>
-                      <div className="text-xs text-gray-900">Direct Impact</div>
+                      <div className="text-xs text-gray-900">{t("modal.directImpact") || "Direct Impact"}</div>
                     </div>
                     <div className="text-center">
                       <div className="text-sm sm:text-base font-semibold text-gray-900">
-                        {data.beneficiaries?.indirect_beneficiaries || "N/A"}
+                        {data.beneficiaries?.indirect_beneficiaries || t("modal.na")}
                       </div>
-                      <div className="text-xs text-gray-900">
-                        Indirect Impact
-                      </div>
+                      <div className="text-xs text-gray-900">{t("modal.indirectImpact") || "Indirect Impact"}</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="w-full md:w-2/3">
                   <div className="text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                    Specific groups that will benefit:
+                    {t("modal.specificGroups")}
                   </div>
                   <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-2">
                     {data.beneficiaries?.beneficiary_categories
@@ -726,16 +733,16 @@ const Modal = ({ isOpen, onClose, project, loading: parentLoading }) => {
             {/* Footer with additional resources */}
             <div className="text-center p-3 sm:p-6 bg-gray-100 rounded-lg">
               <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-3">
-                Want to know more?
+                {t("modal.wantToKnowMore")}
               </h3>
               <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
                 <button className="flex items-center gap-1 px-3 py-2 bg-white text-gray-900 rounded-lg text-xs sm:text-sm border border-gray-200">
                   <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700" />
-                  <span>Contact PWD</span>
+                  <span>{t("modal.contactPWD")}</span>
                 </button>
                 <button className="flex items-center gap-1 px-3 py-2 bg-white text-gray-900 rounded-lg text-xs sm:text-sm border border-gray-200">
                   <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700" />
-                  <span>View on Map</span>
+                  <span>{t("modal.viewOnMap")}</span>
                 </button>
               </div>
             </div>

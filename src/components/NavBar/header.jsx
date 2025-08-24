@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useDashboardStore from '../../store/dashboard';
+import LanguageSwitcher from './LanguageSwitcher';
 
 // Valid Kerala districts
 const KERALA_DISTRICTS = [
@@ -88,46 +89,44 @@ const DribbbleNav = () => {
   return (
     <div className="w-full bg-white">
       <nav className="px-6 sm:px-12 py-4">
-        <div className="flex items-center justify-between">
-          {/* Left side: Logo and Search Bar */}
-          <div className="flex items-center space-x-4 md:space-x-6 flex-1">
-            {/* Logo */}
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900 italic tracking-tight">
-                CivicLens
-              </h1>
-            </div>
-
-            {/* Search Bar - Hidden on mobile, visible on medium screens and up */}
-            <div className="hidden md:block w-full max-w-2xl">
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Search for a Kerala district "
-                  className={`w-full px-4 py-4.5 pl-6 pr-12 text-sm text-gray-700 placeholder-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:border-transparent ${
-                    searchError ? 'focus:ring-red-500 ring-1 ring-red-500' : 'focus:ring-[#72e3ad]'
-                  }`}
-                />
-                <button 
-                  onClick={handleSearch}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors"
-                >
-                  <Search size={24} />
-                </button>
-              </div>
-              {searchError && (
-                <p className="text-red-500 text-sm mt-1 ml-2">{searchError}</p>
-              )}
-            </div>
+        {/* Flex container for logo, search, and nav */}
+        <div className="flex items-center justify-between w-full">
+          {/* Logo */}
+          <div className="flex-shrink-0 flex items-center">
+            <h1 className="text-2xl font-bold text-gray-900 italic tracking-tight">
+              CivicLens
+            </h1>
           </div>
 
-          {/* Right side: Navigation Links */}
-          <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
-            {navItems.map((item) => (
-              <div className="relative group" key={item.name}>
+          {/* Search Bar - Centered on desktop */}
+          <div className="hidden md:flex flex-1 justify-center px-6">
+            <div className="relative w-full max-w-2xl">
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Search for a Kerala district "
+                className={`w-full px-4 py-4.5 pl-6 pr-12 text-sm text-gray-700 placeholder-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:border-transparent ${
+                  searchError ? 'focus:ring-red-500 ring-1 ring-red-500' : 'focus:ring-[#72e3ad]'
+                }`}
+              />
+              <button 
+                onClick={handleSearch}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 bg-[#72e3ad] text-black rounded-full hover:bg-opacity-90 transition-colors"
+              >
+                <Search size={24} />
+              </button>
+            </div>
+            {searchError && (
+              <p className="text-red-500 text-sm mt-1 ml-2">{searchError}</p>
+            )}
+          </div>
+
+          {/* Navigation Links - Right aligned */}
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-8 flex-shrink-0">
+            {navItems.map((item, idx) => (
+              <div className="relative group flex items-center" key={item.name}>
                 <Link
                   to={item.path}
                   className={`flex items-center space-x-1 ${getPageStyle(item.path)} cursor-pointer`}
@@ -135,12 +134,18 @@ const DribbbleNav = () => {
                 >
                   <span className="font-medium">{item.name}</span>
                 </Link>
+                {/* Replace dropdown near Schemes */}
+                {item.name === 'Schemes' && (
+                  <div className="ml-2">
+                    <LanguageSwitcher />
+                  </div>
+                )}
               </div>
             ))}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center ml-2">
             <button
               onClick={toggleMobileMenu}
               className="text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"
@@ -180,14 +185,21 @@ const DribbbleNav = () => {
           <div className="md:hidden mt-4 py-3 space-y-4">
             <div className="flex flex-col space-y-4">
               {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`flex items-center justify-between ${getPageStyle(item.path)} py-2 cursor-pointer`}
-                  onClick={() => handlePageClick(item.path)}
-                >
-                  <span className="font-medium">{item.name}</span>
-                </Link>
+                <div key={item.name} className="flex items-center justify-between">
+                  <Link
+                    to={item.path}
+                    className={`flex items-center ${getPageStyle(item.path)} py-2 cursor-pointer`}
+                    onClick={() => handlePageClick(item.path)}
+                  >
+                    <span className="font-medium">{item.name}</span>
+                  </Link>
+                  {/* Replace dropdown near Schemes */}
+                  {item.name === 'Schemes' && (
+                    <div className="ml-2">
+                      <LanguageSwitcher />
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>

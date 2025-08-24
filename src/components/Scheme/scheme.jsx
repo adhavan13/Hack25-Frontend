@@ -2,8 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { Filter, ChevronDown, Menu, X } from "lucide-react";
 import ProjectGrid from "./ProjectGrid";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+import "../../i18n/config";
 
 const DesignGallery = () => {
+  const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState("Latest"); // for time filter (dropdown)
   const [activeCategoryFilter, setActiveCategoryFilter] = useState(
     "Agriculture and Allied Services"
@@ -137,15 +140,20 @@ const DesignGallery = () => {
   const [loading, setLoading] = useState(false); // for loading state
   const dropdownRef = useRef(null);
 
-  const timeFilters = ["Latest", "Old", "Upcoming"];
+  // Replace hardcoded filter names with translation keys
+  const timeFilters = [
+    t("scheme.filters.latest"),
+    t("scheme.filters.old"),
+    t("scheme.filters.upcoming"),
+  ];
 
   const filters = [
-    "Agriculture and Allied Services",
-    "Rural Development",
-    "Irrigation and Flood Control",
-    "Economic Services",
-    "Industry and Minerals",
-    "Energy",
+    t("scheme.categories.agriculture"),
+    t("scheme.categories.rural"),
+    t("scheme.categories.irrigation"),
+    t("scheme.categories.economic"),
+    t("scheme.categories.industry"),
+    t("scheme.categories.energy"),
   ];
 
   // Handle outside click to close dropdown
@@ -174,10 +182,20 @@ const DesignGallery = () => {
   const fetchProjectsBySector = async (sector) => {
     setLoading(true);
     try {
+      // Map translated sector back to English for backend
+      const sectorMap = {
+        [t("scheme.categories.agriculture")]: "Agriculture and Allied Services",
+        [t("scheme.categories.rural")]: "Rural Development",
+        [t("scheme.categories.irrigation")]: "Irrigation and Flood Control",
+        [t("scheme.categories.economic")]: "Economic Services",
+        [t("scheme.categories.industry")]: "Industry and Minerals",
+        [t("scheme.categories.energy")]: "Energy",
+      };
+      const backendSector = sectorMap[sector] || sector;
       const response = await axios.post(
         "https://hack25-backend-x7el.vercel.app/api/projects/getNames",
         {
-          sector,
+          sector: backendSector,
           pageSize: 10,
           offset: 1,
           filters: {},
@@ -202,9 +220,9 @@ const DesignGallery = () => {
 
   useEffect(() => {
     // Fetch default sector projects on mount
-    fetchProjectsBySector("Agriculture and Allied Services");
+    fetchProjectsBySector(t("scheme.categories.agriculture"));
     // eslint-disable-next-line
-  }, []);
+  }, [t]);
 
   // Skeleton Loading Component
   const SkeletonCard = () => (
@@ -317,7 +335,7 @@ const DesignGallery = () => {
             <button className="flex items-center space-x-2 px-3 py-2 text-gray-800 hover:text-gray-600 border border-gray-100 rounded-lg hover:border-gray-200 transition-colors bg-white">
               <Filter className="w-4 h-4" />
               <span className="text-sm font-medium hidden sm:inline">
-                Filters
+                {t("scheme.filters.filters")}
               </span>
             </button>
           </div>

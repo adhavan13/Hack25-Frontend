@@ -10,8 +10,12 @@ import {
   ArrowUpRight, ArrowDownRight, ArrowRight
 } from 'lucide-react';
 import useDashboardStore from '../../store/dashboard';
+import { useTranslation } from "react-i18next";
+import "../../i18n/config"; // Import i18n configuration
+import LanguageSwitcher from "../NavBar/LanguageSwitcher";
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   // Get location, dashboardData, loading, and fetchDashboardData from store
   const { location, dashboardData, loading, fetchDashboardData, setLocation } = useDashboardStore();
 
@@ -172,7 +176,11 @@ const Dashboard = () => {
     <div
       className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow flex flex-col gap-2
         ${isMobile ? 'p-5 mb-4' : ''}`}
-      style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
+      style={{
+        minWidth: 0,
+        minHeight: isMobile ? 140 : 240, // 240px for desktop, 140px for mobile
+        marginBottom: isMobile ? 16 : undefined
+      }}
     >
       <div className={`flex items-center justify-between mb-2 ${isMobile ? 'mb-4' : ''}`}>
         <div className={`p-3 rounded-lg bg-gray-100 ${isMobile ? 'p-3' : ''}`}>
@@ -192,7 +200,7 @@ const Dashboard = () => {
         )}
       </div>
       <h3 className={`font-bold text-black mb-1 ${isMobile ? 'text-xl' : 'text-3xl mb-2'}`}>{value}</h3>
-      <p className={`text-gray-700 font-medium ${isMobile ? 'text-xs mb-1' : 'text-sm'}`}>{title}</p>
+      <p className={`text-gray-700 font-medium ${isMobile ? 'text-xs mb-1' : 'text-sm'}`}>{t(title)}</p>
       {subtitle && <p className={`text-gray-400 mt-1 ${isMobile ? 'text-[10px] mb-1' : 'text-xs'}`}>{subtitle}</p>}
     </div>
   );
@@ -201,7 +209,12 @@ const Dashboard = () => {
     const isMobile = window.innerWidth < 640;
     if (isMobile) return null;
     return (
-      <div className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow`}>
+      <div
+        className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow flex flex-col"
+        style={{
+          minHeight: 240, // Match MetricCard height in desktop
+        }}
+      >
         <div className="flex items-center mb-4">
           <div className="p-2 rounded-lg bg-gray-100 mr-3">
             <Icon className="text-black w-5 h-5" />
@@ -237,48 +250,56 @@ const Dashboard = () => {
       <div className={`pb-6 md:pb-10 ${isMobile ? 'px-3' : 'px-2 sm:px-4 md:px-8 lg:px-16'}`}>
         <header className={`mb-6 md:mb-10 ${isMobile ? 'mb-5 px-2' : ''}`}>
           <h1 className={`font-bold text-black mb-1 md:mb-2 ${isMobile ? 'text-lg mb-2' : 'text-2xl md:text-3xl'}`}>
-            Government Dashboard for {location}
+            {t("dashboard.title", { location })}
           </h1>
-          <p className={`text-gray-500 ${isMobile ? 'text-xs mb-2' : 'text-sm md:text-base'}`}>Comprehensive overview of public sector performance</p>
+          <p className={`text-gray-500 ${isMobile ? 'text-xs mb-2' : 'text-sm md:text-base'}`}>{t("dashboard.subtitle")}</p>
         </header>
 
         {/* Row 1 - Key Metrics */}
         <div
           className={`mb-6 md:mb-10 grid gap-4 md:gap-8
-            ${isMobile ? 'grid-cols-1 px-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
-          style={isMobile ? { marginBottom: 24 } : {}}
+            ${isMobile ? 'grid-cols-1 px-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-stretch'}`}
+          style={{
+            marginBottom: isMobile ? 24 : undefined,
+          }}
         >
-          <div className={isMobile ? 'px-2' : ''}>
+          <div className={isMobile ? 'px-2' : ''} style={{ height: '100%' }}>
             <MetricCard
-              title="Total Budget"
+              title="dashboard.metrics.totalBudget"
               value={`₹${Math.round(totalBudgetAllocated / 10000000) / 10}Cr`}
-              subtitle={`${spentPercentage}% Spent (₹${Math.round(totalBudgetSpent / 10000000) / 10}Cr)`}
+              subtitle={t("dashboard.metrics.spent", {
+                percent: spentPercentage,
+                amount: Math.round(totalBudgetSpent / 10000000) / 10
+              })}
               icon={DollarSign}
               trend={metrics.budgetTrendPercentage}
               index={0}
             />
           </div>
-          <div className={isMobile ? 'px-2' : ''}>
+          <div className={isMobile ? 'px-2' : ''} style={{ height: '100%' }}>
             <GaugeChart
               percentage={spentPercentage}
-              title="Budget Utilization"
+              title={t("dashboard.metrics.budgetUtilization")}
               icon={CheckCircle}
               index={1}
             />
           </div>
-          <div className={isMobile ? 'px-2' : ''}>
+          <div className={isMobile ? 'px-2' : ''} style={{ height: '100%' }}>
             <GaugeChart
               percentage={onTimePercentage}
-              title="Project Completion Rate"
+              title={t("dashboard.metrics.projectCompletionRate")}
               icon={Clock}
               index={2}
             />
           </div>
-          <div className={isMobile ? 'px-2' : ''}>
+          <div className={isMobile ? 'px-2' : ''} style={{ height: '100%' }}>
             <MetricCard
-              title="Total Projects"
+              title="dashboard.metrics.totalProjects"
               value={totalProjects.planned + totalProjects.ongoing + totalProjects.completed}
-              subtitle={`${totalProjects.completed} Completed, ${totalProjects.ongoing} Ongoing`}
+              subtitle={t("dashboard.metrics.projectSummary", {
+                completed: totalProjects.completed,
+                ongoing: totalProjects.ongoing
+              })}
               icon={FileText}
               trend={metrics.projectTrendPercentage}
               index={3}
@@ -305,7 +326,7 @@ const Dashboard = () => {
               }}
             >
               <TrendingUp className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-              Budget Utilization by Category
+              {t("dashboard.charts.budgetUtilizationByCategory")}
             </h3>
             <div className={isMobile ? 'w-full overflow-x-auto px-1' : ''}>
               <ResponsiveContainer width="100%" height={isMobile ? 120 : 280}>
@@ -375,7 +396,7 @@ const Dashboard = () => {
               }}
             >
               <FileText className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-              Top Expenditure by Sector (₹ Crores)
+              {t("dashboard.charts.topExpenditureBySector")}
             </h3>
             <div className={isMobile ? 'w-full overflow-x-auto px-1' : ''}>
               <ResponsiveContainer width="100%" height={isMobile ? 120 : 280}>
@@ -447,7 +468,7 @@ const Dashboard = () => {
               }}
             >
               <FileText className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-              Projects by Status
+              {t("dashboard.charts.projectsByStatus")}
             </h3>
             <div className={isMobile ? 'w-full overflow-x-auto px-1' : ''}>
               <ResponsiveContainer width="100%" height={isMobile ? 120 : 240}>
@@ -488,7 +509,7 @@ const Dashboard = () => {
               }}
             >
               <Users className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-              Citizen Satisfaction Trend
+              {t("dashboard.charts.citizenSatisfactionTrend")}
             </h3>
             <div className={isMobile ? 'w-full overflow-x-auto px-1' : ''}>
               <ResponsiveContainer width="100%" height={isMobile ? 90 : 160}>
@@ -533,4 +554,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-  

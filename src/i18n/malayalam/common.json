@@ -1,0 +1,91 @@
+{
+  "dashboard": {
+    "title": "{{location}} സര്‍ക്കാര്‍ ഡാഷ്ബോര്‍ഡ്",
+    "subtitle": "പൊതു മേഖലയിലെ പ്രകടനത്തിന്റെ സമഗ്ര അവലോകനം",
+    "metrics": {
+      "totalBudget": "മൊത്തം ബജറ്റ്",
+      "spent": "{{percent}}% ചെലവാക്കി (₹{{amount}} കോടി)",
+      "budgetUtilization": "ബജറ്റ് ഉപയോഗം",
+      "projectCompletionRate": "പ്രോജക്ട് പൂര്‍ത്തീകരണ നിരക്ക്",
+      "totalProjects": "മൊത്തം പദ്ധതികള്‍",
+      "projectSummary": "{{completed}} പൂര്‍ത്തിയായി, {{ongoing}} പുരോഗമിക്കുന്നു"
+    },
+    "charts": {
+      "budgetUtilizationByCategory": "വിഭാഗംപ്രകാരമുള്ള ബജറ്റ് ഉപയോഗം",
+      "topExpenditureBySector": "വിഭാഗംപ്രകാരമുള്ള ഏറ്റവും കൂടുതല്‍ ചെലവുകള്‍ (₹ കോടി)",
+      "projectsByStatus": "പദ്ധതികളുടെ നില",
+      "citizenSatisfactionTrend": "പൗരന്മാരുടെ സംതൃപ്തി പ്രവണത"
+    }
+  },
+  "modal": {
+    "projectDetails": "പദ്ധതി വിശദാംശങ്ങള്‍",
+    "closeModal": "മോഡല്‍ അടയ്ക്കുക",
+    "projectName": "പദ്ധതിയുടെ പേര്",
+    "noDescription": "വിവരണം ലഭ്യമല്ല.",
+    "currentStatus": "നിലവിലെ സ്ഥിതി:",
+    "statusUnknown": "സ്ഥിതി അറിയില്ല",
+    "budgetAllocated": "നിശ്ചയിച്ച ബജറ്റ്",
+    "moneyFormat": "₹{{amount}} കോടി",
+    "na": "ലഭ്യമല്ല",
+    "totalFunds": "ഈ പദ്ധതിക്ക് ലഭിച്ച മൊത്തം ഫണ്ട്",
+    "moneyUsedSoFar": "ഇതുവരെ ചെലവാക്കിയ തുക",
+    "percentBudgetUsed": "% ബജറ്റ് ഉപയോഗിച്ചു",
+    "peopleBenefiting": "ലാഭം ലഭിക്കുന്നവര്‍",
+    "directIndirect": "{{direct}} നേരിട്ടുള്ള + {{indirect}} പരോക്ഷം",
+    "directImpact": "നേരിട്ടുള്ള സ്വാധീനം",
+    "indirectImpact": "പരോക്ഷ സ്വാധീനം",
+    "timelineLabel": "ടൈംലൈന്‍",
+    "expectedCompletion": "പ്രതീക്ഷിക്കുന്ന പൂര്‍ത്തീകരണ തീയതി",
+    "currentProgress": "നിലവിലെ പുരോഗതി",
+    "workCompleted": "പണി പൂര്‍ത്തിയായി",
+    "started": "ആരംഭം:",
+    "expectedEnd": "പ്രതീക്ഷിക്കുന്ന അവസാനതീയതി:",
+    "whatsHappeningNow": "ഇപ്പോള്‍ നടക്കുന്നത്:",
+    "roadFoundation": "റോഡ് അടിസ്ഥാനം",
+    "isBeingLaid": "നിര്‍മ്മിക്കുന്നു",
+    "drainageSystems": "ഡ്രെയിനേജ് സംവിധാനം",
+    "installation": "സ്ഥാപനം",
+    "preparingFor": "തയ്യാറാക്കുന്നു",
+    "streetLighting": "വീഥിവിളക്ക്",
+    "projectTimeline": "പദ്ധതി ടൈംലൈന്‍",
+    "timelineDesc": "ഈ പദ്ധതി എങ്ങനെ മുന്നോട്ട് പോയി എന്ന് കാണുക",
+    "govtOfficerInCharge": "സര്‍ക്കാര്‍ ഉദ്യോഗസ്ഥന്‍",
+    "officialResponsible": "ഈ ഉദ്യോഗസ്ഥന്‍ പദ്ധതിക്ക് മേല്‍നോട്ടം വഹിക്കുന്നു",
+    "constructionCompany": "നിര്‍മ്മാണ കമ്പനി",
+    "companySelected": "ഈ കമ്പനി പദ്ധതിക്ക് തെരഞ്ഞെടുക്കപ്പെട്ടു",
+    "whoWillBenefit": "ഈ റോഡില്‍ നിന്ന് ആര്‍ക്ക് ലാഭം?",
+    "projectWillImprove": "ഈ പദ്ധതി ഗതാഗതവും ജീവിത നിലവാരവും മെച്ചപ്പെടുത്തും",
+    "specificGroups": "ലാഭം ലഭിക്കുന്ന പ്രത്യേക വിഭാഗങ്ങള്‍:",
+    "wantToKnowMore": "കൂടുതല്‍ അറിയണോ?",
+    "contactPWD": "PWDയെ ബന്ധപ്പെടുക",
+    "viewOnMap": "മാപ്പില്‍ കാണുക",
+    "timeline": {
+      "projectPlanned": "പദ്ധതി ആസൂത്രണം ചെയ്തു",
+      "ideaProposed": "ആലോചന മുന്നോട്ടുവച്ചു",
+      "gotPermission": "അനുമതി ലഭിച്ചു",
+      "govtSaidYes": "സര്‍ക്കാര്‍ സമ്മതിച്ചു",
+      "foundBuilder": "നിര്‍മ്മാതാവിനെ കണ്ടെത്തി",
+      "selectedBuilder": "നിര്‍മ്മാണം ചെയ്യാന്‍ തെരഞ്ഞെടുക്കപ്പെട്ടു",
+      "workStarted": "പണി തുടങ്ങി",
+      "constructionBegan": "നിര്‍മ്മാണം ആരംഭിച്ചു",
+      "expectedFinish": "പ്രതീക്ഷിക്കുന്ന പൂര്‍ത്തീകരണം",
+      "whenReady": "തയ്യാറാകേണ്ട സമയം"
+    }
+  },
+  "scheme": {
+    "filters": {
+      "latest": "പുതിയത്",
+      "old": "പഴയത്",
+      "upcoming": "വരാനിരിക്കുന്ന",
+      "filters": "ഫിൽറ്ററുകൾ"
+    },
+    "categories": {
+      "agriculture": "കൃഷിയും അനുബന്ധ സേവനങ്ങളും",
+      "rural": "ഗ്രാമ വികസനം",
+      "irrigation": "നീരാവലി & പ്രളയ നിയന്ത്രണം",
+      "economic": "സാമ്പത്തിക സേവനങ്ങൾ",
+      "industry": "ഇന്ത്യുസ്ട്രി & ഖനികൾ",
+      "energy": "ഊർജ്ജം"
+    }
+  }
+}

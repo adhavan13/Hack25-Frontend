@@ -1,0 +1,91 @@
+{
+  "dashboard": {
+    "title": "Government Dashboard for {{location}}",
+    "subtitle": "Comprehensive overview of public sector performance",
+    "metrics": {
+      "totalBudget": "Total Budget",
+      "spent": "{{percent}}% Spent (₹{{amount}}Cr)",
+      "budgetUtilization": "Budget Utilization",
+      "projectCompletionRate": "Project Completion Rate",
+      "totalProjects": "Total Projects",
+      "projectSummary": "{{completed}} Completed, {{ongoing}} Ongoing"
+    },
+    "charts": {
+      "budgetUtilizationByCategory": "Budget Utilization by Category",
+      "topExpenditureBySector": "Top Expenditure by Sector (₹ Crores)",
+      "projectsByStatus": "Projects by Status",
+      "citizenSatisfactionTrend": "Citizen Satisfaction Trend"
+    }
+  },
+  "modal": {
+    "projectDetails": "Project Details",
+    "closeModal": "Close modal",
+    "projectName": "Project Name",
+    "noDescription": "No description available.",
+    "currentStatus": "Current Status:",
+    "statusUnknown": "Status Unknown",
+    "budgetAllocated": "Budget Allocated",
+    "moneyFormat": "₹{{amount}} Crores",
+    "na": "N/A",
+    "totalFunds": "Total funds for this project",
+    "moneyUsedSoFar": "Money Used So Far",
+    "percentBudgetUsed": "% of budget used",
+    "peopleBenefiting": "People Benefiting",
+    "directIndirect": "{{direct}} direct + {{indirect}} indirect",
+    "directImpact": "Direct Impact",
+    "indirectImpact": "Indirect Impact",
+    "timelineLabel": "Timeline",
+    "expectedCompletion": "Expected completion date",
+    "currentProgress": "Current Progress",
+    "workCompleted": "Work Completed",
+    "started": "Started:",
+    "expectedEnd": "Expected End:",
+    "whatsHappeningNow": "What's Happening Now:",
+    "roadFoundation": "Road foundation",
+    "isBeingLaid": "is being laid",
+    "drainageSystems": "Drainage systems",
+    "installation": "installation",
+    "preparingFor": "Preparing for",
+    "streetLighting": "street lighting",
+    "projectTimeline": "Project Timeline",
+    "timelineDesc": "See how this project has progressed from planning to completion",
+    "govtOfficerInCharge": "Government Officer In-Charge",
+    "officialResponsible": "This official is responsible for overseeing this project",
+    "constructionCompany": "Construction Company",
+    "companySelected": "This company was selected to build the project",
+    "whoWillBenefit": "Who Will Benefit From This Road?",
+    "projectWillImprove": "This project will improve transportation and quality of life for these groups",
+    "specificGroups": "Specific groups that will benefit:",
+    "wantToKnowMore": "Want to know more?",
+    "contactPWD": "Contact PWD",
+    "viewOnMap": "View on Map",
+    "timeline": {
+      "projectPlanned": "Project Planned",
+      "ideaProposed": "Idea proposed",
+      "gotPermission": "Got Permission",
+      "govtSaidYes": "Government said yes",
+      "foundBuilder": "Found Builder",
+      "selectedBuilder": "Selected who will build",
+      "workStarted": "Work Started",
+      "constructionBegan": "Construction began",
+      "expectedFinish": "Expected Finish",
+      "whenReady": "When it should be ready"
+    }
+  },
+  "scheme": {
+    "filters": {
+      "latest": "Latest",
+      "old": "Old",
+      "upcoming": "Upcoming",
+      "filters": "Filters"
+    },
+    "categories": {
+      "agriculture": "Agriculture and Allied Services",
+      "rural": "Rural Development",
+      "irrigation": "Irrigation and Flood Control",
+      "economic": "Economic Services",
+      "industry": "Industry and Minerals",
+      "energy": "Energy"
+    }
+  }
+}
