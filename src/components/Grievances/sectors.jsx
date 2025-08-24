@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export default function CategoryNavigation({ onCategoryChange, selectedCategory = 'All', categories: propsCategories }) {
   const [activeCategory, setActiveCategory] = useState(selectedCategory);
-  
+
   // Update internal state when props change
   useEffect(() => {
     setActiveCategory(selectedCategory);
@@ -33,9 +33,11 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
           <div
             className="flex space-x-2 sm:space-x-4 overflow-x-auto scrollbar-hide"
             style={{
-              WebkitOverflowScrolling: 'touch',
-              msOverflowStyle: 'none',
-              scrollbarWidth: 'none'
+              WebkitOverflowScrolling: "touch",
+              msOverflowStyle: "none",
+              scrollbarWidth: "none",
+              paddingBottom: 2,
+              minHeight: 48,
             }}
           >
             {categoriesList.map((category) => (
@@ -52,8 +54,8 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
                   transition-all duration-200 ease-in-out
                   ${
                     activeCategory === category
-                      ? 'bg-gray-100 text-black'
-                      : 'text-gray-500 hover:bg-gray-50 hover:text-black'
+                      ? "bg-gray-100 text-black"
+                      : "text-gray-500 hover:bg-gray-50 hover:text-black"
                   }
                   flex-shrink-0
                   focus:outline-none focus:ring-2 focus:ring-[#72e3ad]
@@ -61,9 +63,17 @@ export default function CategoryNavigation({ onCategoryChange, selectedCategory 
                 `}
                 style={
                   activeCategory === category
-                    ? { border: '2px solid #72e3ad', backgroundColor: '#f3f4f6', color: '#000' }
-                    : { }
+                    ? {
+                        border: "2px solid #72e3ad",
+                        backgroundColor: "#f3f4f6",
+                        color: "#000",
+                      }
+                    : {
+                        minWidth: 44,
+                        minHeight: 36,
+                      }
                 }
+                tabIndex={0}
               >
                 {category}
               </button>

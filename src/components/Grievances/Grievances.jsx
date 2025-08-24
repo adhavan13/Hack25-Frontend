@@ -400,6 +400,7 @@ export default function Grievances() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-10 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm sm:text-base"
+                className="w-full pl-10 pr-10 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm sm:text-base"
               />
               {searchTerm && (
                 <button
@@ -483,10 +484,10 @@ export default function Grievances() {
                     key={i}
                     className="animate-pulse bg-gray-100 rounded-lg p-3 sm:p-6 flex flex-col gap-3"
                   >
-                    <div className="h-5 w-1/3 bg-gray-300 rounded mb-2"></div>
-                    <div className="h-4 w-2/3 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 w-1/2 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-3 w-1/4 bg-gray-200 rounded"></div>
+                    <div className="h-4 sm:h-5 w-1/3 bg-gray-300 rounded mb-1 sm:mb-2"></div>
+                    <div className="h-3 sm:h-4 w-2/3 bg-gray-200 rounded mb-1 sm:mb-2"></div>
+                    <div className="h-2 sm:h-3 w-1/2 bg-gray-200 rounded mb-1 sm:mb-2"></div>
+                    <div className="h-2 sm:h-3 w-1/4 bg-gray-200 rounded"></div>
                   </div>
                 ))}
               </>
@@ -550,7 +551,7 @@ export default function Grievances() {
                     selectedLocation) && (
                     <button
                       onClick={clearFilters}
-                      className="text-blue-600 hover:text-blue-800 font-medium underline"
+                      className="text-blue-600 hover:text-blue-800 font-medium underline text-sm"
                     >
                       Clear all filters
                     </button>
@@ -569,16 +570,18 @@ export default function Grievances() {
       />
 
       {/* Enhanced ChatBot with filter integration */}
-      <ChatBot
-        onCategoryFilter={handleCategoryChange}
-        onLocationFilter={handleLocationChange}
-        onSearchFilter={handleSearch}
-        currentFilters={{
-          category: selectedCategory,
-          location: selectedLocation,
-          search: searchTerm,
-        }}
-      />
+      <div className="fixed bottom-3 right-3 z-50 w-[90vw] max-w-xs sm:max-w-sm md:max-w-md">
+        <ChatBot 
+          onCategoryFilter={handleCategoryChange}
+          onLocationFilter={handleLocationChange}
+          onSearchFilter={handleSearch}
+          currentFilters={{
+            category: selectedCategory,
+            location: selectedLocation,
+            search: searchTerm
+          }}
+        />
+      </div>
     </div>
   );
 }

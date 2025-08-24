@@ -2,11 +2,10 @@ import Header from "@/components/NavBar/header";
 import Scheme from "@/components/Scheme/scheme";
 import ChatBot from "@/components/ChatBot/chatbot";
 import { Routes, Route } from "react-router-dom";
-import GrievancesPage from "../components/Grievances/grievances";
 import Dashboard from "../components/dashboard/dashboard";
-import RTI from "../components/RTI/rtiInterface";
-import Suggestions from "../components/SchemeSuggestion/schemeSuggestion";
-
+import GrievancesPage from "@/components/Grievances/Grievances";
+import RTI from "@/components/RTI/rtiInterface";
+import Suggestions from "@/components/SchemeSuggestion/schemeSuggestion";
 // Add scrollbar styling
 const scrollbarStyle = `
   ::-webkit-scrollbar {

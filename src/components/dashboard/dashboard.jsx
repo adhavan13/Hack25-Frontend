@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { 
-  PieChart, Pie, BarChart, Bar, AreaChart, Area,
+  PieChart, Pie, BarChart, Bar, LineChart, Line, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   Cell
 } from 'recharts';
@@ -10,7 +10,7 @@ import {
   ArrowUpRight, ArrowDownRight, ArrowRight
 } from 'lucide-react';
 import useDashboardStore from '../../store/dashboard';
-
+import { useEffect } from 'react';
 const Dashboard = () => {
   // Get location, dashboardData, loading, and fetchDashboardData from store
   const { location, dashboardData, loading, fetchDashboardData, setLocation } = useDashboardStore();
@@ -124,13 +124,23 @@ const Dashboard = () => {
 
   // Professional color palette
   const chartColors = [
-    '#2563eb', '#14b8a6', '#f59e42', '#a78bfa', '#64748b', '#f43f5e',
-    '#facc15', '#6366f1', '#10b981', '#eab308', '#0ea5e9', '#d946ef'
+    '#2563eb', // blue
+    '#14b8a6', // teal
+    '#f59e42', // orange
+    '#a78bfa', // purple
+    '#64748b', // slate
+    '#f43f5e', // rose
+    '#facc15', // yellow
+    '#6366f1', // indigo
+    '#10b981', // emerald
+    '#eab308', // gold
+    '#0ea5e9', // sky
+    '#d946ef'  // fuchsia
   ];
 
   // Prepare data for charts
   const topExpenditureData = categories
-    .sort((a, b) => (b.budget_spent || 0) - (a.budget_spent || 0))
+    .sort((a, b) => b.budget_spent - a.budget_spent)
     .slice(0, 6)
     .map((cat, index) => ({
       sector: typeof cat.name === 'string' ? cat.name : '', // always use full name
@@ -153,16 +163,15 @@ const Dashboard = () => {
       };
     });
 
+  // Add this missing definition:
   const projectStatusData = [
     { status: 'Planned', count: totalProjects.planned, color: chartColors[0] },
     { status: 'Ongoing', count: totalProjects.ongoing, color: chartColors[1] },
     { status: 'Completed', count: totalProjects.completed, color: chartColors[2] }
   ];
 
-  // On-time delivery percentage (mock: completed/(completed+ongoing))
-  const onTimePercentage = (totalProjects.completed + totalProjects.ongoing) > 0
-    ? Math.round((totalProjects.completed / (totalProjects.completed + totalProjects.ongoing)) * 100)
-    : 0;
+  // Calculate on-time delivery percentage (mock calculation)
+  const onTimePercentage = Math.round((totalProjects.completed / (totalProjects.completed + totalProjects.ongoing)) * 100);
 
   // Use satisfactionData and metrics from API
   const satisfactionData = dashboardData.satisfactionData || [];
