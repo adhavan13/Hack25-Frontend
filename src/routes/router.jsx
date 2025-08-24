@@ -2,7 +2,7 @@ import Header from "@/components/NavBar/header";
 import Scheme from "@/components/Scheme/scheme";
 import ChatBot from "@/components/ChatBot/chatbot";
 import { Routes, Route } from "react-router-dom";
-import GrievancesPage from "../components/Grievances/grievances";
+import GrievancesPage from "../components/Grievances/Grievances";
 import Dashboard from "../components/dashboard/dashboard";
 import RTI from "../components/RTI/rtiInterface";
 import Suggestions from "../components/SchemeSuggestion/schemeSuggestion";
