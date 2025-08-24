@@ -146,20 +146,31 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
 
   if (!isOpen) return null;
 
+  // Responsive utility for mobile
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+
   return (
     <>
       <AnimatePresence>
         {/* Main Modal */}
         {isOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-10 z-50 flex items-center justify-center p-2 sm:p-4">
+          <div
+            className={`fixed inset-0 bg-black bg-opacity-10 z-50 flex items-center justify-center p-2 sm:p-4`}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl shadow-xl max-w-5xl w-full max-h-[90vh] overflow-hidden"
+              className={`bg-white rounded-3xl shadow-xl max-w-5xl w-full max-h-[90vh] overflow-hidden ${
+                isMobile ? "px-2" : ""
+              }`}
             >
               {/* Header */}
-              <div className="relative bg-white px-4 sm:px-8 py-6 border-b border-gray-200">
+              <div
+                className={`relative bg-white px-4 sm:px-8 py-6 border-b border-gray-200 ${
+                  isMobile ? "px-3" : ""
+                }`}
+              >
                 <button
                   type="button"
                   onClick={onClose}
@@ -185,8 +196,15 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
               </div>
 
               {/* Form Content */}
-              <div className="overflow-y-auto max-h-[calc(90vh-180px)]">
-                <form onSubmit={handleSubmit} className="p-4 sm:p-8">
+              <div
+                className={`overflow-y-auto max-h-[calc(90vh-180px)] ${
+                  isMobile ? "px-2" : ""
+                }`}
+              >
+                <form
+                  onSubmit={handleSubmit}
+                  className={`p-4 sm:p-8 ${isMobile ? "px-2" : ""}`}
+                >
                   {error && (
                     <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl mb-8 flex items-start">
                       <svg
@@ -208,7 +226,11 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                   )}
 
                   {/* Basic Information Section */}
-                  <div className="bg-gray-50 rounded-2xl p-4 sm:p-6 mb-8">
+                  <div
+                    className={`bg-gray-50 rounded-2xl p-4 sm:p-6 mb-8 ${
+                      isMobile ? "px-2" : ""
+                    }`}
+                  >
                     <h3 className="text-lg font-semibold text-black mb-4">
                       Basic Information
                     </h3>
@@ -306,7 +328,11 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                   </div>
 
                   {/* Description Section */}
-                  <div className="bg-gray-50 rounded-2xl p-4 sm:p-6 mb-8">
+                  <div
+                    className={`bg-gray-50 rounded-2xl p-4 sm:p-6 mb-8 ${
+                      isMobile ? "px-2" : ""
+                    }`}
+                  >
                     <h3 className="text-lg font-semibold text-black mb-4">
                       Description & Details
                     </h3>
@@ -385,7 +411,11 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
                   </div>
 
                   {/* Evidence Section */}
-                  <div className="bg-gray-50 rounded-2xl p-4 sm:p-6 mb-8">
+                  <div
+                    className={`bg-gray-50 rounded-2xl p-4 sm:p-6 mb-8 ${
+                      isMobile ? "px-2" : ""
+                    }`}
+                  >
                     <h3 className="text-lg font-semibold text-black mb-4">
                       Supporting Evidence
                     </h3>
@@ -537,7 +567,9 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-4 sm:p-8 text-center"
+              className={`bg-white rounded-2xl shadow-2xl max-w-md w-full p-4 sm:p-8 text-center ${
+                isMobile ? "px-2" : ""
+              }`}
             >
               <div
                 className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center"
@@ -588,7 +620,9 @@ export default function PostGrievanceModal({ isOpen, onClose, onSuccess }) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-4 sm:p-8 text-center"
+              className={`bg-white rounded-2xl shadow-2xl max-w-md w-full p-4 sm:p-8 text-center ${
+                isMobile ? "px-2" : ""
+              }`}
             >
               <div className="w-16 h-16 bg-red-100 mx-auto mb-6 rounded-full flex items-center justify-center">
                 <svg

@@ -25,6 +25,8 @@ import {
   Star
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const SUGGESTIONS = [
   "Provide the latest government circulars on education policy.",
@@ -231,6 +233,13 @@ const RTI_Interface = () => {
     }
   };
 
+  const decodeEntities = (str) => {
+    // Basic HTML entity decoding
+    const txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
+  };
+
   const handleSend = async (msg) => {
     const messageToSend = typeof msg === "string" ? msg : input;
     if (!messageToSend.trim()) return;
@@ -244,17 +253,60 @@ const RTI_Interface = () => {
     setIsTyping(true);
 
     const start = Date.now();
-    const response = await fetchRTIReport(messageToSend);
+    let response = await fetchRTIReport(messageToSend);
     const responseTime = ((Date.now() - start) / 1000).toFixed(1) + "s";
 
     setIsTyping(false);
-    setMessages(prev => [...prev, { 
-      sender: "bot", 
-      text: response, 
-      timestamp: new Date(),
-      queryResolved: true,
-      responseTime
-    }]);
+
+    // --- Clean and decode response ---
+    response = decodeEntities(response)
+      .replace(/\\n/g, '\n')
+      .replace(/\\t/g, '\t')
+      .replace(/\\r/g, '\r')
+      .replace(/\\'/g, "'")
+      .replace(/\\"/g, '"')
+      .replace(/\\\\/g, '\\')
+      .replace(/\r\n/g, '\n')
+      .replace(/\r/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+
+    // --- PDF generation and download (multi-page support) ---
+    const doc = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4"
+    });
+    let y = 15;
+    doc.setFontSize(14);
+    doc.text("RTI AutoBot Response", 10, y);
+    y += 10;
+    doc.setFontSize(11);
+    doc.text(`Query: ${messageToSend}`, 10, y);
+    y += 10;
+    doc.setFontSize(10);
+    doc.text("Response:", 10, y);
+    y += 7;
+
+    // Split response into lines that fit the page width
+    const pageHeight = doc.internal.pageSize.height || 297;
+    const leftMargin = 10;
+    const rightMargin = 10;
+    const maxLineWidth = doc.internal.pageSize.width - leftMargin - rightMargin;
+    const lines = doc.splitTextToSize(response, maxLineWidth);
+
+    lines.forEach(line => {
+      if (y > pageHeight - 15) {
+        doc.addPage();
+        y = 15;
+      }
+      doc.text(line, leftMargin, y);
+      y += 6;
+    });
+
+    doc.save("RTI_Response.pdf");
+    // --- End PDF generation ---
+
     setQueryStats(prev => ({
       total: prev.total + 1,
       resolved: prev.resolved + 1
@@ -298,7 +350,8 @@ const RTI_Interface = () => {
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-100 px-4 sm:px-6 py-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto px-2 sm:px-0">
+          {/* Added px-2 for mobile */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center">
@@ -350,7 +403,7 @@ const RTI_Interface = () => {
             <>
               {/* Chat Area */}
               <div className="flex-1 overflow-y-auto">
-                <div className="max-w-4xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
                   <div className="space-y-6">
                     {messages.map((msg, idx) => (
                       <div
@@ -461,7 +514,7 @@ const RTI_Interface = () => {
 
               {/* Suggestions */}
               <div className="border-t border-gray-100 bg-white">
-                <div className="max-w-4xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
                   <h3 className="text-xs sm:text-sm font-medium text-gray-700 mb-3 sm:mb-4 flex items-center gap-2">
                     <Sparkles className="w-4 h-4" />
                     Try these instant queries:
@@ -483,7 +536,7 @@ const RTI_Interface = () => {
 
               {/* Input Area */}
               <div className="border-t border-gray-100 bg-white">
-                <div className="max-w-4xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
                   <div className="flex items-end gap-2 sm:gap-4">
                     <div className="flex-1 relative">
                       <textarea
@@ -518,13 +571,16 @@ const RTI_Interface = () => {
           )}
 
           {activeTab === "categories" && (
-            <div className="flex-1 overflow-y-auto p-3 sm:p-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+              {/* p-4 for mobile */}
               <div className="max-w-6xl mx-auto">
-                <div className="mb-6 sm:mb-8 px-1 sm:px-0">
+                <div className="mb-6 sm:mb-8 px-2 sm:px-0">
+                  {/* px-2 for mobile */}
                   <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 sm:mb-2">Information Categories</h2>
                   <p className="text-xs sm:text-sm text-gray-500">Browse by category for instant government information</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 px-1 sm:px-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 px-2 sm:px-0">
+                  {/* px-2 for mobile */}
                   {RTI_CATEGORIES.map((category) => (
                     <div
                       key={category.id}
@@ -574,13 +630,16 @@ const RTI_Interface = () => {
           )}
 
           {activeTab === "recent" && (
-            <div className="flex-1 overflow-y-auto p-3 sm:p-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+              {/* p-4 for mobile */}
               <div className="max-w-4xl mx-auto">
-                <div className="mb-6 sm:mb-8 px-1 sm:px-0">
+                <div className="mb-6 sm:mb-8 px-2 sm:px-0">
+                  {/* px-2 for mobile */}
                   <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 sm:mb-2">Recent Query Resolutions</h2>
                   <p className="text-xs sm:text-sm text-gray-500">See how quickly we're resolving information requests</p>
                 </div>
-                <div className="space-y-3 sm:space-y-4 px-1 sm:px-0">
+                <div className="space-y-3 sm:space-y-4 px-2 sm:px-0">
+                  {/* px-2 for mobile */}
                   {RECENT_QUERIES.map((query, i) => (
                     <div key={i} className="bg-gray-50 border border-gray-200 rounded-xl p-6">
                       <div className="flex items-start justify-between mb-3">
@@ -622,13 +681,16 @@ const RTI_Interface = () => {
           )}
 
           {activeTab === "analytics" && (
-            <div className="flex-1 overflow-y-auto p-3 sm:p-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+              {/* p-4 for mobile */}
               <div className="max-w-6xl mx-auto">
-                <div className="mb-6 sm:mb-8 px-1 sm:px-0">
+                <div className="mb-6 sm:mb-8 px-2 sm:px-0">
+                  {/* px-2 for mobile */}
                   <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 sm:mb-2">Query Analytics</h2>
                   <p className="text-xs sm:text-sm text-gray-500">Performance metrics and usage statistics</p>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6 mb-6 sm:mb-8 px-1 sm:px-0">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6 mb-6 sm:mb-8 px-2 sm:px-0">
+                  {/* px-2 for mobile */}
                   <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
                     <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                       <TrendingUp className="w-5 h-5 text-green-600" />
@@ -681,7 +743,8 @@ const RTI_Interface = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6 px-1 sm:px-0">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6 px-2 sm:px-0">
+                  {/* px-2 for mobile */}
                   <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-4 sm:p-6 text-center">
                     <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-3" />
                     <div className="text-2xl font-bold text-green-800 mb-1">44,152</div>
@@ -704,7 +767,8 @@ const RTI_Interface = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 sm:mt-8 bg-gradient-to-r from-blue-50 to-green-50 border border-gray-200 rounded-xl p-4 sm:p-8 text-center px-1 sm:px-8">
+                <div className="mt-6 sm:mt-8 bg-gradient-to-r from-blue-50 to-green-50 border border-gray-200 rounded-xl p-4 sm:p-8 text-center px-2 sm:px-8">
+                  {/* px-2 for mobile */}
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Impact Summary</h3>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
                     <div>

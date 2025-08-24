@@ -234,8 +234,8 @@ const Dashboard = () => {
 
   return (
     <div className={`min-h-screen bg-white pt-6 md:pt-10 overflow-auto ${isMobile ? 'pt-5' : ''}`}>
-      <div className={`pb-6 md:pb-10 ${isMobile ? 'px-4' : 'px-2 sm:px-4 md:px-8 lg:px-16'}`}>
-        <header className={`mb-6 md:mb-10 ${isMobile ? 'mb-5 px-1' : ''}`}>
+      <div className={`pb-6 md:pb-10 ${isMobile ? 'px-3' : 'px-2 sm:px-4 md:px-8 lg:px-16'}`}>
+        <header className={`mb-6 md:mb-10 ${isMobile ? 'mb-5 px-2' : ''}`}>
           <h1 className={`font-bold text-black mb-1 md:mb-2 ${isMobile ? 'text-lg mb-2' : 'text-2xl md:text-3xl'}`}>
             Government Dashboard for {location}
           </h1>
@@ -248,34 +248,42 @@ const Dashboard = () => {
             ${isMobile ? 'grid-cols-1 px-1' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
           style={isMobile ? { marginBottom: 24 } : {}}
         >
-          <MetricCard
-            title="Total Budget"
-            value={`₹${Math.round(totalBudgetAllocated / 10000000) / 10}Cr`}
-            subtitle={`${spentPercentage}% Spent (₹${Math.round(totalBudgetSpent / 10000000) / 10}Cr)`}
-            icon={DollarSign}
-            trend={metrics.budgetTrendPercentage}
-            index={0}
-          />
-          <GaugeChart
-            percentage={spentPercentage}
-            title="Budget Utilization"
-            icon={CheckCircle}
-            index={1}
-          />
-          <GaugeChart
-            percentage={onTimePercentage}
-            title="Project Completion Rate"
-            icon={Clock}
-            index={2}
-          />
-          <MetricCard
-            title="Total Projects"
-            value={totalProjects.planned + totalProjects.ongoing + totalProjects.completed}
-            subtitle={`${totalProjects.completed} Completed, ${totalProjects.ongoing} Ongoing`}
-            icon={FileText}
-            trend={metrics.projectTrendPercentage}
-            index={3}
-          />
+          <div className={isMobile ? 'px-2' : ''}>
+            <MetricCard
+              title="Total Budget"
+              value={`₹${Math.round(totalBudgetAllocated / 10000000) / 10}Cr`}
+              subtitle={`${spentPercentage}% Spent (₹${Math.round(totalBudgetSpent / 10000000) / 10}Cr)`}
+              icon={DollarSign}
+              trend={metrics.budgetTrendPercentage}
+              index={0}
+            />
+          </div>
+          <div className={isMobile ? 'px-2' : ''}>
+            <GaugeChart
+              percentage={spentPercentage}
+              title="Budget Utilization"
+              icon={CheckCircle}
+              index={1}
+            />
+          </div>
+          <div className={isMobile ? 'px-2' : ''}>
+            <GaugeChart
+              percentage={onTimePercentage}
+              title="Project Completion Rate"
+              icon={Clock}
+              index={2}
+            />
+          </div>
+          <div className={isMobile ? 'px-2' : ''}>
+            <MetricCard
+              title="Total Projects"
+              value={totalProjects.planned + totalProjects.ongoing + totalProjects.completed}
+              subtitle={`${totalProjects.completed} Completed, ${totalProjects.ongoing} Ongoing`}
+              icon={FileText}
+              trend={metrics.projectTrendPercentage}
+              index={3}
+            />
+          </div>
         </div>
 
         {/* Row 2 - Financials & Projects */}
@@ -285,7 +293,7 @@ const Dashboard = () => {
           style={isMobile ? { marginBottom: 24 } : {}}
         >
           <div
-            className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
+            className={`bg-white border border-gray-200 rounded-2xl shadow-md ${isMobile ? 'p-5 px-3 mb-4' : 'p-6'}`}
             style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
             <h3
@@ -299,7 +307,7 @@ const Dashboard = () => {
               <TrendingUp className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Budget Utilization by Category
             </h3>
-            <div className={isMobile ? 'w-full overflow-x-auto' : ''}>
+            <div className={isMobile ? 'w-full overflow-x-auto px-1' : ''}>
               <ResponsiveContainer width="100%" height={isMobile ? 120 : 280}>
                 <PieChart>
                   <Pie
@@ -355,7 +363,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div
-            className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
+            className={`bg-white border border-gray-200 rounded-2xl shadow-md ${isMobile ? 'p-5 px-3 mb-4' : 'p-6'}`}
             style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
             <h3
@@ -369,7 +377,7 @@ const Dashboard = () => {
               <FileText className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Top Expenditure by Sector (₹ Crores)
             </h3>
-            <div className={isMobile ? 'w-full overflow-x-auto' : ''}>
+            <div className={isMobile ? 'w-full overflow-x-auto px-1' : ''}>
               <ResponsiveContainer width="100%" height={isMobile ? 120 : 280}>
                 <BarChart
                   data={topExpenditureData}
@@ -427,7 +435,7 @@ const Dashboard = () => {
           style={isMobile ? { marginBottom: 24 } : {}}
         >
           <div
-            className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
+            className={`bg-white border border-gray-200 rounded-2xl shadow-md ${isMobile ? 'p-5 px-3 mb-4' : 'p-6'}`}
             style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
             <h3
@@ -441,7 +449,7 @@ const Dashboard = () => {
               <FileText className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Projects by Status
             </h3>
-            <div className={isMobile ? 'w-full overflow-x-auto' : ''}>
+            <div className={isMobile ? 'w-full overflow-x-auto px-1' : ''}>
               <ResponsiveContainer width="100%" height={isMobile ? 120 : 240}>
                 <BarChart data={projectStatusData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
@@ -468,7 +476,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div
-            className={`bg-white border border-gray-200 rounded-2xl p-6 shadow-md ${isMobile ? 'p-5 mb-4' : ''}`}
+            className={`bg-white border border-gray-200 rounded-2xl shadow-md ${isMobile ? 'p-5 px-3 mb-4' : 'p-6'}`}
             style={isMobile ? { minWidth: 0, marginBottom: 16 } : {}}
           >
             <h3
@@ -482,7 +490,7 @@ const Dashboard = () => {
               <Users className={`mr-2 text-black ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Citizen Satisfaction Trend
             </h3>
-            <div className={isMobile ? 'w-full overflow-x-auto' : ''}>
+            <div className={isMobile ? 'w-full overflow-x-auto px-1' : ''}>
               <ResponsiveContainer width="100%" height={isMobile ? 90 : 160}>
                 <AreaChart data={satisfactionData}>
                   <defs>
@@ -525,3 +533,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+  

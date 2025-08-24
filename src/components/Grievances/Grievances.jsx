@@ -294,22 +294,22 @@ export default function Grievances() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white px-4 sm:px-0"> {/* Added px-4 for mobile */}
+    <div className="min-h-screen bg-white px-2 sm:px-0"> {/* px-2 for mobile, sm:px-0 for desktop */}
       {/* Header */}
       {/* <Header /> */}
 
-      <div className="px-0 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8 border-b shadow-[0_4px_12px_0_rgba(0,0,0,0.06)]">
+      <div className="px-2 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-8 border-b shadow-[0_4px_12px_0_rgba(0,0,0,0.06)]">
         {/* Responsive: px-2/py-3 for mobile, sm:px-6/py-6 for desktop */}
         <div className="px-0 sm:pl-5 flex flex-col sm:flex-row justify-between items-start gap-3">
           <div className="w-full sm:w-auto">
-            <h1 className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900">
+            <h1 className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900 pl-1 sm:pl-0">
               Grievances
             </h1>
-            <p className="mt-1 sm:mt-2 text-xs sm:text-base lg:text-lg text-gray-600">
+            <p className="mt-1 sm:mt-2 text-xs sm:text-base lg:text-lg text-gray-600 pl-1 sm:pl-0">
               View and submit grievances across different sectors
             </p>
             {(searchTerm || selectedCategory !== "All" || selectedLocation) && (
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-wrap gap-2 pl-1 sm:pl-0">
                 {searchTerm && (
                   <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
                     Search: "{searchTerm}"
@@ -352,7 +352,7 @@ export default function Grievances() {
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end pr-1 sm:pr-0">
             {/* Mobile menu icon for filters */}
             <button
               className="block sm:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
@@ -387,7 +387,7 @@ export default function Grievances() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-3 sm:mt-4 px-0 sm:px-5"
+            className="mt-3 sm:mt-4 px-1 sm:px-5"
           >
             <div className="relative">
               <Search
@@ -416,7 +416,7 @@ export default function Grievances() {
         {/* Category Navigation */}
         <div className="mt-3 sm:mt-6">
           {/* Hide on mobile, show on sm+ */}
-          <div className="hidden sm:block">
+          <div className="hidden sm:block px-1 sm:px-0">
             <CategoryNavigation
               onCategoryChange={handleCategoryChange}
               onLocationChange={handleLocationChange}
@@ -435,7 +435,7 @@ export default function Grievances() {
           </div>
           {/* Show filters on mobile only when menu is open */}
           {mobileMenuOpen && (
-            <div className="block sm:hidden w-full px-1"> {/* Added px-1 for mobile */}
+            <div className="block sm:hidden w-full px-1">
               <div className="flex flex-wrap gap-2 px-1 py-2">
                 {['All', 'Agriculture and Allied Services', 'Rural Development', 'Irrigation and Flood Control', 'Economic Services', 'Industry and Minerals', 'Energy'].map((category) => (
                   <button
@@ -459,10 +459,10 @@ export default function Grievances() {
         </div>
 
         {/* Grievances Cards */}
-        <div className="mt-4 sm:mt-8 px-1 sm:px-5"> {/* Added px-1 for mobile */}
+        <div className="mt-4 sm:mt-8 px-1 sm:px-5">
           {/* Results summary */}
           {!loading && !error && (
-            <div className="mb-3 sm:mb-4 px-0">
+            <div className="mb-3 sm:mb-4 px-1 sm:px-0">
               <p className="text-xs sm:text-sm text-gray-600">
                 Showing {grievances.length} of {allGrievances.length} grievances
                 {(searchTerm ||
@@ -481,7 +481,7 @@ export default function Grievances() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="animate-pulse bg-gray-100 rounded-lg p-4 sm:p-6 flex flex-col gap-3"
+                    className="animate-pulse bg-gray-100 rounded-lg p-3 sm:p-6 flex flex-col gap-3"
                   >
                     <div className="h-5 w-1/3 bg-gray-300 rounded mb-2"></div>
                     <div className="h-4 w-2/3 bg-gray-200 rounded mb-2"></div>
@@ -491,7 +491,7 @@ export default function Grievances() {
                 ))}
               </>
             ) : error ? (
-              <p className="text-red-500">{error}</p>
+              <p className="text-red-500 px-1 sm:px-0">{error}</p>
             ) : grievances.length > 0 ? (
               <AnimatePresence>
                 {grievances.map((grievance) => (
@@ -505,6 +505,7 @@ export default function Grievances() {
                       type: "spring",
                       stiffness: 80,
                     }}
+                    className="px-1 sm:px-0"
                   >
                     <GrievanceCard
                       id={grievance.grievance_id}
@@ -531,7 +532,7 @@ export default function Grievances() {
                 ))}
               </AnimatePresence>
             ) : (
-              <div className="col-span-full text-center py-8 lg:py-16">
+              <div className="col-span-full text-center py-8 lg:py-16 px-1 sm:px-0">
                 <div className="max-w-md mx-auto">
                   <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                   <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
